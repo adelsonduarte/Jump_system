@@ -1,0 +1,59 @@
+# depslib dependency file v1.0
+1658252944 source:g:\o meu disco\cefise - biotecnologia\jump_system\display_module.c
+
+1658345167 source:g:\meu drive\cefise - biotecnologia\jump_system\main.c
+	<stdio.h>
+	<stdlib.h>
+	"menu_module.h"
+	"main.h"
+
+1658340395 g:\meu drive\cefise - biotecnologia\jump_system\menu_module.h
+
+1658345583 source:g:\meu drive\cefise - biotecnologia\jump_system\menu_module.c
+	<stdio.h>
+	<stdlib.h>
+	"menu_module.h"
+	"main.h"
+
+1658345583 source:g:\meu drive\cefise - biotecnologia\jump_system\iniciar_component.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	"INICIAR_Component.h"
+
+1658251638 g:\meu drive\cefise - biotecnologia\jump_system\bluetooth_module.h
+
+1658240986 g:\meu drive\cefise - biotecnologia\jump_system\display_module.h
+
+1655921123 g:\meu drive\cefise - biotecnologia\jump_system\io_interface.h
+
+1657041066 g:\meu drive\cefise - biotecnologia\jump_system\sd_module.h
+
+1658343648 g:\meu drive\cefise - biotecnologia\jump_system\iniciar_component.h
+
+1658345602 g:\meu drive\cefise - biotecnologia\jump_system\main.h
+
+1658841466 source:g:\o meu disco\cefise - biotecnologia\jump_system\menu_module.c
+	<stdio.h>
+	<stdlib.h>
+	"menu_module.h"
+	"main.h"
+
+1658780300 g:\o meu disco\cefise - biotecnologia\jump_system\menu_module.h
+
+1658840529 g:\o meu disco\cefise - biotecnologia\jump_system\main.h
+
+1658841466 source:g:\o meu disco\cefise - biotecnologia\jump_system\main.c
+	<stdio.h>
+	<stdlib.h>
+	"menu_module.h"
+	"main.h"
+
+1658842432 source:g:\o meu disco\cefise - biotecnologia\jump_system\iniciar_component.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	"INICIAR_Component.h"
+
+1658838464 g:\o meu disco\cefise - biotecnologia\jump_system\iniciar_component.h
+
