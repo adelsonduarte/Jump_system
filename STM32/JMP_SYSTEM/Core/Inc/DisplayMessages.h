@@ -2,70 +2,73 @@
 #define DisplayMessage_H_INCLUDED
 
 //MENSAGEM DE BOAS VINDAS
-unsigned char* appNameMsg = "Jump System NG";
-unsigned char* companyNameMsg = "CEFISE";
-unsigned char* appVersionMsg = "Versao 0.1 2.1";
+extern unsigned char* appNameMsg;
+extern unsigned char* companyNameMsg;
+extern unsigned char* appVersionMsg;
 //
 
 //SUBMENU INICIAR
-unsigned char* startUserMsg = "INICIA TESTE";
-unsigned char* noTransmissionMsg = "SEM TRANSMISSAO";
-unsigned char* yesTransmissionMsg = "COM TRANSMISSAO";
-unsigned char* waitTransmissionMsg = "PAREANDO";
+extern unsigned char* startUserMsg;
+extern unsigned char* noTransmissionMsg;
+extern unsigned char* yesTransmissionMsg;
+extern unsigned char* waitTransmissionMsg;
 
-unsigned char* timeUserMsg = "TEMPO DE LEITURA";
-unsigned char* massUserMsg = "MASSA CORPORAL";
-unsigned char* overmassUserMsg = "SOBRECARGA";
+extern unsigned char* timeUserMsg;
+extern unsigned char* massUserMsg;
+extern unsigned char* overmassUserMsg;
 
-unsigned char* startreadUserMsg = "TEMPO DE LEITURA";
-unsigned char* stopreadUserMsg = "CONFIRMAR PARADA";
+extern unsigned char* startreadUserMsg;
+extern unsigned char* stopreadUserMsg;
 
 
-unsigned char* resultsUserMsg = "VER RESULTADOS?";
+extern unsigned char* resultsUserMsg;
 //VERIFICAR COMO COLOCAR OS PARAMETROS LIDOS
-unsigned char* saveUserMsg = "SALVAR DADOS?";
-unsigned char* savedUserMsg = "SALVANDO";
-unsigned char* cancelUserMsg = "CANCELAR?";
-unsigned char* canceledUserMsg = "CANCELANDO";
+extern unsigned char* saveUserMsg;
+extern unsigned char* savedUserMsg;
+extern unsigned char* cancelUserMsg;
+extern unsigned char* canceledUserMsg;
 
 //SUBMENU CONSULTA
-unsigned char* consultUserMsg = "CONSULTA";
-unsigned char* consultTestUserMsg = "N TESTE";
+extern unsigned char* consultUserMsg;
+extern unsigned char* consultTestUserMsg;
 //VERIFICAR COMO COLOCAR OS PARAMETROS LIDOS
-unsigned char* consultExportUserMsg = "EXPORTAR";
-unsigned char* exportedUserMsg = "EXPORTANDO"; //aplicado para SUBMENU CONSULTA E EXPORTAR
+extern unsigned char* consultExportUserMsg;
+extern unsigned char* exportedUserMsg; //aplicado para SUBMENU CONSULTA E EXPORTAR
 //
 
 //SUBMENU CONFIG
-unsigned char* configUserMsg = "CONFIGURACAO";
-unsigned char* sensor1UserMsg = "SENSOR 1";
-unsigned char* sensor2UserMsg = "SENSOR 2";
-unsigned char* altminUserMsg = "ALTURA MINIMA";
-unsigned char* altmaxUserMsg = "ALTURA MAXIMA";
-unsigned char* numsaltosUserMsg = "NUMERO DE SALTOS";
-unsigned char* intersaltosUserMsg = "INTERVALO SALTOS";
-unsigned char* tiposaltoUserMsg = "CMJ=1 SJ=2 DJ=3";
-unsigned char* altdjUserMsg = "ALTURA DJ";
-unsigned char* numserieUserMsg = "NUMERO DE SERIES";
-unsigned char* interseriesUserMsg = "INTERVALO SERIES";
-unsigned char* intapeteUserMsg = "TAPETE ON";
-unsigned char* outtapeteUserMsg = "TAPETE OFF";
+extern unsigned char* configUserMsg;
+extern unsigned char* sensor1UserMsg;
+extern unsigned char* sensor2UserMsg;
+extern unsigned char* altminUserMsg;
+extern unsigned char* altmaxUserMsg;
+extern unsigned char* numsaltosUserMsg;
+extern unsigned char* intersaltosUserMsg;
+extern unsigned char* tiposaltoUserMsg;
+extern unsigned char* altdjUserMsg;
+extern unsigned char* numserieUserMsg;
+extern unsigned char* interseriesUserMsg;
+extern unsigned char* intapeteUserMsg;
+extern unsigned char* outtapeteUserMsg;
 //
 
 //SUBMENU EXPORTACAO
-unsigned char* exportUserMsg = "EXPORTACAO";
+extern unsigned char* exportUserMsg;
 //MSG 4 DO SUBMENU INICIAR
-unsigned char* exportunitUserMsg = "TESTE UNITARIO";
-unsigned char* testunitUserMsg = "TESTE UNITÁRIO";
+extern unsigned char* exportunitUserMsg;
+extern unsigned char* testunitUserMsg;
 //MSG 2 DO SUBMENU CONSULTA
-unsigned char* exportallUserMsg = "EXPORTAR TODOS";
+extern unsigned char* exportallUserMsg;
 //MSG 4 DO SUBMENU CONSULTA
 
 //SUBMENU APAGAR
-unsigned char* eraseUserMsg = "APAGAR DADOS";
-unsigned char* eraseselectUserMsg = "5 CONFIRMA\n 2 VOLTA";
-unsigned char* erasingUserMsg = "APAGANDO";
-unsigned char* erasedUserMsg = "DADOS APAGADOS";
+extern unsigned char* eraseUserMsg;
+extern unsigned char* eraseselectUserMsg;
+extern unsigned char* erasingUserMsg;
+extern unsigned char* erasedUserMsg;
+
+extern unsigned char* testMsg;
+
 
 
 

@@ -5,8 +5,11 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../Core/Src/DisplayMessages.c \
 ../Core/Src/Display_module.c \
+../Core/Src/INICIAR_Component.c \
 ../Core/Src/LiquidCrystal.c \
+../Core/Src/SubMenu.c \
 ../Core/Src/main.c \
 ../Core/Src/menu_module.c \
 ../Core/Src/stm32f1xx_hal_msp.c \
@@ -16,8 +19,11 @@ C_SRCS += \
 ../Core/Src/system_stm32f1xx.c 
 
 OBJS += \
+./Core/Src/DisplayMessages.o \
 ./Core/Src/Display_module.o \
+./Core/Src/INICIAR_Component.o \
 ./Core/Src/LiquidCrystal.o \
+./Core/Src/SubMenu.o \
 ./Core/Src/main.o \
 ./Core/Src/menu_module.o \
 ./Core/Src/stm32f1xx_hal_msp.o \
@@ -27,8 +33,11 @@ OBJS += \
 ./Core/Src/system_stm32f1xx.o 
 
 C_DEPS += \
+./Core/Src/DisplayMessages.d \
 ./Core/Src/Display_module.d \
+./Core/Src/INICIAR_Component.d \
 ./Core/Src/LiquidCrystal.d \
+./Core/Src/SubMenu.d \
 ./Core/Src/main.d \
 ./Core/Src/menu_module.d \
 ./Core/Src/stm32f1xx_hal_msp.d \
@@ -45,7 +54,7 @@ Core/Src/%.o Core/Src/%.su: ../Core/Src/%.c Core/Src/subdir.mk
 clean: clean-Core-2f-Src
 
 clean-Core-2f-Src:
-	-$(RM) ./Core/Src/Display_module.d ./Core/Src/Display_module.o ./Core/Src/Display_module.su ./Core/Src/LiquidCrystal.d ./Core/Src/LiquidCrystal.o ./Core/Src/LiquidCrystal.su ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/menu_module.d ./Core/Src/menu_module.o ./Core/Src/menu_module.su ./Core/Src/stm32f1xx_hal_msp.d ./Core/Src/stm32f1xx_hal_msp.o ./Core/Src/stm32f1xx_hal_msp.su ./Core/Src/stm32f1xx_it.d ./Core/Src/stm32f1xx_it.o ./Core/Src/stm32f1xx_it.su ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32f1xx.d ./Core/Src/system_stm32f1xx.o ./Core/Src/system_stm32f1xx.su
+	-$(RM) ./Core/Src/DisplayMessages.d ./Core/Src/DisplayMessages.o ./Core/Src/DisplayMessages.su ./Core/Src/Display_module.d ./Core/Src/Display_module.o ./Core/Src/Display_module.su ./Core/Src/INICIAR_Component.d ./Core/Src/INICIAR_Component.o ./Core/Src/INICIAR_Component.su ./Core/Src/LiquidCrystal.d ./Core/Src/LiquidCrystal.o ./Core/Src/LiquidCrystal.su ./Core/Src/SubMenu.d ./Core/Src/SubMenu.o ./Core/Src/SubMenu.su ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/menu_module.d ./Core/Src/menu_module.o ./Core/Src/menu_module.su ./Core/Src/stm32f1xx_hal_msp.d ./Core/Src/stm32f1xx_hal_msp.o ./Core/Src/stm32f1xx_hal_msp.su ./Core/Src/stm32f1xx_it.d ./Core/Src/stm32f1xx_it.o ./Core/Src/stm32f1xx_it.su ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32f1xx.d ./Core/Src/system_stm32f1xx.o ./Core/Src/system_stm32f1xx.su
 
 .PHONY: clean-Core-2f-Src
 

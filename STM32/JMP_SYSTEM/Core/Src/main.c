@@ -24,6 +24,7 @@
 #include "menu_module.h"
 #include "Display_module.h"
 #include "DisplayMessages.h"
+#include "INICIAR_Component.h"
 
 /* USER CODE END Includes */
 
@@ -48,7 +49,7 @@ TIM_HandleTypeDef htim3;
 UART_HandleTypeDef huart2;
 DMA_HandleTypeDef hdma_usart2_rx;
 
-volatile unsigned char key = 0;
+unsigned char key = IDDLE;
 
 /* USER CODE BEGIN PV */
 
@@ -67,7 +68,15 @@ static void MX_USART2_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+unsigned char getKeyPressed()
+{
+	return key;
+}
 
+unsigned char resetKeyPressed()
+{
+	key = IDDLE;
+}
 /* USER CODE END 0 */
 
 /**
@@ -150,40 +159,41 @@ int main(void)
 		  case IDDLE:
 			  if(key == AVANCAR)
 			  {
+				  IOStatus(&key,&displayUpdateStatus);
 				  menuTesteMain.menuState = getNextMain(START_TEST);
 			  }
-
-			  else if(key == CONFIRMAR)  menuTesteMain.menuState = setSelectMain(&menuTesteMain.menuState);
+//			  else if(key == CONFIRMAR)  menuTesteMain.menuState = setSelectMain(&menuTesteMain.menuState);
 		  break;
+
 		  case START_TEST:
-			  key = IDDLE;
 			  updateUserInterface(3,2,startUserMsg,&displayUpdateStatus);
 			  if(key == AVANCAR)
 			  {
-				  displayUpdateStatus = IDDLE;
+				  IOStatus(&key,&displayUpdateStatus);
 				  menuTesteMain.menuState = getNextMain(CONSULT_DATA);
 			  }
 			  else if(key == CONFIRMAR)
 			  {
+				  IOStatus(&key,&displayUpdateStatus);
 				  menuTesteMain.menuState = setSelectMain(&menuTesteMain.menuState);
 				  menuTesteMain.menuSelect = menuTesteMain.menuState;
-//				  initStateMachine(&menuTesteSub);
+				  initStateMachine(&menuTesteSub);
 				  menuTesteSub.menuState = IDDLE;
 				  menuTesteSub.menuSelect = IDDLE;
 			  }
 		  break;
 
 		  case CONSULT_DATA:
-			  key = IDDLE;
 			  updateUserInterface(3,2,consultUserMsg,&displayUpdateStatus);
 			  if(key == AVANCAR)
 			  {
+				  IOStatus(&key,&displayUpdateStatus);
 				  menuTesteMain.menuState = getNextMain(CONFIG_SENSOR);
-				  displayUpdateStatus = IDDLE;
 			  }
 
 			  else if(key == CONFIRMAR)
 			  {
+				 IOStatus(&key,&displayUpdateStatus);
 				 menuTesteMain.menuState = setSelectMain(&menuTesteMain.menuState);
 //				 consultStateMachine(&menuTesteSub);
 				 menuTesteMain.menuState = getNextMain(START_TEST);
@@ -193,15 +203,15 @@ int main(void)
 		  break;
 
 		  case CONFIG_SENSOR:
-			  key = IDDLE;
 			  updateUserInterface(3,2,configUserMsg,&displayUpdateStatus);
 			  if(key == AVANCAR)
 			  {
+				  IOStatus(&key,&displayUpdateStatus);
 				  menuTesteMain.menuState = getNextMain(EXPORT_DATA);
-				  displayUpdateStatus = IDDLE;
 			  }
 			  else if(key == CONFIRMAR)
 			  {
+				  IOStatus(&key,&displayUpdateStatus);
 				  menuTesteMain.menuState = setSelectMain(&menuTesteMain.menuState);
 //				  configStateMachine(&menuTesteSub);
 				  menuTesteSub.menuState = IDDLE;
@@ -211,15 +221,16 @@ int main(void)
 		  break;
 
 		  case EXPORT_DATA:
-			  key = IDDLE;
 			  updateUserInterface(3,2,exportUserMsg,&displayUpdateStatus);
 			  if(key == AVANCAR)
 			  {
+				  IOStatus(&key,&displayUpdateStatus);
 				  displayUpdateStatus = IDDLE;
 				  menuTesteMain.menuState = getNextMain(ERASE_DATA);
 			  }
 			  else if(key == CONFIRMAR)
 			  {
+				  IOStatus(&key,&displayUpdateStatus);
 				  menuTesteMain.menuState = setSelectMain(&menuTesteMain.menuState);
 //				  exportStateMachine(&menuTesteSub);
 				  menuTesteSub.menuState = IDDLE;
@@ -229,15 +240,16 @@ int main(void)
 		  break;
 
 		  case ERASE_DATA:
-			  key = IDDLE;
 			  updateUserInterface(3,2,eraseUserMsg,&displayUpdateStatus);
 			  if(key == AVANCAR)
 			  {
+				  IOStatus(&key,&displayUpdateStatus);
 				  displayUpdateStatus = IDDLE;
 				  menuTesteMain.menuState = getNextMain(START_TEST);
 			  }
 			  else if(key == CONFIRMAR)
 			  {
+				  IOStatus(&key,&displayUpdateStatus);
 				  menuTesteMain.menuState = setSelectMain(&menuTesteMain.menuState);
 //				  eraseStateMachine(&menuTesteSub);
 				  menuTesteSub.menuState = IDDLE;
@@ -445,9 +457,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, LCD_D7_Pin|LCD_D6_Pin|LCD_D5_Pin|LCD_D4_Pin
@@ -456,6 +472,13 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, LCD_D3_Pin|LCD_D2_Pin|LCD_D1_Pin|LCD_D0_Pin
                           |LCD_EN_Pin|LCD_RW_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : LED_Pin */
+  GPIO_InitStruct.Pin = LED_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(LED_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : LCD_D7_Pin LCD_D6_Pin LCD_D5_Pin LCD_D4_Pin
                            LCD_RS_Pin RELAY_Pin */

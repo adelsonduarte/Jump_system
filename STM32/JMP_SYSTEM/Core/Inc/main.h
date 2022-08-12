@@ -31,7 +31,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+unsigned char getKeyPressed();
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -109,7 +109,7 @@ extern "C" {
 #define CONFIRMA            5
 #define RET_MENU            2
 
-//COMANDOS USUÃ?RIO
+//COMANDOS USUï¿½?RIO
 #define AVANCAR     'A'
 #define CONFIRMAR   'C'
 #define PARAR       'P'
@@ -127,6 +127,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define LED_Pin GPIO_PIN_13
+#define LED_GPIO_Port GPIOC
 #define LCD_D7_Pin GPIO_PIN_12
 #define LCD_D7_GPIO_Port GPIOB
 #define LCD_D6_Pin GPIO_PIN_13

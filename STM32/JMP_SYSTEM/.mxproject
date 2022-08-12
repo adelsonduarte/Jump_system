@@ -9,17 +9,17 @@ CDefines=USE_HAL_DRIVER;STM32F103xB;USE_HAL_DRIVER;USE_HAL_DRIVER;
 [PreviousGenFiles]
 AdvancedFolderStructure=true
 HeaderFileListSize=3
-HeaderFiles#0=G:/Meu Drive/CEFISE - Biotecnologia/Jump_system/STM32/JMP_SYSTEM/Core/Inc/stm32f1xx_it.h
-HeaderFiles#1=G:/Meu Drive/CEFISE - Biotecnologia/Jump_system/STM32/JMP_SYSTEM/Core/Inc/stm32f1xx_hal_conf.h
-HeaderFiles#2=G:/Meu Drive/CEFISE - Biotecnologia/Jump_system/STM32/JMP_SYSTEM/Core/Inc/main.h
+HeaderFiles#0=G:/O meu disco/CEFISE - Biotecnologia/Jump_system/STM32/JMP_SYSTEM/Core/Inc/stm32f1xx_it.h
+HeaderFiles#1=G:/O meu disco/CEFISE - Biotecnologia/Jump_system/STM32/JMP_SYSTEM/Core/Inc/stm32f1xx_hal_conf.h
+HeaderFiles#2=G:/O meu disco/CEFISE - Biotecnologia/Jump_system/STM32/JMP_SYSTEM/Core/Inc/main.h
 HeaderFolderListSize=1
-HeaderPath#0=G:/Meu Drive/CEFISE - Biotecnologia/Jump_system/STM32/JMP_SYSTEM/Core/Inc
+HeaderPath#0=G:/O meu disco/CEFISE - Biotecnologia/Jump_system/STM32/JMP_SYSTEM/Core/Inc
 HeaderFiles=;
 SourceFileListSize=3
-SourceFiles#0=G:/Meu Drive/CEFISE - Biotecnologia/Jump_system/STM32/JMP_SYSTEM/Core/Src/stm32f1xx_it.c
-SourceFiles#1=G:/Meu Drive/CEFISE - Biotecnologia/Jump_system/STM32/JMP_SYSTEM/Core/Src/stm32f1xx_hal_msp.c
-SourceFiles#2=G:/Meu Drive/CEFISE - Biotecnologia/Jump_system/STM32/JMP_SYSTEM/Core/Src/main.c
+SourceFiles#0=G:/O meu disco/CEFISE - Biotecnologia/Jump_system/STM32/JMP_SYSTEM/Core/Src/stm32f1xx_it.c
+SourceFiles#1=G:/O meu disco/CEFISE - Biotecnologia/Jump_system/STM32/JMP_SYSTEM/Core/Src/stm32f1xx_hal_msp.c
+SourceFiles#2=G:/O meu disco/CEFISE - Biotecnologia/Jump_system/STM32/JMP_SYSTEM/Core/Src/main.c
 SourceFolderListSize=1
-SourcePath#0=G:/Meu Drive/CEFISE - Biotecnologia/Jump_system/STM32/JMP_SYSTEM/Core/Src
+SourcePath#0=G:/O meu disco/CEFISE - Biotecnologia/Jump_system/STM32/JMP_SYSTEM/Core/Src
 SourceFiles=;
 

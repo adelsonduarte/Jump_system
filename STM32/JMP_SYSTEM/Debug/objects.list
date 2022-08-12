@@ -1,5 +1,8 @@
+"./Core/Src/DisplayMessages.o"
 "./Core/Src/Display_module.o"
+"./Core/Src/INICIAR_Component.o"
 "./Core/Src/LiquidCrystal.o"
+"./Core/Src/SubMenu.o"
 "./Core/Src/main.o"
 "./Core/Src/menu_module.o"
 "./Core/Src/stm32f1xx_hal_msp.o"

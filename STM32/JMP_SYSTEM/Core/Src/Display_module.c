@@ -36,14 +36,10 @@ unsigned char eraseUserInterface()
 	clear(&lcdDisplay);
 }
 
-//unsigned char show_userInterface()
-//{
-//
-//
-//}
-//
-//unsigned char wait_userInterface()
-//{
-//
-//
-//}
+unsigned char IOStatus(unsigned char* displayStatus, unsigned char* buttonStatus)
+{
+	*displayStatus = IDDLE;
+	*buttonStatus = IDDLE;
+}
+
+
