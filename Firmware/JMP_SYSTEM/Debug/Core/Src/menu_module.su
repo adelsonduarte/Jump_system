@@ -1,0 +1,6 @@
+../Core/Src/menu_module.c:17:15:getNextMain	16	static
+../Core/Src/menu_module.c:25:15:setSelectMain	24	static
+../Core/Src/menu_module.c:35:15:getDisplayMain	24	static
+../Core/Src/menu_module.c:43:15:getStateMain	16	static
+../Core/Src/menu_module.c:48:15:setStateMain	24	static
+../Core/Src/menu_module.c:54:16:getDataMainMenuTest	16	static

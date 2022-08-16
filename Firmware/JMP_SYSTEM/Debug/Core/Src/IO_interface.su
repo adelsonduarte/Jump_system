@@ -1,0 +1,6 @@
+../Core/Src/IO_interface.c:6:16:start_encoder	4	static
+../Core/Src/IO_interface.c:15:16:stop_encoder	4	static
+../Core/Src/IO_interface.c:24:16:start_timer	4	static
+../Core/Src/IO_interface.c:33:16:stop_timer	4	static
+../Core/Src/IO_interface.c:42:15:IOStatus	16	static
+../Core/Src/IO_interface.c:49:15:reset_hardware	4	static

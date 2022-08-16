@@ -1,0 +1,360 @@
+# depslib dependency file v1.0
+1658252944 source:g:\o meu disco\cefise - biotecnologia\jump_system\display_module.c
+
+1659462807 source:g:\meu drive\cefise - biotecnologia\jump_system\main.c
+	<stdio.h>
+	<stdlib.h>
+	"menu_module.h"
+	"main.h"
+	"INICIAR_Component.h"
+	"Consulta_component.h"
+
+1659446325 g:\meu drive\cefise - biotecnologia\jump_system\menu_module.h
+
+1659446756 source:g:\meu drive\cefise - biotecnologia\jump_system\menu_module.c
+	<stdio.h>
+	<stdlib.h>
+	"menu_module.h"
+	"main.h"
+
+1659984286 source:g:\meu drive\cefise - biotecnologia\jump_system\iniciar_component.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	"INICIAR_Component.h"
+	"SubMenu.h"
+
+1658251638 g:\meu drive\cefise - biotecnologia\jump_system\bluetooth_module.h
+
+1658240986 g:\meu drive\cefise - biotecnologia\jump_system\display_module.h
+
+1655921123 g:\meu drive\cefise - biotecnologia\jump_system\io_interface.h
+
+1657041066 g:\meu drive\cefise - biotecnologia\jump_system\sd_module.h
+
+1659979032 g:\meu drive\cefise - biotecnologia\jump_system\iniciar_component.h
+
+1659985741 g:\meu drive\cefise - biotecnologia\jump_system\main.h
+
+1659304825 source:g:\o meu disco\cefise - biotecnologia\jump_system\menu_module.c
+	<stdio.h>
+	<stdlib.h>
+	"menu_module.h"
+	"main.h"
+
+1659304295 g:\o meu disco\cefise - biotecnologia\jump_system\menu_module.h
+
+1659307210 g:\o meu disco\cefise - biotecnologia\jump_system\main.h
+
+1659303447 source:g:\o meu disco\cefise - biotecnologia\jump_system\main.c
+	<stdio.h>
+	<stdlib.h>
+	"menu_module.h"
+	"main.h"
+	"INICIAR_Component.h"
+
+1659304198 source:g:\o meu disco\cefise - biotecnologia\jump_system\iniciar_component.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	"INICIAR_Component.h"
+	"menu_module.h"
+
+1659303385 g:\o meu disco\cefise - biotecnologia\jump_system\iniciar_component.h
+
+1659370679 g:\meu drive\cefise - biotecnologia\jump_system\submenu_module.h
+
+1659979065 g:\meu drive\cefise - biotecnologia\jump_system\submenu.h
+
+1659980728 source:g:\meu drive\cefise - biotecnologia\jump_system\submenu.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	"INICIAR_Component.h"
+	"SubMenu.h"
+
+1659978342 source:g:\meu drive\cefise - biotecnologia\jump_system\consulta_component.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	"Consulta_component.h"
+	"SubMenu.h"
+
+1659451049 g:\meu drive\cefise - biotecnologia\jump_system\consulta_component.h
+
+1659978397 source:g:\meu drive\cefise - biotecnologia\jump_system\configuracao_component.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	"Configuracao_component.h"
+	"SubMenu.h"
+
+1659384653 g:\meu drive\cefise - biotecnologia\jump_system\configuracao_component.h
+
+1659978328 source:g:\meu drive\cefise - biotecnologia\jump_system\exportar_component.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	"Exportar_component.h"
+	"SubMenu.h"
+
+1659458747 g:\meu drive\cefise - biotecnologia\jump_system\exportar_component.h
+
+1659985556 source:g:\meu drive\cefise - biotecnologia\jump_system\apagar_component.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	"Exportar_component.h"
+	"SubMenu.h"
+
+1659985567 source:h:\o meu disco\cefise - biotecnologia\jump_system\firmware\apagar_component.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	"Exportar_component.h"
+	"SubMenu.h"
+
+1659985752 h:\o meu disco\cefise - biotecnologia\jump_system\firmware\main.h
+
+1659458738 h:\o meu disco\cefise - biotecnologia\jump_system\firmware\exportar_component.h
+
+1659979071 h:\o meu disco\cefise - biotecnologia\jump_system\firmware\submenu.h
+
+1659978352 source:h:\o meu disco\cefise - biotecnologia\jump_system\firmware\consulta_component.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	"Consulta_component.h"
+	"SubMenu.h"
+
+1659451041 h:\o meu disco\cefise - biotecnologia\jump_system\firmware\consulta_component.h
+
+1659978336 source:h:\o meu disco\cefise - biotecnologia\jump_system\firmware\exportar_component.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	"Exportar_component.h"
+	"SubMenu.h"
+
+1659984293 source:h:\o meu disco\cefise - biotecnologia\jump_system\firmware\iniciar_component.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	"INICIAR_Component.h"
+	"SubMenu.h"
+
+1659979039 h:\o meu disco\cefise - biotecnologia\jump_system\firmware\iniciar_component.h
+
+1659462797 source:h:\o meu disco\cefise - biotecnologia\jump_system\firmware\main.c
+	<stdio.h>
+	<stdlib.h>
+	"menu_module.h"
+	"main.h"
+	"INICIAR_Component.h"
+	"Consulta_component.h"
+
+1659446314 h:\o meu disco\cefise - biotecnologia\jump_system\firmware\menu_module.h
+
+1659446749 source:h:\o meu disco\cefise - biotecnologia\jump_system\firmware\menu_module.c
+	<stdio.h>
+	<stdlib.h>
+	"menu_module.h"
+	"main.h"
+
+1659980740 source:h:\o meu disco\cefise - biotecnologia\jump_system\firmware\submenu.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	"INICIAR_Component.h"
+	"SubMenu.h"
+
+1659985567 source:h:\o meu disco\cefise - biotecnologia\jump_system\software\apagar_component.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	"Exportar_component.h"
+	"SubMenu.h"
+
+1659985752 h:\o meu disco\cefise - biotecnologia\jump_system\software\main.h
+
+1659458738 h:\o meu disco\cefise - biotecnologia\jump_system\software\exportar_component.h
+
+1659979071 h:\o meu disco\cefise - biotecnologia\jump_system\software\submenu.h
+
+1659986614 source:h:\o meu disco\cefise - biotecnologia\jump_system\software\configuracao_component.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	"Configuracao_component.h"
+	"SubMenu.h"
+
+1659384638 h:\o meu disco\cefise - biotecnologia\jump_system\software\configuracao_component.h
+
+1659978352 source:h:\o meu disco\cefise - biotecnologia\jump_system\software\consulta_component.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	"Consulta_component.h"
+	"SubMenu.h"
+
+1659451041 h:\o meu disco\cefise - biotecnologia\jump_system\software\consulta_component.h
+
+1659978336 source:h:\o meu disco\cefise - biotecnologia\jump_system\software\exportar_component.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	"Exportar_component.h"
+	"SubMenu.h"
+
+1660575573 source:h:\o meu disco\cefise - biotecnologia\jump_system\software\main.c
+	<stdio.h>
+	<stdlib.h>
+	"menu_module.h"
+	"main.h"
+	"INICIAR_Component.h"
+	"Consulta_component.h"
+	"Display_module.h"
+	"DisplayMessages.h"
+
+1659446314 h:\o meu disco\cefise - biotecnologia\jump_system\software\menu_module.h
+
+1659979039 h:\o meu disco\cefise - biotecnologia\jump_system\software\iniciar_component.h
+
+1659446749 source:h:\o meu disco\cefise - biotecnologia\jump_system\software\menu_module.c
+	<stdio.h>
+	<stdlib.h>
+	"menu_module.h"
+	"main.h"
+
+1659980740 source:h:\o meu disco\cefise - biotecnologia\jump_system\software\submenu.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	"INICIAR_Component.h"
+	"SubMenu.h"
+
+1660155739 source:h:\o meu disco\cefise - biotecnologia\jump_system\software\displaymessages.c
+	"DisplayMessages.h"
+
+1660154952 h:\o meu disco\cefise - biotecnologia\jump_system\software\displaymessages.h
+
+1660652918 source:h:\o meu disco\cefise - biotecnologia\jump_system\software\iniciar_component.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	"INICIAR_Component.h"
+	"SubMenu.h"
+	"time.h"
+	"Display_module.h"
+	"DisplayMessages.h"
+
+1660587471 source:h:\o meu disco\cefise - biotecnologia\jump_system\software\io_interface.c
+	"stdio.h"
+	"stdlib.h"
+
+1660652875 source:h:\o meu disco\cefise - biotecnologia\jump_system\software\display_module.c
+	"main.h"
+	"Display_module.h"
+	"time.h"
+	"C:\MinGW\include\stdlib.h"
+
+1660652625 h:\o meu disco\cefise - biotecnologia\jump_system\software\display_module.h
+
+1659985556 source:g:\meu drive\cefise - biotecnologia\jump_system\software\apagar_component.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	"Exportar_component.h"
+	"SubMenu.h"
+
+1659985741 g:\meu drive\cefise - biotecnologia\jump_system\software\main.h
+
+1659458747 g:\meu drive\cefise - biotecnologia\jump_system\software\exportar_component.h
+
+1659979065 g:\meu drive\cefise - biotecnologia\jump_system\software\submenu.h
+
+1659986604 source:g:\meu drive\cefise - biotecnologia\jump_system\software\configuracao_component.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	"Configuracao_component.h"
+	"SubMenu.h"
+
+1659384653 g:\meu drive\cefise - biotecnologia\jump_system\software\configuracao_component.h
+
+1659978342 source:g:\meu drive\cefise - biotecnologia\jump_system\software\consulta_component.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	"Consulta_component.h"
+	"SubMenu.h"
+
+1659451049 g:\meu drive\cefise - biotecnologia\jump_system\software\consulta_component.h
+
+1660155739 source:g:\meu drive\cefise - biotecnologia\jump_system\software\displaymessages.c
+	"DisplayMessages.h"
+
+1660154952 g:\meu drive\cefise - biotecnologia\jump_system\software\displaymessages.h
+
+1659978328 source:g:\meu drive\cefise - biotecnologia\jump_system\software\exportar_component.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	"Exportar_component.h"
+	"SubMenu.h"
+
+1660587501 source:g:\meu drive\cefise - biotecnologia\jump_system\software\io_interface.c
+	"stdio.h"
+	"stdlib.h"
+
+1660575585 source:g:\meu drive\cefise - biotecnologia\jump_system\software\main.c
+	<stdio.h>
+	<stdlib.h>
+	"menu_module.h"
+	"main.h"
+	"INICIAR_Component.h"
+	"Consulta_component.h"
+	"Display_module.h"
+	"DisplayMessages.h"
+
+1659446325 g:\meu drive\cefise - biotecnologia\jump_system\software\menu_module.h
+
+1659979032 g:\meu drive\cefise - biotecnologia\jump_system\software\iniciar_component.h
+
+1660667138 g:\meu drive\cefise - biotecnologia\jump_system\software\display_module.h
+
+1659446756 source:g:\meu drive\cefise - biotecnologia\jump_system\software\menu_module.c
+	<stdio.h>
+	<stdlib.h>
+	"menu_module.h"
+	"main.h"
+
+1659980728 source:g:\meu drive\cefise - biotecnologia\jump_system\software\submenu.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	"INICIAR_Component.h"
+	"SubMenu.h"
+
+1660667294 source:g:\meu drive\cefise - biotecnologia\jump_system\software\display_module.c
+	"main.h"
+	"stdio.h"
+	"Display_module.h"
+	"time.h"
+	"C:\MinGW\include\stdlib.h"
+
+1660666069 source:g:\meu drive\cefise - biotecnologia\jump_system\software\iniciar_component.c
+	<stdio.h>
+	<stdlib.h>
+	"main.h"
+	"INICIAR_Component.h"
+	"SubMenu.h"
+	"time.h"
+	"Display_module.h"
+	"DisplayMessages.h"
+
+1512590989 c:\mingw\include\stdlib.h
+	<_mingw.h>
+	<stddef.h>
+	<locale.h>
+
