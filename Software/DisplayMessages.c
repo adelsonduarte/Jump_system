@@ -22,7 +22,7 @@ unsigned char* stopreadUserMsg = "CONFIRMAR PARADA";
 
 
 unsigned char* resultsUserMsg = "VER RESULTADOS?";
-//VERIFICAR COMO COLOCAR OS PARAMETROS LIDOS
+unsigned char* showResults = "SALTO";
 unsigned char* saveUserMsg = "SALVAR DADOS?";
 unsigned char* savedUserMsg = "SALVANDO";
 unsigned char* cancelUserMsg = "CANCELAR?";

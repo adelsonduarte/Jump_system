@@ -32,7 +32,10 @@ unsigned char* getMassArray();
 unsigned char* getMassString();
 unsigned char indexMass(unsigned char* index);
 unsigned char stringToFloat(unsigned char* string);
-unsigned char stringToInt(unsigned char* string);
-unsigned char stringToLong(unsigned char* string);
+unsigned int stringToInt(unsigned char* string);
+unsigned long stringToLong(unsigned char* string);
+unsigned int* param_1_toString(unsigned char* string);
+unsigned int* param_2_toString(unsigned char* string);
+unsigned int* param_3_toString(unsigned char* string);
 
 #endif // DISPLAY_MODULE_H_INCLUDED

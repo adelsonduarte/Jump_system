@@ -134,14 +134,15 @@ unsigned char* getTimeStruct()
     return insertTime;
 }
 
-unsigned char stringToLong(unsigned char* string)
+unsigned long stringToLong(unsigned char* string)
 {
     char *ptr;
     unsigned long int intTime = strtol(string,&ptr,10);
+    //fazer a conversão de hhmmss para ms
     return intTime;
 }
 
-unsigned char stringToInt(unsigned char* string)
+unsigned int stringToInt(unsigned char* string)
 {
     char *ptr;
     unsigned int x = strtol(string,&ptr,10);
@@ -185,6 +186,26 @@ unsigned char* getOverMassString()
     return overMassString;
 }
 
+unsigned int* param_1_toString(unsigned char* string)
+{
+    static unsigned char result[5];
+    sprintf(result,"%d",*string);
+    return result;
+}
+unsigned int* param_2_toString(unsigned char* string)
+{
+    static unsigned char result[5];
+    sprintf(result,"%d",*string);
+    return result;
+}
+
+unsigned int* param_3_toString(unsigned char* string)
+{
+    static unsigned char result[5];
+    sprintf(result,"%d",*string);
+    return result;
+}
+
 unsigned char* setUserMass(unsigned char* idx)
 {
     unsigned char index = *idx;
@@ -202,6 +223,8 @@ unsigned char* setUserOverMass(unsigned char* idx)
     sprintf(overMassString,"%d%d%d.%d",overMassArray[0],overMassArray[1],overMassArray[2],overMassArray[3]);
     return overMassString;
 }
+
+
 
 
 

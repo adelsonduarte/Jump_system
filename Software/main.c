@@ -21,6 +21,14 @@ unsigned char botaoMenu;
 unsigned char botaoInserir;
 
 
+unsigned int getTimeInterrupt()
+{
+
+}
+
+
+
+
 void main(void)
 {
     unsigned char key = 0;

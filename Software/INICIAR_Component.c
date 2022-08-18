@@ -14,6 +14,7 @@ struct results{
     unsigned int uiVooTime;
     unsigned char ucAltDistance;
 };
+
 //
 struct dataInsert{
     unsigned long int userTime;
@@ -51,7 +52,8 @@ unsigned char initStateMachine(struct Menu* subMenu)
     struct tm myTime;
     struct tm* userTimeStruct = &myTime;
     unsigned char userTimeString[9];
-    unsigned char* ptr_userTimeString = &userTimeString;
+    unsigned char procTimeString[9];
+//    unsigned char* ptr_userTimeString;
     unsigned char* ptr_massArray;
     unsigned char* ptr_massString;
     unsigned char* ptr_overMassArray;
@@ -62,6 +64,10 @@ unsigned char initStateMachine(struct Menu* subMenu)
     unsigned char cursorPosition[2] = {0,0};
 
     //Teste results
+    unsigned char* ptr_Sample;
+    unsigned char* ptr_ulReadingTime;
+    unsigned char* ptr_uiVooTime;
+    unsigned char* ptr_ucAltDistance;
     struct results result ={0,0,0,0};
     unsigned char i = 0;
     unsigned char idx=0;
@@ -76,6 +82,8 @@ unsigned char initStateMachine(struct Menu* subMenu)
         {
             case IDDLE:
                 subMenuIniciar->menuState = getNextSub(COMM_OFF);
+                //RESET
+
             break;
 
             case COMM_OFF:
@@ -129,7 +137,8 @@ unsigned char initStateMachine(struct Menu* subMenu)
                 while( getchar() != '\n' );
                 if(key == INSERIR)
                 {
-                    ptr_userTimeString = setUserTime(&index);
+//                    ptr_userTimeString = setUserTime(&index);
+                    setUserTime(&index);
                     subMenuIniciar->menuState = getNextSub(TEMPO_READ);
                 }
                 else if (key == AVANCAR)
@@ -140,8 +149,9 @@ unsigned char initStateMachine(struct Menu* subMenu)
                 {
                     index = 0;
                     readyUserInterface(&displayUpdateStatus,cursorPosition);
-                    strftime(userTimeString, sizeof(userTimeString), "%H%M%S", userTimeStruct);
-                    subMenuIniciar->menuInsert.userTime = stringToLong(userTimeString);
+                    strftime(procTimeString, sizeof(procTimeString), "%H%M%S", userTimeStruct);
+                    puts(procTimeString);
+                    subMenuIniciar->menuInsert.userTime = stringToLong(procTimeString);
 //                    setInsertSub(&subMenuIniciar->menuInsert);
                     //Configurar TIMER
                     subMenuIniciar->menuState = getNextSub(MASSA_READ);
@@ -172,7 +182,7 @@ unsigned char initStateMachine(struct Menu* subMenu)
                     index = 0;
                     readyUserInterface(&displayUpdateStatus,cursorPosition);
                     subMenuIniciar->menuInsert.userMass= stringToInt(ptr_massString);
-//                    printf("subMenuIniciar->menuInsert.userMass = %d\n",subMenuIniciar->menuInsert.userMass);
+                    printf("subMenuIniciar->menuInsert.userMass = %d\n",subMenuIniciar->menuInsert.userMass);
 //                    setInsertSub(&subMenuIniciar->menuInsert);
                     subMenuIniciar->menuState = getNextSub(SOBREC_READ);
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
@@ -207,13 +217,14 @@ unsigned char initStateMachine(struct Menu* subMenu)
                 break;
 
             case START:
-                 printf("INICIAR LEITURA\n");
-                 printf("T = %d\n",subMenuIniciar->menuInsert.userTime);
+                 updateUserMsg(3,2,startreadUserMsg,&displayUpdateStatus);
+                 insertUserInterface(0,0,userTimeString);
                 key = getchar();
                 while( getchar() != '\n' );
                 if(key == CONFIRMAR)
                 {
-                    //INICIA LEITURA (LIGA ENCODER, PONTE, O QUE FOR
+                    //INICIA LEITURA (LIGA ENCODER, PONTE, O QUE FOR //I0_INTERFACE
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
                     subMenuIniciar->menuState = getNextSub(READING);
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
                 }
@@ -221,7 +232,17 @@ unsigned char initStateMachine(struct Menu* subMenu)
 
             case READING:
                  printf("READING->->-> LOOP DE LEITURA DEVE FICAR AQUI\n");
-                 //DISPLAY
+                 /*DISPLAY
+                 BASICAMENTE, CHAMAR FUNÇÕES PARA ACESSAR O MAIN  E AS VARIAVEIS DE TEMPO E LEITURA DO SENSOR
+                 ATUALIZAR SOMENTE QUANDO TIVER NOVO DADO DA INTERRUPÇÃO
+                 CALCULA O PARAMETRO PASSADO PELO ALEX DE CADA AMOSTRA :Altura do Salto em Centímetros = ((Tempo Voo^2) *  (9,81/8)) * 10
+                 processResult : calcula o parametro acima
+                 APRESENTAR O RESULTADO PARA O USUÁRIO
+                 O LOOP DE READING DEVE PARAR QUANDO:
+                 1 - DER O TEMPO CONFIGURADO
+                 2 - DER O NUMERO DE SALTOS CONFIGURADO
+                 3 - PRESSIONAR O BOTAO PARAR
+                 */
                 key = getchar();
                 while( getchar() != '\n' );
                 if(key == PARAR) subMenuIniciar->menuState = getNextSub(STOP);
@@ -242,12 +263,14 @@ unsigned char initStateMachine(struct Menu* subMenu)
             break;
 
             case STOP:
-                printf("CONFIRMA PARADA?\n");
+                updateUserMsg(3,2,stopreadUserMsg,&displayUpdateStatus);
                 key = getchar();
                 while( getchar() != '\n' );
                 if(key == CONFIRMAR)
                 {
-                    //PARA LEITURA, DESLIGA TIMER, ENCODER, O QUE FOR
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    //PARA LEITURA, DESLIGA TIMER, ENCODER, O QUE FOR I0_INTERFACE
+                    //PAREI AQUI
                     subMenuIniciar->menuState = getNextSub(DISP_RESULTS);
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
 
@@ -256,16 +279,17 @@ unsigned char initStateMachine(struct Menu* subMenu)
                 break;
 
             case DISP_RESULTS:
-                printf("VER RESULTADOS DOS ESTÁGIOS\n");
-                subMenuIniciar->menuDisplay = getDisplaySub(&subMenuIniciar->menuDisplay);
+                updateUserMsg(3,2,resultsUserMsg,&displayUpdateStatus);
                 key = getchar();
                 while( getchar() != '\n' );
                 if(key == PARAR)
                 {
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
                     subMenuIniciar->menuState = getNextSub(SAVE_DATA);
                 }
                 else if(key == CONFIRMAR)
                 {
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
                     subMenuIniciar->menuState = getNextSub(RESULTS);
                 }
@@ -275,11 +299,19 @@ unsigned char initStateMachine(struct Menu* subMenu)
                 //Teste results
                 if(i<idx)
                 {
-                  printf("RESULTADO %d\n",arraySample[i]);
+                printf("RESULTADO %d\n",arraySample[i]);
                 printf("Altura = %d\n",arrayAltDistance[i]);
                 printf("Tempo de voo = %d\n",arrayVooTime[i]);
                 printf("Tempo de leitura = %d\n",arrayReadingTime[i]);
+                insertUserInterface(0,0,"SALTO");
+                ptr_Sample = param_1_toString(&arraySample[i]);
+                ptr_uiVooTime = param_2_toString(&arrayVooTime[i]);
+                ptr_ucAltDistance = param_3_toString(&arrayAltDistance[i]);
+                insertUserInterface(0,0,ptr_Sample);
+                insertUserInterface(0,0,ptr_ucAltDistance);
+                insertUserInterface(0,0,ptr_uiVooTime);
                 }
+
                 //
 
                 subMenuIniciar->menuDisplay = getDisplaySub(&subMenuIniciar->menuDisplay);
@@ -296,40 +328,50 @@ unsigned char initStateMachine(struct Menu* subMenu)
                     //
                     subMenuIniciar->menuState = getNextSub(RESULTS);
                 }
-                else if(key == PARAR) subMenuIniciar->menuState = getNextSub(SAVE_DATA);
+                else if(key == PARAR)
+                {
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    subMenuIniciar->menuState = getNextSub(SAVE_DATA);
+                }
+
             break;
 
             case SAVE_DATA:
-                printf("SALVAR\n");
+                updateUserMsg(3,2,saveUserMsg,&displayUpdateStatus);
                 key = getchar();
                 while( getchar() != '\n' );
                 if(key == AVANCAR)
                 {
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    updateUserMsg(3,2,cancelUserMsg,&displayUpdateStatus);
                     subMenuIniciar->menuState = getNextSub(CANCEL_SAVE);
                 }
                 else if(key == CONFIRMAR)
                 {
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    updateUserMsg(3,2,savedUserMsg,&displayUpdateStatus);
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
                     //display
-                    printf("Salvando->->->\n");
                     subMenuIniciar->menuState = getNextSub(COMM_OFF);
                     key = MENU; // ta errado mas coloquei aqui pra teste
                 }
             break;
 
             case CANCEL_SAVE:
-                printf("CANCEL_SAVE\n");
+                updateUserMsg(3,2,cancelUserMsg,&displayUpdateStatus);
                 key = getchar();
                 while( getchar() != '\n' );
                 if(key == AVANCAR)
                 {
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
                     subMenuIniciar->menuState = getNextSub(SAVE_DATA);
                 }
                 else if(key == CONFIRMAR)
                 {
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    updateUserMsg(3,2,canceledUserMsg,&displayUpdateStatus);
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
                     //display
-                    printf("Cancelando->->->\n");
                     ////Teste results
                     result.sample=0;
                     result.ucAltDistance=0;

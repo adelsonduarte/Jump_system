@@ -43,9 +43,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="Consulta_component.h" />
-		<Unit filename="Data.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="Data.h" />
 		<Unit filename="DisplayMessages.c">
 			<Option compilerVar="CC" />

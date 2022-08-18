@@ -8,7 +8,7 @@ static unsigned char timerStatus;
 
 unsigned char* start_encoder(void)
 {
-//        printf("Liga Encoder \n");
+        printf("Liga Encoder \n");
         encoderStatus = 0;
 //        encoderStatus = HAL_TIM_Encoder_Start_IT(&htim2, TIM_CHANNEL_ALL);
 //      delay
@@ -17,7 +17,7 @@ unsigned char* start_encoder(void)
 
 unsigned char* stop_encoder(void)
 {
-//    printf("Desliga Encoder \n");
+    printf("Desliga Encoder \n");
     encoderStatus = 1;
 //        encoderStatus = HAL_TIM_Encoder_Stop_IT(&htim2, TIM_CHANNEL_ALL);
 //      delay
