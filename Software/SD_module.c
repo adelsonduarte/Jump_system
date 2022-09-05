@@ -1,45 +1,44 @@
 #include <String.h>
 #include "SD_module.h"
+#include "Data.h"
 
-unsigned char check_SD_card()
-{
-//    FATFS *pfs;
-//    DWORD fre_clust;
-//    uint32_t totalSpace, freeSpace;
-//    f_getfree("", &fre_clust, &pfs);
-//    totalSpace = (uint32_t)((pfs->n_fatent - 2) * pfs->csize * 0.5);
-//    freeSpace = (uint32_t)(fre_clust * pfs->csize * 0.5);
-//    return freeSpace;
-}
-
-unsigned char read_SD_card()
-{
-//    static char buffer[100];
-//    f_open(&fil, "read.txt", FA_READ);
-//  // Reads line by line until the end
-//    while(f_gets(buffer, sizeof(buffer), &fil))
-//    {
-//    // Can use the buffer for something useful
-//        memset(buffer,0,sizeof(buffer));
-//    }
-//    f_close(&fil);
-//    return *buffer;
-}
-
-unsigned char write_SD_card()
-{
-//    FATFS fs;
-//    FIL fil;
-//    HAL_Delay(500);
-//    f_mount(&fs, "", 0);
-//    f_open(&fil, "write.txt", FA_OPEN_ALWAYS | FA_WRITE | FA_READ);
-//    f_lseek(&fil, fil.fsize);
-//    f_puts("Hello from Nizar\n", &fil);
-//    f_close(&fil);
-//    return 1;
-}
+struct dataSave{
+    unsigned long int userTime;
+    unsigned char userMass;
+    unsigned char userOverMass;
+    unsigned char userConsultTest;
+    unsigned char userAlturaMin;
+    unsigned char userAlturaMax;
+    unsigned char userNumSaltos;
+    unsigned char userIntervalSaltos;
+    unsigned char userCMJ;
+    unsigned char userAlturaDJ;
+    unsigned char userNumSeries;
+    unsigned char userIntervalSeries;
+    unsigned char userCommConfig;
+    unsigned char userSelectTapete;
+    unsigned char userSelectSensorChannel;
+};
 
 unsigned char save_data()
 {
-
+    static struct dataSave myDataSave;
+    struct dataSave* userDataSave = &myDataSave;
+    //salvar os dados medidos também -> criar outra estrutura
+    userDataSave->userTime = getUserTime();
+    userDataSave->userMass = getUserMass();
+    userDataSave->userOverMass = getUserOverMass();
+    userDataSave->userConsultTest = getUserConsultTest();
+    userDataSave->userAlturaMin = getUserAlturaMin();
+    userDataSave->userAlturaMax = getUserAlturaMax();
+    userDataSave->userIntervalSaltos = getUserIntervalSaltos();
+    userDataSave->userNumSaltos = getUserNumSaltos();
+    userDataSave->userCMJ = getUserCMJ();
+    userDataSave->userAlturaDJ = getUserAlturaDJ();
+    userDataSave->userNumSeries = getUserNumSeries();
+    userDataSave->userIntervalSeries = getUserIntervalSeries();
+    userDataSave->userCommConfig = getUserCommConfig();
+    userDataSave->userSelectTapete = getUserSelectTapete();
+    userDataSave->userSelectSensorChannel = getUserSelectSensorChannel();
+    //ENVIA userDataSave PARA IO_INTERFACE PARA SALVAR NO CARTAO SD
 }

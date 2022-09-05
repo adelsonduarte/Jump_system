@@ -3,7 +3,21 @@
 #include "main.h"
 #include "Exportar_component.h"
 #include "SubMenu.h"
+#include "DisplayMessages.h"
+#include "DataProcessing.h"
+#include "Data.h"
 
+struct samples{
+    unsigned char sampleNum;
+    unsigned long int ulReadingTime;
+    unsigned int uiVooTime;
+    unsigned char ucAltDistance;
+};
+struct results{
+    unsigned char resultTestNum;
+    unsigned char resultTestAcquiredSamples;
+    struct samples Measurement[MEASUREMENT_SIZE];
+};
 struct dataInsert{
     unsigned char userTime;
     unsigned char userMass;
@@ -29,12 +43,13 @@ struct Menu{
         struct dataInsert menuInsert;
     };
 
-//APAGAR QUAIS DADOS? TODOS OS PARAMETROS INSERIDOS OU OS PARAMETROS LIDOS?
 unsigned char eraseStateMachine(struct Menu* subMenu)
 {
     struct Menu* subMenuErase = subMenu;
     unsigned char key = 0;
-    unsigned char aux = 0;
+    unsigned char index = 0;
+    unsigned char displayUpdateStatus = IDDLE;
+    unsigned char* ptr_eraseString;
     while(key != MENU)
     {
         switch(subMenuErase->menuState)
@@ -44,23 +59,26 @@ unsigned char eraseStateMachine(struct Menu* subMenu)
             break;
 
             case VERFICA_APAGAR:
-                printf("VERFICA_APAGAR\n");
-                printf("%d\n",aux);
+                updateUserMsg(3,2,eraseselectUserMsg,&displayUpdateStatus);
+                ptr_eraseString = getEraseTestString();
+                insertUserInterface(0,0,ptr_eraseString);
                 key = getchar();
                 while( getchar() != '\n' );
                 if(key == INSERIR)
                 {
-                    aux++;
+                    setUserErase(&index);
                     subMenuErase->menuState = getNextSub(VERFICA_APAGAR);
                 }
-                else if(key == CONFIRMAR)
+                else if(key == CONFIRMAR) //parei aqui esta apagando e nao deixando salvar novamente.
                 {
-                    if(aux == CONFIRMA)
+                    if(*ptr_eraseString == '5')
                     {
+                        updateUserMsg(3,2,erasingUserMsg,&displayUpdateStatus);
+                        resetMyResults();
                         subMenuErase->menuSelect = setSelectSub(&subMenuErase->menuState);
                         subMenuErase->menuState = getNextSub(CONFIRMA_APAGAR);
                     }
-                    else
+                    else if(*ptr_eraseString == '2')
                     {
                      subMenuErase->menuState = getNextSub(IDDLE);
                       key = MENU;
@@ -70,9 +88,7 @@ unsigned char eraseStateMachine(struct Menu* subMenu)
             break;
 
             case CONFIRMA_APAGAR:
-                printf("DADOS APAGADOS\n");
-                //funcao para apagar os dados
-                //if dados apagados = ok
+                updateUserMsg(3,2,erasedUserMsg,&displayUpdateStatus);
                 subMenuErase->menuState = getNextSub(IDDLE);
                 key = MENU;
                 break;

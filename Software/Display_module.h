@@ -21,21 +21,12 @@ unsigned char cursorChangeInterface(unsigned char col, unsigned char linha);
 unsigned char readyUserInterface(unsigned char* displayStatus,unsigned char* cursorPosition);
 unsigned char resetCursorInterface(unsigned char* cursorPosition);
 
-unsigned char* setUserTime(unsigned char* userTime);
-unsigned char indexTime(unsigned char* index);
-unsigned char* getTimeStruct();
-unsigned char* getMassArray();
-unsigned char* setUserOverMass(unsigned char* idx);
-unsigned char* setUserMass(unsigned char* idx);
-unsigned char* getOverMassArray();
-unsigned char* getMassArray();
-unsigned char* getMassString();
-unsigned char indexMass(unsigned char* index);
-unsigned char stringToFloat(unsigned char* string);
-unsigned int stringToInt(unsigned char* string);
-unsigned long stringToLong(unsigned char* string);
-unsigned int* param_1_toString(unsigned char* string);
-unsigned int* param_2_toString(unsigned char* string);
-unsigned int* param_3_toString(unsigned char* string);
+
+
+
+
+
+
+
 
 #endif // DISPLAY_MODULE_H_INCLUDED

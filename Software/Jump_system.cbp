@@ -43,7 +43,14 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="Consulta_component.h" />
+		<Unit filename="Data.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="Data.h" />
+		<Unit filename="DataProcessing.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="DataProcessing.h" />
 		<Unit filename="DisplayMessages.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -64,6 +71,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="IO_interface.h" />
+		<Unit filename="SD_module.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="SD_module.h" />
 		<Unit filename="SubMenu.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -4,7 +4,7 @@
 #define TRUE            1
 #define FALSE           0
 
-#define SUBMENU_SIZE    19
+#define SUBMENU_SIZE    15
 #define MAINMENU_SIZE   4
 #define HOME            1
 
@@ -50,13 +50,15 @@
 #define SENSOR_INT_SERIES   10
 #define TAPETE_ON           11
 #define TAPETE_OFF          12
+#define SAVE_CONFIGS        13
 
 //EXPORTACAO MACHINE STATE
-#define VERIFICA_COMM       1
-#define EXPORTAR_UNITARIO   2
-#define NUM_TESTE_EXPORT    3
-#define EXPORTAR_PROC       4
-#define EXPORTAR_TODOS      5
+#define VERIFICA_COMM         1
+#define EXPORTAR_UNITARIO     2
+#define NUM_TESTE_EXPORT      3
+#define PROCESS_UNITARIO      4
+#define EXPORTAR_TODOS        5
+#define PROCESS_TODOS         6
 
 //APAGA DADOS MACHINE STATE
 #define VERFICA_APAGAR      1
@@ -71,6 +73,11 @@
 #define MENU        'M'
 #define INSERIR     'I'
 #define AMOSTRA     ';'
+
+
+//QUANTIDADE DE TESTES
+#define TEST_SIZE   5
+#define MEASUREMENT_SIZE   5
 
 
 #endif // MAIN_H_INCLUDED

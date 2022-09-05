@@ -14,11 +14,6 @@ Relé -> Rele_module.c TESTAR
 Display 16x4; -> LiquidCrystal.c TESTAR*/
 
 //Variaveis global, interrupcoes
-unsigned char botaoAvancar;
-unsigned char botaoConfirmar;
-unsigned char botaoParar;
-unsigned char botaoMenu;
-unsigned char botaoInserir;
 
 
 unsigned int getTimeInterrupt()
@@ -26,15 +21,13 @@ unsigned int getTimeInterrupt()
 
 }
 
-
-
-
 void main(void)
 {
     unsigned char key = 0;
 
     struct dataInsert{
-    unsigned char userTime;
+    unsigned char userTest;
+    unsigned long int userTime;
     unsigned char userMass;
     unsigned char userOverMass;
     unsigned char userConsultTest;
@@ -48,6 +41,7 @@ void main(void)
     unsigned char userIntervalSeries;
     unsigned char userCommConfig;
     unsigned char userSelectTapete;
+    unsigned char userSelectSensorChannel;
 
 };
     struct Menu{
