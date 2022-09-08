@@ -1,0 +1,4 @@
+Teste 1, Amostras = 3
+Amostra 1,Tempo de leitura = 100,Tempo de voo = 10, Altura = 5
+Amostra 2,Tempo de leitura = 100,Tempo de voo = 10, Altura = 5
+Amostra 3,Tempo de leitura = 100,Tempo de voo = 10, Altura = 5

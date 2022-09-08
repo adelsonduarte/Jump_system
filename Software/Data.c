@@ -1,178 +1,362 @@
 #include <stdio.h>
 #include <stdlib.h>
-//#include "comunicacao.h"
 #include "Data.h"
 #include "main.h"
+#include "time.h"
 
-struct deviceStruct dataDevice;
-struct deviceStruct* ptr_dataDevice = &dataDevice;
+struct samples{
+    unsigned char sampleNum;
+    unsigned long int ulReadingTime;
+    unsigned int uiVooTime;
+    unsigned char ucAltDistance;
+};
 
+struct results{
+    unsigned char resultTestNum;
+    unsigned char resultTestAcquiredSamples;
+    unsigned char thereAreData;
+    struct samples Measurement[MEASUREMENT_SIZE];
+};
 
-char* get_data(char *data)
+struct dataInsert{
+    unsigned char userTest;
+    unsigned long int userTime;
+    unsigned char userMass;
+    unsigned char userOverMass;
+    unsigned char userConsultTest;
+    unsigned char userAlturaMin;
+    unsigned char userAlturaMax;
+    unsigned char userNumSaltos;
+    unsigned char userIntervalSaltos;
+    unsigned char userCMJ;
+    unsigned char userAlturaDJ;
+    unsigned char userNumSeries;
+    unsigned char userIntervalSeries;
+    unsigned char userCommConfig;
+    unsigned char userSelectTapete;
+    unsigned char userSelectSensorChannel;
+};
+struct Menu{
+        unsigned char menuNext;
+        unsigned char menuSelect;
+        unsigned char menuDisplay;
+        unsigned char menuState;
+        struct dataInsert menuInsert;
+    };
+
+static struct dataInsert myData;
+static struct results myResults[TEST_SIZE];
+static struct tm myTime;
+struct tm* insertTime = &myTime;
+
+static unsigned char massArray[] = {0,0,0,0};
+static unsigned char overMassArray[] = {0,0,0,0};
+static unsigned char altMinArray[] = {0,0,0};
+static unsigned char altMaxArray[] = {0,0,0};
+static unsigned char numSaltosArray[] = {0,0,0};
+static unsigned char intervalSaltosArray[] = {0,0,0};
+static unsigned char altDJArray[] = {0,0};
+static unsigned char JumpTypeArray[] = {0};
+static unsigned char numSeriesArray[] = {0,0,0};
+static unsigned char intervalSeriesArray[] = {0,0,0};
+static unsigned char numTestArray[] = {0,0,1};
+static unsigned char selectEraseArray[] = {0};
+
+static unsigned char numberTest = 0;
+
+unsigned long int getUserTest()
 {
-  static char receive_Data[SIZE_DATA];
-
-  receive_Data[0] = get_header_start(data);
-
-  receive_Data[1] = get_source_address(data);
-
-  receive_Data[2] = get_destination_address(data);
-
-  receive_Data[3] = get_function(data);
-
-  receive_Data[4] = get_payload_size(data);
-
-  for(unsigned char idx=0;idx<get_payload_size(data);idx++)
-  {
-    receive_Data[5+idx] = get_payload(data,idx);
-  }
-    receive_Data[5+get_payload_size(data)] = get_checksum(data);
-
-    receive_Data[6+get_payload_size(data)] = get_header_end(data);
-
-    receive_Data[7+get_payload_size(data)] = get_array_end();
-
-
-    printf("endereço de receive_Data = %d\n",receive_Data);
-    printf("conteudo de receive_Data = %p\n",*receive_Data);
-   return receive_Data;
+   return myData.userTest;
+}
+unsigned long int getUserTime()
+{
+    return myData.userTime;
 }
 
-struct communicationStruct* set_receive_data_struct(char* rawData){
-
-    static struct communicationStruct dataReceive = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-    struct communicationStruct* ptr_dataReceive = &dataReceive;
-    ptr_dataReceive->startHeader = rawData[0];
-    ptr_dataReceive->sourceAdress = rawData[1];
-    ptr_dataReceive->destinationAdress = rawData[2];
-    ptr_dataReceive->function = rawData[3];
-    ptr_dataReceive->payloadSize = rawData[4];
-    for(unsigned char idx=0;idx<ptr_dataReceive->payloadSize;idx++){
-        ptr_dataReceive->payload[idx] = rawData[5+idx];
-    }
-    ptr_dataReceive->checksum = rawData[5+ptr_dataReceive->payloadSize];
-    ptr_dataReceive->endHeader = rawData[6+ptr_dataReceive->payloadSize];
-    return ptr_dataReceive;
+unsigned char getUserMass()
+{
+    return myData.userMass;
 }
 
-struct communicationStruct* set_transmission_data_struct(unsigned char* rawData){
-
-    static struct communicationStruct dataTransmission;
-    struct communicationStruct* ptr_dataTransmission = &dataTransmission;
-    unsigned char* payload;
-    ptr_dataTransmission->startHeader = HEADER;
-    ptr_dataTransmission->sourceAdress = ptr_dataDevice->id;
-    ptr_dataTransmission->destinationAdress = DESTINATION;
-    ptr_dataTransmission->function = rawData[0];
-    ptr_dataTransmission->payloadSize = rawData[1];
-    if(ptr_dataTransmission->payloadSize>0) payload = get_transmitt_payload(&(ptr_dataTransmission->function));
-    for(unsigned char idx=0;idx<ptr_dataTransmission->payloadSize;idx++){
-        ptr_dataTransmission->payload[idx] = payload[idx];
-    }
-    ptr_dataTransmission->checksum = set_checksum(ptr_dataTransmission, sizeof(*ptr_dataTransmission));
-    ptr_dataTransmission->endHeader = END;
-    printf("Endereco ptr_dataTransmission = %d\n",ptr_dataTransmission);
-    return ptr_dataTransmission;
+unsigned char getUserOverMass()
+{
+    return myData.userOverMass;
 }
 
-struct deviceStruct* set_device_ID_struct(char *data)
+unsigned char getUserConsultTest()
 {
-    ptr_dataDevice->id = *data;
-//    printf("endereço ptr_dataDevice = %d\n",ptr_dataDevice);
-//    printf("conteudo ptr_dataDevice = %p\n",*ptr_dataDevice);
-    return ptr_dataDevice;
-};
-
-struct deviceStruct* get_device_ID_struct()
-{
-     char* data = &(ptr_dataDevice->id);
-    return data;
-};
-
-unsigned char* get_transmitt_payload(unsigned char* ID)
-{
-    extern int32_t bufferPulso[SAMPLES];
-    extern uint16_t currentTime[SAMPLES];
-    unsigned char* data;
-    if(*ID == IDENTIFICATION) data = get_device_ID_struct();
-    else if(*ID == READ) data = set_device_measurement_struct(currentTime,bufferPulso);
-    return data;
+    return myData.userConsultTest;
 }
 
-struct deviceStruct* set_device_frequency_struct(char* data){
-    ptr_dataDevice->timeSampling = data[1];
-    return ptr_dataDevice->timeSampling;
-};
+unsigned char getUserAlturaMin()
+{
+    return myData.userAlturaMin;
+}
 
-struct deviceStruct* set_device_mode_struct(char* data){
-    ptr_dataDevice->readStatus = data[0];
-    return ptr_dataDevice->readStatus;
-};
+unsigned char getUserAlturaMax()
+{
+    return myData.userAlturaMax;
+}
 
-struct deviceStruct* set_device_function_struct(char* data){
-    ptr_dataDevice->function = *data;
-    return ptr_dataDevice->readStatus;
-};
+unsigned char getUserNumSaltos()
+{
+    return myData.userNumSaltos;
+}
 
-struct deviceStruct* set_device_error_struct(char* data){
-    ptr_dataDevice->error = *data;
-    return ptr_dataDevice->error;
-};
+unsigned char getUserIntervalSaltos()
+{
+    return myData.userIntervalSaltos;
+}
 
-struct deviceStruct* set_device_measurement_struct(uint16_t* data1, int32_t* data2){
-    unsigned char position = 0;
+unsigned char getUserCMJ()
+{
+    return myData.userCMJ;
+}
 
-    for(unsigned char i=0;i<SAMPLES;i++)
+unsigned char getUserAlturaDJ()
+{
+    return myData.userAlturaDJ;
+}
+
+unsigned char getUserNumSeries()
+{
+    return myData.userNumSeries;
+}
+
+unsigned char getUserIntervalSeries()
+{
+    return myData.userIntervalSeries;
+}
+
+unsigned char getUserCommConfig()
+{
+    return myData.userCommConfig;
+}
+
+unsigned char getUserSelectSensorChannel()
+{
+    return myData.userSelectSensorChannel;
+}
+
+unsigned char getUserSelectTapete()
+{
+    return myData.userSelectTapete;
+}
+
+unsigned char* getTimeStruct()
+{
+    return insertTime;
+}
+
+unsigned char* getMassArray()
+{
+    return massArray;
+}
+
+unsigned char* getOverMassArray()
+{
+    return overMassArray;
+}
+
+unsigned char* getAltMinArray()
+{
+    return altMinArray;
+}
+
+unsigned char* getAltMaxArray()
+{
+    return altMaxArray;
+}
+
+unsigned char* getNumSaltosArray()
+{
+    return numSaltosArray;
+}
+
+unsigned char* getIntervalSaltosArray()
+{
+    return intervalSaltosArray;
+}
+
+unsigned char* getTypeJumpArray()
+{
+    return JumpTypeArray;
+}
+
+unsigned char* getAltDJArray()
+{
+    return altDJArray;
+}
+
+unsigned char* getNumSeriesArray()
+{
+    return numSeriesArray;
+}
+
+unsigned char* getIntervalSeriesArray()
+{
+    return intervalSeriesArray;
+}
+
+unsigned char* getNumTestArray()
+{
+    return numTestArray;
+}
+
+unsigned char* getEraseTestArray()
+{
+    return selectEraseArray;
+}
+
+unsigned char* getUserConfigStruct() //VERIFICAR SE VOU USAR
+{
+    static struct dataInsert configStruct;
+    configStruct = myData;
+    return &configStruct;
+}
+
+unsigned char setUserInputConfigData(struct dataInsert* dataToInsert)
+{
+    myData.userTest = dataToInsert->userTest;
+    myData.userTime = dataToInsert->userTime;
+    myData.userMass = dataToInsert->userMass;
+    myData.userOverMass = dataToInsert->userOverMass;
+    myData.userConsultTest = dataToInsert->userConsultTest;
+    myData.userAlturaMin = dataToInsert->userAlturaMin;
+    myData.userAlturaMax = dataToInsert->userAlturaMax;
+    myData.userNumSaltos = dataToInsert->userNumSaltos;
+    myData.userIntervalSaltos = dataToInsert->userIntervalSaltos;
+    myData.userCMJ = dataToInsert->userCMJ;
+    myData.userAlturaDJ = dataToInsert->userAlturaDJ;
+    myData.userNumSeries = dataToInsert->userNumSeries;
+    myData.userIntervalSeries = dataToInsert->userIntervalSeries;
+    myData.userCommConfig = dataToInsert->userCommConfig;
+    myData.userSelectTapete = dataToInsert->userSelectTapete;
+    myData.userSelectSensorChannel = dataToInsert->userSelectSensorChannel;
+
+
+    printf("myData.userTest = %d\n",myData.userTest);
+    printf("myData.userTime = %ld\n",myData.userTime);
+    printf("myData.userMass = %d\n",myData.userMass);
+    printf("myData.userOverMass = %d\n",myData.userOverMass);
+    printf("myData.userConsultTest = %d\n",myData.userConsultTest);
+    printf("myData.userAlturaMin = %d\n",myData.userAlturaMin);
+    printf("myData.userAlturaMax = %d\n",myData.userAlturaMax);
+    printf("myData.userNumSaltos = %d\n",myData.userNumSaltos);
+    printf("myData.userIntervalSaltos = %d\n",myData.userIntervalSaltos);
+    printf("myData.userCMJ = %d\n",myData.userCMJ);
+    printf("myData.userAlturaDJ = %ld\n",myData.userAlturaDJ);
+    printf("myData.userNumSeries = %d\n",myData.userNumSeries);
+    printf("myData.userIntervalSeries = %d\n",myData.userIntervalSeries);
+    printf("myData.userCommConfig = %d\n",myData.userCommConfig);
+    printf("myData.userSelectTapete = %d\n",myData.userSelectTapete);
+    printf("myData.userSelectSensorChannel = %d\n",myData.userSelectSensorChannel);
+}
+
+unsigned char* getUserResultData(unsigned char numTest)
+{
+    return &myResults[numTest-1];
+}
+
+unsigned char getResultTestNumber()
+{
+    return numberTest;
+}
+
+unsigned char getThereAreData(unsigned char numTest)
+{
+    return myResults[numTest].thereAreData;
+}
+
+unsigned char getResultOccupiedFlag(unsigned char numTest)
+{
+    return  myResults[numTest].thereAreData;
+}
+
+unsigned char setResultOccupiedFlag(unsigned char numTest)
+{
+     myResults[numTest].thereAreData = TRUE;
+}
+
+unsigned char setResultTestNumber()
+{
+     numberTest++;
+}
+
+unsigned char setUserResultData(struct results* structDataResult, unsigned char numTest, unsigned char numSample)
+{
+    myResults[numTest].resultTestNum = numTest+1;
+    myResults[numTest].resultTestAcquiredSamples = numSample;
+    myResults[numTest].thereAreData = TRUE;
+    for(unsigned char i = 0;i<numSample;i++)
     {
-      ptr_dataDevice->timeMeasurement.timeAll = data1[i];
-      for(unsigned char y = 2;y>0;y--)
-      {
-          ptr_dataDevice->measurement[position] = ptr_dataDevice->timeMeasurement.timePT[y-1];
-          position++;
-      }
+        myResults[numTest].Measurement[i].sampleNum = structDataResult->Measurement[i].sampleNum;
+        myResults[numTest].Measurement[i].ulReadingTime = structDataResult->Measurement[i].ulReadingTime;
+        myResults[numTest].Measurement[i].uiVooTime = structDataResult->Measurement[i].uiVooTime;
+        myResults[numTest].Measurement[i].ucAltDistance = structDataResult->Measurement[i].ucAltDistance;
     }
 
-    for(unsigned char i=0;i<SAMPLES;i++)
+    for(unsigned char i = 0;i<numSample;i++)
     {
-      ptr_dataDevice->pulseMeasurement.pulseAll = data2[i];
-      for(unsigned char y = 4;y>0;y--)
-      {
-          ptr_dataDevice->measurement[position] = ptr_dataDevice->pulseMeasurement.pulsePT[y-1];
-          position++;
-      }
+      printf("myResults[%d].Measurement[%d].sampleNum = %d\n",numTest,i,myResults[numTest].Measurement[i].sampleNum);
+    printf("myResults[%d].Measurement[%d].ulReadingTime  = %d\n",numTest,i,myResults[numTest].Measurement[i].ulReadingTime);
+    printf("myResults[%d].Measurement[%d].uiVooTime = %d\n",numTest,i,myResults[numTest].Measurement[i].uiVooTime);
+    printf("myResults[%d].Measurement[%d].ucAltDistance = %d\n",numTest,i,myResults[numTest].Measurement[i].ucAltDistance);
     }
-    return ptr_dataDevice->measurement;
 }
 
-char set_checksum(char* data, char dataSize)
+unsigned char resetResultStruct(struct results* structToReset) //verificar se vai precisar
 {
-    unsigned char checksum_value = 0;
-    unsigned char checksum_sum=0;
-
-    for(unsigned char i=1; i<(dataSize-2);i++)
+    structToReset->resultTestNum = 0;
+    structToReset->resultTestAcquiredSamples = 0;
+    structToReset->thereAreData = FALSE;
+    for(unsigned char i = 0;i<MEASUREMENT_SIZE;i++)
     {
-        checksum_sum += data[i];
+        structToReset->Measurement[i].sampleNum = 0;
+        structToReset->Measurement[i].ulReadingTime = 0;
+        structToReset->Measurement[i].uiVooTime = 0;
+        structToReset->Measurement[i].ucAltDistance = 0;
     }
 
-    checksum_value = 0xFF-checksum_sum;
-    checksum_value += 0x01;
-    return checksum_value;
-
 }
 
-void reset_buffer(void)
+unsigned char resetConfigStruct(struct dataInsert* structToReset)
 {
-	extern int32_t bufferPulso[SAMPLES];
-	extern uint16_t currentTime[SAMPLES];
-	for(unsigned x=0;x<SAMPLES;x++)
-	{
-		bufferPulso[x] = 0;
-		currentTime[x] = 0;
-	}
+    structToReset->userTest = 0;
+    structToReset->userAlturaDJ = 0;
+    structToReset->userAlturaMax = 0;
+    structToReset->userAlturaMin = 0;
+    structToReset->userCMJ = 0;
+    structToReset->userCommConfig = 0;
+    structToReset->userConsultTest = 0;
+    structToReset->userIntervalSaltos = 0;
+    structToReset->userIntervalSeries = 0;
+    structToReset->userMass = 0;
+    structToReset->userNumSaltos = 0;
+    structToReset->userNumSeries = 0;
+    structToReset->userOverMass = 0;
+    structToReset->userSelectSensorChannel = 0;
+    structToReset->userSelectTapete = 0;
+    structToReset->userTime = 0;
 
 }
 
+void resetMyResults()
+{
+    numberTest = 0;
+    for(unsigned char test=0;test<TEST_SIZE;test++)
+    {
+        myResults[test].resultTestNum = 0;
+        myResults[test].resultTestAcquiredSamples = 0;
+        myResults[test].thereAreData = FALSE;
+        for(unsigned sample=0;sample<MEASUREMENT_SIZE;sample++)
+        {
+            myResults[test].Measurement[sample].sampleNum = 0;
+            myResults[test].Measurement[sample].ulReadingTime = 0;
+            myResults[test].Measurement[sample].uiVooTime = 0;
+            myResults[test].Measurement[sample].ucAltDistance = 0;
+        }
 
-
-
+    }
+}
 

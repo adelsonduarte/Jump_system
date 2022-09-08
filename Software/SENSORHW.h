@@ -1,0 +1,6 @@
+#ifndef SENSORHW_H_INCLUDED
+#define SENSORHW_H_INCLUDED
+
+
+
+#endif // SENSORHW_H_INCLUDED

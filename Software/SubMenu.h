@@ -5,7 +5,7 @@ struct Menu;
 struct dataInsert;
 unsigned char getNextSub(unsigned char nextState);
 unsigned char setSelectSub(unsigned char *selectedState);
-unsigned char setInsertSub(struct dataInsert* dataToInsert);
+unsigned char setInsertData(struct dataInsert* dataToInsert);
 unsigned char getInsertSub(struct dataInsert* dataToGet);
 unsigned char getDisplaySub(unsigned char *data);
 unsigned char getStateSub(unsigned char *currentState);

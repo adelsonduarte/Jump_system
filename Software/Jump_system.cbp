@@ -43,7 +43,14 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="Consulta_component.h" />
+		<Unit filename="Data.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="Data.h" />
+		<Unit filename="DataProcessing.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="DataProcessing.h" />
 		<Unit filename="DisplayMessages.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -64,10 +71,35 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="IO_interface.h" />
+		<Unit filename="LCDHW.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="LCDHW.h" />
+		<Unit filename="SDMEMORYHW.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="SDMEMORYHW.h" />
+		<Unit filename="SD_module.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="SD_module.h" />
+		<Unit filename="SENSORHW.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="SENSORHW.h" />
 		<Unit filename="SubMenu.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="SubMenu.h" />
+		<Unit filename="TimerHW.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="TimerHW.h" />
+		<Unit filename="UARTHW.C">
+			<Option compilerVar="CC" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="UARTHW.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -3,7 +3,24 @@
 #include "main.h"
 #include "Exportar_component.h"
 #include "SubMenu.h"
+#include "DisplayMessages.h"
+#include "Display_module.h"
+#include "Data.h"
+#include "DataProcessing.h"
 
+struct samples{
+    unsigned char sampleNum;
+    unsigned long int ulReadingTime;
+    unsigned int uiVooTime;
+    unsigned char ucAltDistance;
+};
+
+struct results{
+    unsigned char resultTestNum;
+    unsigned char resultTestAcquiredSamples;
+    unsigned char thereAreData;
+    struct samples Measurement[MEASUREMENT_SIZE];
+};
 struct dataInsert{
     unsigned char userTime;
     unsigned char userMass;
@@ -34,6 +51,18 @@ unsigned char exportStateMachine(struct Menu* subMenu)
 {
     struct Menu* subMenuExport = subMenu;
     unsigned char key = 0;
+    unsigned char index = 0;
+    unsigned char indexTest = 0;
+    unsigned char testSamples = 0;
+    unsigned char selectedUserTest=0;
+    unsigned char* ptr_exportTestString;
+    unsigned char* ptr_sampleString;
+    unsigned char* ptr_vooTimeString;
+    unsigned char* ptr_alturaString;
+    struct results* ptr_structExportResult;
+    unsigned char dataVerify;
+    unsigned char cursorPosition[2] = {0,0};
+    unsigned char displayUpdateStatus = IDDLE;
     while(key != MENU)
     {
         switch(subMenuExport->menuState)
@@ -44,71 +73,122 @@ unsigned char exportStateMachine(struct Menu* subMenu)
 
             case VERIFICA_COMM:
                 //funcao para habilitar comunicacao
-                printf("Resultado da funcao para habilitar comunicacao\n");
-                printf("Pareando...\n");
+                updateUserMsg(0,0,waitTransmissionMsg,&displayUpdateStatus);
                 subMenuExport->menuState = getNextSub(EXPORTAR_UNITARIO);
+                readyUserInterface(&displayUpdateStatus,cursorPosition);
             break;
 
             case EXPORTAR_UNITARIO:
-                printf("EXPORTAR_UNITARIO\n");
+                updateUserMsg(0,0,exportunitUserMsg,&displayUpdateStatus);
                 key = getchar();
                 while( getchar() != '\n' );
-                if(key == AVANCAR) subMenuExport->menuState = getNextSub(EXPORTAR_TODOS);
+                if(key == AVANCAR)
+                {
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    subMenuExport->menuState = getNextSub(EXPORTAR_TODOS);
+                }
+
                 else if(key == CONFIRMAR)
                 {
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
                     subMenuExport->menuSelect = setSelectSub(&subMenuExport->menuState);
                     subMenuExport->menuState = getNextSub(NUM_TESTE_EXPORT);
                 }
                 break;
 
             case EXPORTAR_TODOS:
-                printf("EXPORTAR_TODOS\n");
+                updateUserMsg(0,0,exportallUserMsg,&displayUpdateStatus);
                 key = getchar();
                 while( getchar() != '\n' );
-                if(key == AVANCAR) subMenuExport->menuState = getNextSub(EXPORTAR_UNITARIO);
+                if(key == AVANCAR)
+                {
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    subMenuExport->menuState = getNextSub(EXPORTAR_UNITARIO);
+                }
+
                 else if(key == CONFIRMAR)
                 {
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
                     subMenuExport->menuSelect = setSelectSub(&subMenuExport->menuState);
-                    subMenuExport->menuState = getNextSub(EXPORTAR_PROC);
+                    subMenuExport->menuState = getNextSub(PROCESS_TODOS);
                 }
                 break;
 
 
             case NUM_TESTE_EXPORT:
-                printf("NUM_TESTE_EXPORT: %d\n",subMenuExport->menuInsert.userConsultTest);
+                updateUserMsg(0,0,consultTestUserMsg,&displayUpdateStatus);
+                ptr_exportTestString = getNumTestString();
+                printDataDisplay(0,0,ptr_exportTestString);
                 key = getchar();
                 while( getchar() != '\n' );
                 if(key == INSERIR)
                 {
-                    subMenuExport->menuInsert.userConsultTest++;
+                    setUserNumTest(&index);
                     subMenuExport->menuState = getNextSub(NUM_TESTE_EXPORT);
+                }
+                else if(key == AVANCAR)
+                {
+                    indexChange(&index,3);
                 }
                 else if(key == CONFIRMAR)
                 {
-                    printf("NUM_TESTE_EXPORT: %d\n",subMenuExport->menuInsert.userConsultTest);
-                    subMenuExport->menuState = getNextSub(EXPORTAR_PROC);
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    subMenuExport->menuState = getNextSub(PROCESS_UNITARIO);
                     subMenuExport->menuSelect = setSelectSub(&subMenuExport->menuState);
                 }
 
                 break;
 
+                case PROCESS_UNITARIO:
+                    updateUserMsg(0,0,exportedUserMsg,&displayUpdateStatus);
+                    selectedUserTest = stringToInt(ptr_exportTestString);
+                    ptr_structExportResult = getUserResultData(selectedUserTest);
 
+                   //ESSE FOR É SÓ PARA TESTE NO CONSOLE, AO INVES DESSE MONTE DE "PRINT", COLOCAREI FUÇÃO PARA ENVIAR BT
 
-                case EXPORTAR_PROC:
-                printf("EXPORTANDO\n");
-                subMenuExport->menuState = getNextSub(IDDLE);
-                key = MENU; // ta errado mas coloquei aqui pra teste
-                if(subMenuExport->menuState == EXPORTAR_TODOS)
-                {
-                    printf("Exporta TODOS\n");
-                    //Acessa os dados referente ao Teste e envia todos por BT
-                }
-                else if(subMenuExport->menuState == EXPORTAR_UNITARIO)
-                {
-                    printf("Exporta unitario\n");
+                    for(testSamples=0;testSamples<(ptr_structExportResult->resultTestAcquiredSamples);testSamples++)
+                    {
+                        ptr_structExportResult = getUserResultData(selectedUserTest);
+                        readyUserInterface(&displayUpdateStatus,cursorPosition);
+                        updateUserMsg(0,0,"Amostra",&displayUpdateStatus);
+                        readyUserInterface(&displayUpdateStatus,cursorPosition);
+                        ptr_sampleString = param_1_toString(&ptr_structExportResult->Measurement[testSamples].sampleNum);
+                        updateUserMsg(0,0,ptr_sampleString,&displayUpdateStatus);
+                        readyUserInterface(&displayUpdateStatus,cursorPosition);
+
+                        updateUserMsg(0,0,"Tempo de Voo",&displayUpdateStatus);
+                        readyUserInterface(&displayUpdateStatus,cursorPosition);
+                        ptr_vooTimeString = param_2_toString(&ptr_structExportResult->Measurement[testSamples].uiVooTime);
+                        updateUserMsg(0,0,ptr_vooTimeString,&displayUpdateStatus);
+                        readyUserInterface(&displayUpdateStatus,cursorPosition);
+
+                        updateUserMsg(0,0,"Altura do salto",&displayUpdateStatus);
+                        readyUserInterface(&displayUpdateStatus,cursorPosition);
+                        ptr_alturaString = param_3_toString(&ptr_structExportResult->Measurement[testSamples].ucAltDistance);
+                        updateUserMsg(0,0,ptr_alturaString,&displayUpdateStatus);
+                        readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    }
                     //Acessa os dados referente ao Teste e envia apenas o selecionado por BT
-                }
+                subMenuExport->menuState = getNextSub(IDDLE);
+                key = MENU;
                 break;
+
+                case PROCESS_TODOS: //
+                    updateUserMsg(0,0,exportedUserMsg,&displayUpdateStatus);
+                    for(unsigned char i = 0; i<(TEST_SIZE);i++)
+                    {
+                       dataVerify =  getThereAreData(i);
+                       if(dataVerify == TRUE)
+                       {
+//                           structToSend(i);
+                            printf("Teste %d existe\n",i);
+                       }
+                       else printf("Teste %d nao existe\n",i);
+
+                    }
+                    subMenuExport->menuState = getNextSub(IDDLE);
+                    key = MENU;
+                    break;
         }
     }
 }

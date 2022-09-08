@@ -1,71 +1,73 @@
 //#include "Data.h"
 #include "stdio.h"
 #include "stdlib.h"
+#include "LCDHW.h"
+#include "SDMEMORYHW.h"
+#include "TimerHW.h"
+#include "UARTHW.h"
+#include "IO_interface.h"
+#include "string.h"
+//TESTE
+#include "main.h"
+#define MAX_LINES 100
+#define MAX_LEN 100
+//
 
+struct samples{
+    unsigned char sampleNum;
+    unsigned long int ulReadingTime;
+    unsigned int uiVooTime;
+    unsigned char ucAltDistance;
+};
 
-static unsigned char encoderStatus;
-static unsigned char timerStatus;
+struct results{
+    unsigned char resultTestNum;
+    unsigned char resultTestAcquiredSamples;
+    unsigned char thereAreData;
+    struct samples Measurement[MEASUREMENT_SIZE];
+};
 
-unsigned char* start_encoder(void)
+unsigned char startTM1(void)
 {
-        printf("Liga Encoder \n");
-        encoderStatus = 0;
-//        encoderStatus = HAL_TIM_Encoder_Start_IT(&htim2, TIM_CHANNEL_ALL);
-//      delay
-        return !encoderStatus;
+        printf("startTM1 \n");
+//        SET_HW_TIMER1();
 }
 
-unsigned char* stop_encoder(void)
+unsigned char stopTM1(void)
 {
     printf("Desliga Encoder \n");
-    encoderStatus = 1;
-//        encoderStatus = HAL_TIM_Encoder_Stop_IT(&htim2, TIM_CHANNEL_ALL);
-//      delay
-        return encoderStatus;
+//    RESET_HW_TIMER1();
 }
 
-unsigned char* start_timer(void)
+unsigned char startTM2(void)
 {
-//    printf("Liga Timer \n");
-    timerStatus = 0;
-    // timerStatus =HAL_TIM_Base_Start_IT(&htim3);
-    // delay
-    return !timerStatus;
+        printf("startTM2 \n");
+//        SET_HW_TIMER2();
 }
 
-unsigned char* stop_timer(void)
+unsigned char stopTM2(void)
 {
-//    printf("Desliga Timer \n");
-    timerStatus = 1;
-    // timerStatus =HAL_TIM_Base_Stop_IT(&htim3);
-    // delay
-    return timerStatus;
+    printf("stopTM2 \n");
+//    RESET_HW_TIMER2();
 }
 
-
-unsigned char reset_hardware(void)
+unsigned char rstHardware(void)
 {
-
+    printf("ResetHardware");
+//    RESET_HARDWARE();
 }
 
 unsigned char printDataDisplay(unsigned char col, unsigned char linha,unsigned char* userData)
 {
     printf(userData);
     printf("\n");
-//	unsigned char buffer[2];
-//	setCursor(&lcdDisplay, col, linha);
-//	cursor(&lcdDisplay);
-//	HAL_Delay(250);
-//	noCursor(&lcdDisplay);
-//	HAL_Delay(250);
-//	sprintf(buffer,"%d",*userData);
-//	print(&lcdDisplay,buffer);
+//    HW_PRINT_DATA();
 }
 
 unsigned char eraseDataDisplay()
 {
     system("clear");
-//	clear(&lcdDisplay);
+//    HW_ERASE_DATA();
 }
 
 unsigned char updateDataDisplay(unsigned char col, unsigned char linha, unsigned char *userMessage, unsigned char* status)
@@ -78,17 +80,101 @@ unsigned char homeDataDisplay(unsigned char* appName,unsigned char* companyName,
     printf("%s\n",appName);
     printf("%s\n",companyName);
     printf("%s\n",appVersion);
-//	begin(&lcdDisplay,16,4,LCD_5x10DOTS);
-//	setCursor(&lcdDisplay, 0, 0);
-//	print(&lcdDisplay,appName);
-//	setCursor(&lcdDisplay, 0, 1);
-//	print(&lcdDisplay,companyName);
-//	setCursor(&lcdDisplay, 0, 3);
-//	print(&lcdDisplay,appVersion);
-//	return &(lcdDisplay);
+//    HW_HOME_DISP();
+
 }
 
+unsigned char check_SD_card()
+{
+    printf("HW_EXT_MEMORY_CHECK()\n");
+//    HW_EXT_MEMORY_CHECK();
+}
 
+unsigned char load_SD_card(unsigned char numTeste)
+{
+     struct results* ptr_structConsultResult;
+     static unsigned char ptr_loadStringResult[MAX_LINES][MAX_LEN];
+     unsigned char line = 0;
+     unsigned char i = 0;
+     unsigned char* ptr_loadName = getArqName(numTeste);
+//    unsigned char* ptr_loadStringResult = getUserResultData(numTeste);
+
+    printf("HW_EXT_MEMORY_READ()\n");
+    FILE* ptr_file;
+    ptr_file = fopen(ptr_loadName,"r");
+    if (ptr_file == NULL )
+    {
+        printf( "error ao abrir\n");
+    }
+    else{
+        printf( "Abriu load_SD_card\n");
+
+        while(fgets(ptr_loadStringResult[line],MAX_LEN,ptr_file))
+        {
+
+            printf("ptr_loadStringResult[%d] = %s",line,ptr_loadStringResult[line]);
+            line++;
+        }
+    }
+    ptr_structConsultResult = &ptr_loadResult[0];
+    printf("resultTestNum = %d\n",ptr_structConsultResult->resultTestNum);
+    printf("resultTestAcquiredSamples = %d\n",ptr_structConsultResult->resultTestAcquiredSamples);
+
+
+//    ptr_loadResult = HW_EXT_MEMORY_READ();
+    return ptr_loadResult;
+}
+
+unsigned char save_SD_card(unsigned char* dataToSave, unsigned char numTeste)
+{
+    unsigned char* ptr_saveName = getArqName(numTeste);
+
+    printf("HW_EXT_MEMORY_WRITE()\n");
+    FILE* ptr_file;
+    ptr_file = fopen(ptr_saveName,"a");
+    if ( ptr_file == NULL )
+    {
+        printf( "error ao abrir\n");
+    }
+    else{
+        printf( "abriu save_SD_card\n");
+        fputs(dataToSave,ptr_file);
+    }
+    fclose(ptr_file);
+
+
+//    HW_EXT_MEMORY_WRITE(dataToSave,numTeste);
+}
+
+unsigned char startCOMM()
+{
+    printf("SET_HW_UART2()\n");
+//    SET_HW_UART2();
+}
+
+unsigned char stopCOMM()
+{
+    printf("RESET_HW_UART2()\n");
+//    RESET_HW_UART2();
+}
+
+unsigned char transmissionCOMM()
+{
+        printf("TRANSMISSION_HW_UART2()\n");
+//    TRANSMISSION_HW_UART2();
+}
+
+unsigned char receiveCOMM()
+{
+    printf("RECEIVE_HW_UART2()\n");
+//    RECEIVE_HW_UART2();
+}
+
+unsigned char statusCOMM()
+{
+        printf("STATUS_HW_UART2()\n");
+//    STATUS_HW_UART2();
+}
 
 
 
