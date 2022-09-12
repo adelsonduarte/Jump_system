@@ -64,6 +64,11 @@ static unsigned char selectEraseArray[] = {0};
 
 static unsigned char numberTest = 0;
 
+
+unsigned long int getUserTest()
+{
+   return myData.userTest;
+}
 unsigned long int getUserTime()
 {
     return myData.userTime;

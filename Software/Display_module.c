@@ -9,11 +9,6 @@
 
 //static LiquidCrystal lcdDisplay;
 
-unsigned char startUserInterface(unsigned char* appName,unsigned char* companyName,unsigned char* appVersion)
-{
-    homeDataDisplay(appName, companyName, appVersion);
-}
-
 unsigned char updateUserMsg(unsigned char col, unsigned char linha, unsigned char *userMessage, unsigned char* status)
 {
 	if(*status == IDDLE)
@@ -21,11 +16,6 @@ unsigned char updateUserMsg(unsigned char col, unsigned char linha, unsigned cha
 	    printDataDisplay(col,linha,userMessage);
 		*status = PRINTED;
 	}
-}
-
-unsigned char eraseUserInterface()
-{
-    eraseDataDisplay();
 }
 
 unsigned char readyUserInterface(unsigned char* displayStatus,unsigned char* cursorPosition)
@@ -38,11 +28,6 @@ unsigned char readyUserInterface(unsigned char* displayStatus,unsigned char* cur
 unsigned char statusUserInterface(unsigned char* displayStatus)
 {
 	*displayStatus = IDDLE;
-}
-
-unsigned char insertUserInterface(unsigned char col, unsigned char linha,unsigned char* userData)
-{
-    printDataDisplay(col,linha,userData);
 }
 
 unsigned char cursorChangeInterface(unsigned char col, unsigned char linha)

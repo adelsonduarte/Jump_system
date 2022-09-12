@@ -4,8 +4,15 @@
 #include "main.h"
 #include "INICIAR_Component.h"
 #include "Consulta_component.h"
+#include "Configuracao_component.h"
+#include "Exportar_component.h"
+#include "Apagar_component.h"
 #include "Display_module.h"
 #include "DisplayMessages.h"
+#include "IO_interface.h"
+#include "DataProcessing.h"
+
+
 
 
 /*Cartão de memória -> OK SD_module.c TESTAR
@@ -23,6 +30,7 @@ unsigned int getTimeInterrupt()
 
 void main(void)
 {
+
     unsigned char key = 0;
 
     struct dataInsert{
@@ -56,10 +64,8 @@ void main(void)
     unsigned char cursorPosition[2] = {0,0};
     struct Menu menuTesteMain = {IDDLE,IDDLE,IDDLE,IDDLE};
     struct Menu menuTesteSub = {IDDLE,IDDLE,IDDLE,IDDLE};
-    unsigned char* mainMenuArray;
-    unsigned char* subMenuArray;
 
-    startUserInterface(appNameMsg,companyNameMsg,appVersionMsg);
+    homeDataDisplay(appNameMsg,companyNameMsg,appVersionMsg);
     while(1)
     {
         switch(menuTesteMain.menuState)
@@ -162,7 +168,7 @@ void main(void)
                 if(key == AVANCAR)
                 {
                     readyUserInterface(&displayUpdateStatus,cursorPosition);
-                    menuTesteMain.menuState = getNextMain(TESTE);
+                    menuTesteMain.menuState = getNextMain(START_TEST);
                 }
 
                 else if(key == CONFIRMAR)
@@ -177,29 +183,29 @@ void main(void)
             break;
 
             //Alterar a linha 112 (START_TEST ->TESTE)para que o case TESTE funcione
-            case TESTE:
-                printf("ESTADO DE TESTE - ACESSO AS VARIAVEIS PRIVADAS STRUCT MENU\n");
-                key = getchar();
-                while( getchar() != '\n' );
-                if(key == AVANCAR) menuTesteMain.menuState = getNextMain(START_TEST);
-                else if(key == CONFIRMAR)
-                {
-                     mainMenuArray = getDataMainMenuTest();
-                     subMenuArray = getDataSubMenuTest();
-                     for(unsigned char i =0;i<MAINMENU_SIZE;i++)
-                    {
-                        printf("Private MAIN menu\n");
-                        printf("%d\n",mainMenuArray[i]);
-                    }
-                        printf("\n\n");
-                    for(unsigned char i =0;i<SUBMENU_SIZE;i++)
-                    {
-                        printf("Private SUB menu\n");
-                        printf("%d\n",subMenuArray[i]);
-                    }
-                }
-
-            break;
+//            case TESTE:
+//                printf("ESTADO DE TESTE - ACESSO AS VARIAVEIS PRIVADAS STRUCT MENU\n");
+//                key = getchar();
+//                while( getchar() != '\n' );
+//                if(key == AVANCAR) menuTesteMain.menuState = getNextMain(START_TEST);
+//                else if(key == CONFIRMAR)
+//                {
+//                     mainMenuArray = getDataMainMenuTest();
+//                     subMenuArray = getDataSubMenuTest();
+//                     for(unsigned char i =0;i<MAINMENU_SIZE;i++)
+//                    {
+//                        printf("Private MAIN menu\n");
+//                        printf("%d\n",mainMenuArray[i]);
+//                    }
+//                        printf("\n\n");
+//                    for(unsigned char i =0;i<SUBMENU_SIZE;i++)
+//                    {
+//                        printf("Private SUB menu\n");
+//                        printf("%d\n",subMenuArray[i]);
+//                    }
+//                }
+//
+//            break;
         }
     }
 }

@@ -5,6 +5,10 @@
 #include "SubMenu.h"
 #include "DisplayMessages.h"
 #include "DataProcessing.h"
+#include "Display_module.h"
+#include "Data.h"
+
+
 
 struct dataInsert{
     unsigned char userTest;
@@ -108,7 +112,7 @@ unsigned char configStateMachine(struct Menu* subMenu)
             case SENSOR_ALTMIN:
                 updateUserMsg(0,0,altminUserMsg,&displayUpdateStatus);
                 ptr_altMinString = getAltMinString();
-                insertUserInterface(0,0,ptr_altMinString);
+                printDataDisplay(0,0,ptr_altMinString);
                 key = getchar();
                 while( getchar() != '\n' );
                 if(key == INSERIR)
@@ -132,7 +136,7 @@ unsigned char configStateMachine(struct Menu* subMenu)
             case SENSOR_ALTMAX:
                 updateUserMsg(0,0,altmaxUserMsg,&displayUpdateStatus);
                 ptr_altMaxString = getAltMaxString();
-                insertUserInterface(0,0,ptr_altMaxString);
+                printDataDisplay(0,0,ptr_altMaxString);
                 key = getchar();
                 while( getchar() != '\n' );
                 if(key == INSERIR)
@@ -157,7 +161,7 @@ unsigned char configStateMachine(struct Menu* subMenu)
             case SENSOR_SALTOS:
                 updateUserMsg(0,0,numsaltosUserMsg,&displayUpdateStatus);
                 ptr_numSaltosString = getNumSaltosString();
-                insertUserInterface(0,0,ptr_numSaltosString);
+                printDataDisplay(0,0,ptr_numSaltosString);
                 key = getchar();
                 while( getchar() != '\n' );
                 if(key == INSERIR)
@@ -181,7 +185,7 @@ unsigned char configStateMachine(struct Menu* subMenu)
             case SENSOR_INT_SALTOS: //VERIFICAR AINDA resolucao de 1s 00min:00segundos
                 updateUserMsg(0,0,intersaltosUserMsg,&displayUpdateStatus);
                 ptr_intervalNumSaltosString = getIntervalSaltosString();
-                insertUserInterface(0,0,ptr_intervalNumSaltosString);
+                printDataDisplay(0,0,ptr_intervalNumSaltosString);
                 key = getchar();
                 while( getchar() != '\n' );
                 if(key == INSERIR)
@@ -202,7 +206,7 @@ unsigned char configStateMachine(struct Menu* subMenu)
             case SENSOR_JMP_SELECT:
                 updateUserMsg(0,0,tiposaltoUserMsg,&displayUpdateStatus);
                 ptr_jumpSelectString = getTypeJumpString();
-                insertUserInterface(0,0,ptr_jumpSelectString);
+                printDataDisplay(0,0,ptr_jumpSelectString);
                 key = getchar();
                 while( getchar() != '\n' );
                 if(key == INSERIR)
@@ -233,7 +237,7 @@ unsigned char configStateMachine(struct Menu* subMenu)
             case SENSOR_ALTDJ:
                 updateUserMsg(0,0,altdjUserMsg,&displayUpdateStatus);
                 ptr_altDJString = getAltDJString();
-                insertUserInterface(0,0,ptr_altDJString);
+                printDataDisplay(0,0,ptr_altDJString);
                 key = getchar();
                 while( getchar() != '\n' );
                 if(key == INSERIR)
@@ -253,7 +257,7 @@ unsigned char configStateMachine(struct Menu* subMenu)
             case SENSOR_SERIES:
                 updateUserMsg(0,0,numserieUserMsg,&displayUpdateStatus);
                 ptr_numSeriesString = getNumSeriesString();
-                insertUserInterface(0,0,ptr_numSeriesString);
+                printDataDisplay(0,0,ptr_numSeriesString);
                 key = getchar();
                 while( getchar() != '\n' );
                 if(key == INSERIR)
@@ -273,7 +277,7 @@ unsigned char configStateMachine(struct Menu* subMenu)
             case SENSOR_INT_SERIES:
                 updateUserMsg(0,0,interseriesUserMsg,&displayUpdateStatus);
                 ptr_intervalSeriesString = getIntervalSeriesString();
-                insertUserInterface(0,0,ptr_intervalSeriesString);
+                printDataDisplay(0,0,ptr_intervalSeriesString);
                 key = getchar();
                 while( getchar() != '\n' );
                 if(key == INSERIR)

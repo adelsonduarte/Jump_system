@@ -4,6 +4,9 @@
 #include "Consulta_component.h"
 #include "SubMenu.h"
 #include "DisplayMessages.h"
+#include "Display_module.h"
+#include "DataProcessing.h"
+#include "Data.h"
 
 struct samples{
     unsigned char sampleNum;
@@ -61,7 +64,7 @@ unsigned char consultStateMachine(struct Menu* subMenu)
     unsigned char key = 0;
     static unsigned char results = 0;
     unsigned char displayUpdateStatus = IDDLE;
-//    struct Menu subMenuTesteConsultar = {COMM_OFF,COMM_OFF,COMM_OFF,COMM_OFF};
+
     while(key != MENU)
     {
         switch(subMenuTesteConsultar->menuState)
@@ -73,7 +76,7 @@ unsigned char consultStateMachine(struct Menu* subMenu)
             case CONSULTA_TESTE:
                 updateUserMsg(0,0,consultTestUserMsg,&displayUpdateStatus);
                 ptr_consultTestString = getNumTestString();
-                insertUserInterface(0,0,ptr_consultTestString);
+                printDataDisplay(0,0,ptr_consultTestString);
                 key = getchar();
                 while( getchar() != '\n' );
                 if(key == INSERIR)
@@ -95,9 +98,9 @@ unsigned char consultStateMachine(struct Menu* subMenu)
 
             case RESULT_TESTE:
                 selectedUserTest = stringToInt(ptr_consultTestString);
-                ptr_structConsultResult = getUserResultData(selectedUserTest);
+                ptr_structConsultResult = load_data(selectedUserTest);
 
-                if(testSamples<(ptr_structConsultResult->resultTestAcquiredSamples)) //BUSCAR INFOMAÇÃO DE NUMSAMPLE
+                if(testSamples<(ptr_structConsultResult->resultTestAcquiredSamples))
                 {
                     updateUserMsg(0,0,"Amostra",&displayUpdateStatus);
                     readyUserInterface(&displayUpdateStatus,cursorPosition);
@@ -118,6 +121,7 @@ unsigned char consultStateMachine(struct Menu* subMenu)
                     readyUserInterface(&displayUpdateStatus,cursorPosition);
                 }
                 else printf("Vazio\n");
+
                 key = getchar();
                 while( getchar() != '\n' );
                 if(key == AVANCAR)

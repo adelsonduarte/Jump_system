@@ -18,6 +18,7 @@ unsigned char* getNumSeriesArray();
 unsigned char* getIntervalSeriesArray();
 unsigned char* getNumTestArray();
 
+unsigned long int getUserTest();
 unsigned long int getUserTime();
 unsigned char getUserMass();
 unsigned char getUserOverMass();
@@ -36,6 +37,7 @@ unsigned char getUserSelectTapete();
 
 unsigned char setUserInputConfigData(struct dataInsert* dataToInsert);
 unsigned char* getUserConfigStruct();
+unsigned char* getUserResultData(unsigned char numTest);
 
 void resetMyResults();
 

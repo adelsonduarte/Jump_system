@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "comunicacao.h"
-#include "usb_device.h"
-#include "usbd_cdc_if.h"
 
 unsigned char get_header_start(char *buffer){
     return buffer[0];
@@ -34,10 +32,6 @@ unsigned char get_header_end(char *buffer){
     return buffer[6+get_payload_size(buffer)];
 }
 
-unsigned char get_array_end(){
-    return END_ARRAY;
-}
-
 
 void transmit_data(unsigned char dataSize, unsigned char* buffer){
     unsigned char TXbuffer[dataSize];
@@ -51,7 +45,7 @@ void transmit_data(unsigned char dataSize, unsigned char* buffer){
         TXbuffer[4] = buffer[4];
         TXbuffer[5] = buffer[65];
         TXbuffer[6] = buffer[66];
-        CDC_Transmit_FS((unsigned*)TXbuffer, sizeof(TXbuffer));
+//        TRANSMISSION_HW_UART2(TXbuffer);
     }
     else if(buffer[4] == 1)
     {
@@ -63,13 +57,13 @@ void transmit_data(unsigned char dataSize, unsigned char* buffer){
         TXbuffer[5] = buffer[5];
         TXbuffer[6] = buffer[65];
         TXbuffer[7] = buffer[66];
-        CDC_Transmit_FS((unsigned*)TXbuffer, sizeof(TXbuffer));
+//        TRANSMISSION_HW_UART2(TXbuffer);
     }
 
     else
     {
         for(unsigned char x=0;x<dataSize;x++) TXbuffer[x] = buffer[x];
-        CDC_Transmit_FS((unsigned*)TXbuffer, sizeof(TXbuffer));
+//        TRANSMISSION_HW_UART2(TXbuffer);
     }
 
 

@@ -79,5 +79,9 @@
 #define TEST_SIZE   5
 #define MEASUREMENT_SIZE   5
 
+//READ FILE MATRIX
+#define MAX_LINES 10
+#define MAX_LEN 100
+
 
 #endif // MAIN_H_INCLUDED

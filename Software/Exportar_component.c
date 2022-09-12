@@ -4,6 +4,10 @@
 #include "Exportar_component.h"
 #include "SubMenu.h"
 #include "DisplayMessages.h"
+#include "Display_module.h"
+#include "Data.h"
+#include "DataProcessing.h"
+
 struct samples{
     unsigned char sampleNum;
     unsigned long int ulReadingTime;
@@ -114,7 +118,7 @@ unsigned char exportStateMachine(struct Menu* subMenu)
             case NUM_TESTE_EXPORT:
                 updateUserMsg(0,0,consultTestUserMsg,&displayUpdateStatus);
                 ptr_exportTestString = getNumTestString();
-                insertUserInterface(0,0,ptr_exportTestString);
+                printDataDisplay(0,0,ptr_exportTestString);
                 key = getchar();
                 while( getchar() != '\n' );
                 if(key == INSERIR)
@@ -169,7 +173,7 @@ unsigned char exportStateMachine(struct Menu* subMenu)
                 key = MENU;
                 break;
 
-                case PROCESS_TODOS: //PAREI AQUI
+                case PROCESS_TODOS: //
                     updateUserMsg(0,0,exportedUserMsg,&displayUpdateStatus);
                     for(unsigned char i = 0; i<(TEST_SIZE);i++)
                     {

@@ -6,6 +6,8 @@
 #include "DisplayMessages.h"
 #include "DataProcessing.h"
 #include "Data.h"
+#include "Display_module.h"
+
 
 struct samples{
     unsigned char sampleNum;
@@ -61,7 +63,7 @@ unsigned char eraseStateMachine(struct Menu* subMenu)
             case VERFICA_APAGAR:
                 updateUserMsg(3,2,eraseselectUserMsg,&displayUpdateStatus);
                 ptr_eraseString = getEraseTestString();
-                insertUserInterface(0,0,ptr_eraseString);
+                printDataDisplay(0,0,ptr_eraseString);
                 key = getchar();
                 while( getchar() != '\n' );
                 if(key == INSERIR)
@@ -69,8 +71,8 @@ unsigned char eraseStateMachine(struct Menu* subMenu)
                     setUserErase(&index);
                     subMenuErase->menuState = getNextSub(VERFICA_APAGAR);
                 }
-                else if(key == CONFIRMAR) //parei aqui esta apagando e nao deixando salvar novamente.
-                {
+                else if(key == CONFIRMAR)
+
                     if(*ptr_eraseString == '5')
                     {
                         updateUserMsg(3,2,erasingUserMsg,&displayUpdateStatus);
@@ -83,7 +85,6 @@ unsigned char eraseStateMachine(struct Menu* subMenu)
                      subMenuErase->menuState = getNextSub(IDDLE);
                       key = MENU;
                     }
-                }
 
             break;
 

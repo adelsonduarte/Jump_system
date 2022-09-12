@@ -20,6 +20,8 @@ unsigned char* getAltDJString();
 unsigned char* getNumSeriesString();
 unsigned char* getIntervalSeriesString();
 unsigned char* getNumTestString();
+unsigned char* getEraseTestString();
+unsigned char* getStringToSave();
 
 unsigned char* getTimeStruct();
 unsigned char* getMassArray();

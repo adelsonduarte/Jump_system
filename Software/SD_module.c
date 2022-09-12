@@ -1,8 +1,34 @@
 #include <String.h>
+#include "stdio.h"
 #include "SD_module.h"
 #include "Data.h"
+#include "main.h"
+#include "C:\MinGW\include\stdlib.h"
 
-struct dataSave{
+static struct config myUserConfigSave;
+struct config* userDataSave = &myUserConfigSave;
+
+static unsigned char loadFileLineCounter = 0;
+
+//static unsigned char myResult;
+static unsigned char* myResultString;
+static unsigned char* myHeaderString;
+
+struct samples{
+    unsigned char sampleNum;
+    unsigned long int ulReadingTime;
+    unsigned int uiVooTime;
+    unsigned char ucAltDistance;
+};
+struct results{
+    unsigned char resultTestNum;
+    unsigned char resultTestAcquiredSamples;
+    unsigned char thereAreData;
+    struct samples sampleMeasurement[MEASUREMENT_SIZE];
+};
+
+struct config{
+    unsigned char userTest;
     unsigned long int userTime;
     unsigned char userMass;
     unsigned char userOverMass;
@@ -20,25 +46,124 @@ struct dataSave{
     unsigned char userSelectSensorChannel;
 };
 
-unsigned char save_data()
+
+unsigned char* savedDataToString(struct results* dataToSave, unsigned char sample)
 {
-    static struct dataSave myDataSave;
-    struct dataSave* userDataSave = &myDataSave;
-    //salvar os dados medidos também -> criar outra estrutura
-    userDataSave->userTime = getUserTime();
-    userDataSave->userMass = getUserMass();
-    userDataSave->userOverMass = getUserOverMass();
-    userDataSave->userConsultTest = getUserConsultTest();
-    userDataSave->userAlturaMin = getUserAlturaMin();
-    userDataSave->userAlturaMax = getUserAlturaMax();
-    userDataSave->userIntervalSaltos = getUserIntervalSaltos();
-    userDataSave->userNumSaltos = getUserNumSaltos();
-    userDataSave->userCMJ = getUserCMJ();
-    userDataSave->userAlturaDJ = getUserAlturaDJ();
-    userDataSave->userNumSeries = getUserNumSeries();
-    userDataSave->userIntervalSeries = getUserIntervalSeries();
-    userDataSave->userCommConfig = getUserCommConfig();
-    userDataSave->userSelectTapete = getUserSelectTapete();
-    userDataSave->userSelectSensorChannel = getUserSelectSensorChannel();
-    //ENVIA userDataSave PARA IO_INTERFACE PARA SALVAR NO CARTAO SD
+    unsigned char* stringToSave = getStringToSave();
+    sprintf(stringToSave, "%d     %d     %ld     %d\n",
+            dataToSave->sampleMeasurement[sample].sampleNum,
+            dataToSave->sampleMeasurement[sample].ulReadingTime,
+            dataToSave->sampleMeasurement[sample].uiVooTime,
+            dataToSave->sampleMeasurement[sample].ucAltDistance);
+    return stringToSave;
 }
+
+unsigned char setFileLineCounter(unsigned char* count)
+{
+    loadFileLineCounter = *count;
+}
+
+unsigned char getFileLineCounter()
+{
+    return loadFileLineCounter;
+}
+
+unsigned char save_data(unsigned char numTest)
+{
+    numTest++;
+    struct results* ptr_resultDataSave;
+    ptr_resultDataSave = getUserResultData(numTest);
+    save_SD_card(ptr_resultDataSave,numTest);
+}
+
+unsigned char* load_data(unsigned char numTest)
+{
+    unsigned char* ptr_dataLoad;
+    struct results* ptr_resultLoadStruct;
+    ptr_dataLoad = load_SD_card(numTest);
+    ptr_resultLoadStruct = loadDataArrayToStruct(ptr_dataLoad);
+    return ptr_resultLoadStruct;
+
+}
+
+unsigned char* loadDataArrayToStruct(unsigned char* data)
+{
+    static struct results loadedResults; //
+    struct results* ptr_loadedResults = &loadedResults;
+
+    unsigned char (*loadData)[MAX_LINES][MAX_LEN] = data;
+    unsigned char numTeste = getResultTestNumber();
+    unsigned char samplesCounter = getFileLineCounter();
+
+    ptr_loadedResults->resultTestNum = numTeste;
+    ptr_loadedResults->resultTestAcquiredSamples = samplesCounter;
+
+    for(unsigned char samples = 0; samples<samplesCounter;samples++)
+    {
+        ptr_loadedResults->sampleMeasurement[samples].sampleNum = (*loadData)[samples][0];
+        ptr_loadedResults->sampleMeasurement[samples].ulReadingTime = (*loadData)[samples][1];
+        ptr_loadedResults->sampleMeasurement[samples].uiVooTime = (*loadData)[samples][2];
+        ptr_loadedResults->sampleMeasurement[samples].ucAltDistance = (*loadData)[samples][3];
+    }
+
+    return ptr_loadedResults;
+
+}
+
+unsigned char* getArqName(unsigned char numTeste)
+{
+    static unsigned char arqName[15]; //VERIFICAR SE VOU FAZER UM GET NISSO
+    sprintf(arqName,"Teste %d.txt",numTeste);
+    return arqName;
+}
+
+unsigned char lineCounter(unsigned char numTeste)
+{
+    unsigned char* arqName = getArqName(numTeste);
+    char c = 0;
+    unsigned char count = 0;
+    FILE* ptr_file;
+    ptr_file = fopen(arqName,"r");
+    if (ptr_file == NULL )
+    {
+        printf( "error ao abrir\n");
+    }
+    for(c = fgetc(ptr_file); c != EOF; c = fgetc(ptr_file))
+    {
+        if (c == '\n') // Increment count if this character is newline
+        {
+          count = count + 1;
+        }
+    }
+    fclose(ptr_file);
+    return count;
+}
+
+
+
+
+
+
+
+
+
+
+//userDataSave->userTest = getUserTest();
+//    userDataSave->userTime = getUserTime();
+//    userDataSave->userMass = getUserMass();
+//    userDataSave->userOverMass = getUserOverMass();
+//    userDataSave->userConsultTest = getUserConsultTest();
+//    userDataSave->userAlturaMin = getUserAlturaMin();
+//    userDataSave->userAlturaMax = getUserAlturaMax();
+//    userDataSave->userIntervalSaltos = getUserIntervalSaltos();
+//    userDataSave->userNumSaltos = getUserNumSaltos();
+//    userDataSave->userCMJ = getUserCMJ();
+//    userDataSave->userAlturaDJ = getUserAlturaDJ();
+//    userDataSave->userNumSeries = getUserNumSeries();
+//    userDataSave->userIntervalSeries = getUserIntervalSeries();
+//    userDataSave->userCommConfig = getUserCommConfig();
+//    userDataSave->userSelectTapete = getUserSelectTapete();
+//    userDataSave->userSelectSensorChannel = getUserSelectSensorChannel();
+
+
+

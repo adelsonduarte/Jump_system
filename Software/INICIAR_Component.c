@@ -7,6 +7,8 @@
 #include "Display_module.h"
 #include "DisplayMessages.h"
 #include "SD_module.h"
+#include "Data.h"
+#include "IO_interface.h"
 
 //Teste results
 
@@ -108,7 +110,8 @@ unsigned char initStateMachine(struct Menu* subMenu)
                 }
                 else if(key == CONFIRMAR)
                 {
-                    //funcao para desabilitar comunicacao
+
+                    stopCOMM();
                     readyUserInterface(&displayUpdateStatus,cursorPosition);
                     ptr_userConfiguration->userCommConfig = COMM_OFF;
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
@@ -128,9 +131,8 @@ unsigned char initStateMachine(struct Menu* subMenu)
                 else if(key == CONFIRMAR)
                 {
                 	readyUserInterface(&displayUpdateStatus,cursorPosition);
-                    //funcao para habilitar comunicacao
+                    startCOMM();
                 	updateUserMsg(3,2,waitTransmissionMsg,&displayUpdateStatus);
-
                      ptr_userConfiguration->userCommConfig = COMM_ON;
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
                     subMenuIniciar->menuState = getNextSub(TEMPO_READ);
@@ -141,7 +143,7 @@ unsigned char initStateMachine(struct Menu* subMenu)
                 updateUserMsg(3,2,timeUserMsg,&displayUpdateStatus);
                 userTimeStruct = getTimeStruct();
                 strftime(userTimeString, sizeof(userTimeString), "%H:%M:%S", userTimeStruct);
-                insertUserInterface(0,0,userTimeString);
+                printDataDisplay(0,0,userTimeString);
                 key = getchar();
                 while( getchar() != '\n' );
                 if(key == INSERIR)
@@ -170,7 +172,7 @@ unsigned char initStateMachine(struct Menu* subMenu)
             case MASSA_READ:
                  updateUserMsg(3,2,massUserMsg,&displayUpdateStatus);
                  ptr_massString = getMassString();
-                 insertUserInterface(0,0,ptr_massString);
+                 printDataDisplay(0,0,ptr_massString);
                 key = getchar();
                 while( getchar() != '\n' );
                 if(key == INSERIR)
@@ -195,7 +197,7 @@ unsigned char initStateMachine(struct Menu* subMenu)
             case SOBREC_READ:
                 updateUserMsg(3,2,overmassUserMsg,&displayUpdateStatus);
                 ptr_overMassString = getOverMassString();
-                insertUserInterface(0,0,ptr_overMassString);
+                printDataDisplay(0,0,ptr_overMassString);
                 key = getchar();
                 while( getchar() != '\n' );
                 if(key == INSERIR)
@@ -220,14 +222,14 @@ unsigned char initStateMachine(struct Menu* subMenu)
             case START:
                 setInsertData(ptr_userConfiguration);
                 updateUserMsg(3,2,startreadUserMsg,&displayUpdateStatus);
-                insertUserInterface(0,0,userTimeString);
+                printDataDisplay(0,0,userTimeString);
                 key = getchar();
                 while( getchar() != '\n' );
                 if(key == CONFIRMAR)
                 {
-//                    setTest(&result[indexTest].resultTestNum); //verificar talvez nao seja util
                     //INICIA LEITURA (LIGA ENCODER, PONTE, O QUE FOR //I0_INTERFACE
-
+                    startTM1();
+                    startTM2();
                     indexTest = getResultTestNumber();
                     readyUserInterface(&displayUpdateStatus,cursorPosition);
                     subMenuIniciar->menuState = getNextSub(READING);
@@ -278,6 +280,8 @@ unsigned char initStateMachine(struct Menu* subMenu)
                 while( getchar() != '\n' );
                 if(key == CONFIRMAR)
                 {
+                    stopTM1();
+                    stopTM2();
                     readyUserInterface(&displayUpdateStatus,cursorPosition);
                     //PARA LEITURA, DESLIGA TIMER, ENCODER, O QUE FOR I0_INTERFACE
                     setUserResultData(&result[indexTest],indexTest,sampleCount);
@@ -309,13 +313,13 @@ unsigned char initStateMachine(struct Menu* subMenu)
                 //Teste results
                 if(i<sampleCount)
                 {
-                insertUserInterface(0,0,"SALTO");
+                printDataDisplay(0,0,"SALTO");
                 ptr_Sample = param_1_toString(&arraySample[i]);
                 ptr_uiVooTime = param_2_toString(&arrayVooTime[i]);
                 ptr_ucAltDistance = param_3_toString(&arrayAltDistance[i]);
-                insertUserInterface(0,0,ptr_Sample);
-                insertUserInterface(0,0,ptr_ucAltDistance);
-                insertUserInterface(0,0,ptr_uiVooTime);
+                printDataDisplay(0,0,ptr_Sample);
+                printDataDisplay(0,0,ptr_ucAltDistance);
+                printDataDisplay(0,0,ptr_uiVooTime);
                 }
 
                 //
@@ -353,7 +357,7 @@ unsigned char initStateMachine(struct Menu* subMenu)
                 }
                 else if(key == CONFIRMAR)
                 {
-                    save_data();
+                    save_data(indexTest);
                     readyUserInterface(&displayUpdateStatus,cursorPosition);
                     updateUserMsg(3,2,savedUserMsg,&displayUpdateStatus);
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);

@@ -151,6 +151,12 @@ unsigned char* getEraseTestString()
     return eraseTestString;
 }
 
+unsigned char* getStringToSave() //fiz aqui pra ficar mais simples
+{
+        static unsigned char saveResultString[50];
+        return saveResultString;
+}
+
 unsigned int* param_1_toString(unsigned char* string)
 {
     static unsigned char result[TEST_SIZE];
@@ -267,7 +273,10 @@ unsigned char setUserNumTest(unsigned char* idx)
     numTestArray[index] = numTestArray[index]+1;
     if(numTestArray[index]>9) numTestArray[index]= 0;
 }
-
+//unsigned char* setIntervaloSaltosTime(unsigned char* inputUserTimer)
+//{
+//
+//}
 unsigned char* setUserTime(unsigned char* inputUserTimer)
 {
     unsigned char index = *inputUserTimer;
