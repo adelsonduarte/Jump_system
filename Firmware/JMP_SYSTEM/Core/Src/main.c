@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "fatfs.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -26,6 +27,20 @@
 #include "DisplayMessages.h"
 #include "INICIAR_Component.h"
 #include "IO_interface.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include "menu_module.h"
+#include "main.h"
+#include "INICIAR_Component.h"
+#include "Consulta_component.h"
+#include "Configuracao_component.h"
+#include "Exportar_component.h"
+#include "Apagar_component.h"
+#include "IO_interface.h"
+#include "DataProcessing.h"
+
+#include "fatfs.h"
+#include "fatfs_sd.h"
 
 /* USER CODE END Includes */
 
@@ -44,15 +59,21 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
- TIM_HandleTypeDef htim2;
+SPI_HandleTypeDef hspi1;
+
+TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
 
 UART_HandleTypeDef huart2;
 DMA_HandleTypeDef hdma_usart2_rx;
 
-unsigned char key = IDDLE;
-
 /* USER CODE BEGIN PV */
+volatile char key = IDDLE;
+ volatile unsigned int timer3Data = 0;
+ volatile unsigned int timer3Count = 0;
+ volatile char sensorFlag = 1; //ESTADO INICIAL 1->FORA DO TAPETE 0> SOBRE O TAPETE
+ volatile char uartBuffer[5];
+ volatile char readingState = REPOUSO;
 
 /* USER CODE END PV */
 
@@ -63,12 +84,34 @@ static void MX_DMA_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_USART2_UART_Init(void);
+static void MX_SPI1_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+unsigned char resetTimer3Variable()
+{
+	timer3Data = 0;
+}
+
+//unsigned char resetTimer2Variable()
+//{
+//	sensorFlag = RESET_SENSOR;
+//}
+//
+//unsigned char iddleTimer2Variable()
+//{
+//	sensorFlag = IDDLE_SENSOR;
+//}
+//
+//unsigned char setTimer2Variable()
+//{
+//	sensorFlag = SET_SENSOR;
+//}
+
 unsigned char getKeyPressed()
 {
 	return key;
@@ -77,6 +120,32 @@ unsigned char getKeyPressed()
 unsigned char resetKeyPressed()
 {
 	key = IDDLE;
+	HAL_Delay(250);
+}
+
+unsigned char* getUARTInstance()
+{
+	return &huart2;
+}
+
+unsigned char* getTimer2Instance()
+{
+	return &htim2;
+}
+
+unsigned char* getTimer3Instance()
+{
+	return &htim3;
+}
+
+unsigned char getTimer2Variable()
+{
+	return sensorFlag;
+}
+
+unsigned char getTimer3Variable()
+{
+	return timer3Data;
 }
 /* USER CODE END 0 */
 
@@ -98,37 +167,17 @@ int main(void)
 
   /* USER CODE BEGIN Init */
 
-  struct dataInsert{
-      unsigned char userTime;
-      unsigned char userMass;
-      unsigned char userOverMass;
-      unsigned char userConsultTest;
-      unsigned char userAlturaMin;
-      unsigned char userAlturaMax;
-      unsigned char userNumSaltos;
-      unsigned char userIntervalSaltos;
-      unsigned char userCMJ;
-      unsigned char userAlturaDJ;
-      unsigned char userNumSeries;
-      unsigned char userIntervalSeries;
-      unsigned char userCommConfig;
-      unsigned char userSelectTapete;
-
-  };
   struct Menu{
 	  unsigned char menuNext;
 	  unsigned char menuSelect;
 	  unsigned char menuDisplay;
 	  unsigned char menuState;
-	  struct dataInsert menuInsert;
   };
 
   struct Menu menuTesteMain = {IDDLE,IDDLE,IDDLE,IDDLE};
   struct Menu menuTesteSub = {IDDLE,IDDLE,IDDLE,IDDLE};
-  unsigned char* mainMenuArray;
-  unsigned char* subMenuArray;
   unsigned char displayUpdateStatus = IDDLE;
-  unsigned char cursorPosition[1] = {0,0};
+  unsigned char cursorPosition[2] = {0,0};
 
   /* USER CODE END Init */
 
@@ -145,6 +194,8 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM3_Init();
   MX_USART2_UART_Init();
+  MX_FATFS_Init();
+  MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
 
 
@@ -152,31 +203,35 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  //PAREI AQUI
-  menuTesteMain.menuDisplay = startUserInterface(appNameMsg,companyNameMsg,appVersionMsg);
-  while (1)
+  HAL_UARTEx_ReceiveToIdle_DMA(&huart2, (uint8_t *)uartBuffer, 1);
+  __HAL_DMA_DISABLE_IT(&hdma_usart2_rx, DMA_IT_HT);
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, SET);
+  homeDataDisplay(appNameMsg,companyNameMsg,appVersionMsg);
+  while(1)
   {
 	  switch(menuTesteMain.menuState)
 	  {
 		  case IDDLE:
 			  if(key == AVANCAR)
 			  {
-				  IOStatus(&displayUpdateStatus,&cursorPosition);
+				  resetKeyPressed();
+				  readyUserInterface(&displayUpdateStatus,cursorPosition);
 				  menuTesteMain.menuState = getNextMain(START_TEST);
 			  }
-//			  else if(key == CONFIRMAR)  menuTesteMain.menuState = setSelectMain(&menuTesteMain.menuState);
 		  break;
 
 		  case START_TEST:
-			  updateUserMsg(3,2,startUserMsg,&displayUpdateStatus);
+			  updateUserMsg(0,0,startUserMsg,&displayUpdateStatus);
 			  if(key == AVANCAR)
 			  {
-				  IOStatus(&displayUpdateStatus,&cursorPosition);
+				  resetKeyPressed();
+				  readyUserInterface(&displayUpdateStatus,cursorPosition);
 				  menuTesteMain.menuState = getNextMain(CONSULT_DATA);
 			  }
 			  else if(key == CONFIRMAR)
 			  {
-				  IOStatus(&displayUpdateStatus,&cursorPosition);
+				  resetKeyPressed();
+				  readyUserInterface(&displayUpdateStatus,cursorPosition);
 				  menuTesteMain.menuState = setSelectMain(&menuTesteMain.menuState);
 				  menuTesteMain.menuSelect = menuTesteMain.menuState;
 				  initStateMachine(&menuTesteSub);
@@ -186,18 +241,20 @@ int main(void)
 		  break;
 
 		  case CONSULT_DATA:
-			  updateUserMsg(3,2,consultUserMsg,&displayUpdateStatus);
+			  updateUserMsg(0,0,consultUserMsg,&displayUpdateStatus);
 			  if(key == AVANCAR)
 			  {
-				  IOStatus(&displayUpdateStatus,&cursorPosition);
+				  resetKeyPressed();
+				  readyUserInterface(&displayUpdateStatus,cursorPosition);
 				  menuTesteMain.menuState = getNextMain(CONFIG_SENSOR);
 			  }
 
 			  else if(key == CONFIRMAR)
 			  {
-				 IOStatus(&displayUpdateStatus,&cursorPosition);
+				  resetKeyPressed();
+				  readyUserInterface(&displayUpdateStatus,cursorPosition);
 				 menuTesteMain.menuState = setSelectMain(&menuTesteMain.menuState);
-//				 consultStateMachine(&menuTesteSub);
+				 consultStateMachine(&menuTesteSub);
 				 menuTesteMain.menuState = getNextMain(START_TEST);
 				 menuTesteSub.menuState = IDDLE;
 				 menuTesteSub.menuSelect = IDDLE;
@@ -205,17 +262,19 @@ int main(void)
 		  break;
 
 		  case CONFIG_SENSOR:
-			  updateUserMsg(3,2,configUserMsg,&displayUpdateStatus);
+			  updateUserMsg(0,0,configUserMsg,&displayUpdateStatus);
 			  if(key == AVANCAR)
 			  {
-				  IOStatus(&displayUpdateStatus,&cursorPosition);
+				  resetKeyPressed();
+				  readyUserInterface(&displayUpdateStatus,cursorPosition);
 				  menuTesteMain.menuState = getNextMain(EXPORT_DATA);
 			  }
 			  else if(key == CONFIRMAR)
 			  {
-				  IOStatus(&displayUpdateStatus,&cursorPosition);
+				  resetKeyPressed();
+				  readyUserInterface(&displayUpdateStatus,cursorPosition);
 				  menuTesteMain.menuState = setSelectMain(&menuTesteMain.menuState);
-//				  configStateMachine(&menuTesteSub);
+				  configStateMachine(&menuTesteSub);
 				  menuTesteSub.menuState = IDDLE;
 				  menuTesteSub.menuSelect = IDDLE;
 				  menuTesteMain.menuState = getNextMain(START_TEST);
@@ -223,18 +282,19 @@ int main(void)
 		  break;
 
 		  case EXPORT_DATA:
-			  updateUserMsg(3,2,exportUserMsg,&displayUpdateStatus);
+			  updateUserMsg(0,0,exportUserMsg,&displayUpdateStatus);
 			  if(key == AVANCAR)
 			  {
-				  IOStatus(&displayUpdateStatus,&cursorPosition);
-				  displayUpdateStatus = IDDLE;
+				  resetKeyPressed();
+				  readyUserInterface(&displayUpdateStatus,cursorPosition);
 				  menuTesteMain.menuState = getNextMain(ERASE_DATA);
 			  }
 			  else if(key == CONFIRMAR)
 			  {
-				  IOStatus(&displayUpdateStatus,&cursorPosition);
+				  resetKeyPressed();
+				  readyUserInterface(&displayUpdateStatus,cursorPosition);
 				  menuTesteMain.menuState = setSelectMain(&menuTesteMain.menuState);
-//				  exportStateMachine(&menuTesteSub);
+				  exportStateMachine(&menuTesteSub);
 				  menuTesteSub.menuState = IDDLE;
 				  menuTesteSub.menuSelect = IDDLE;
 				  menuTesteMain.menuState = getNextMain(START_TEST);
@@ -242,28 +302,31 @@ int main(void)
 		  break;
 
 		  case ERASE_DATA:
-			  updateUserMsg(3,2,eraseUserMsg,&displayUpdateStatus);
+			  updateUserMsg(0,0,eraseUserMsg,&displayUpdateStatus);
 			  if(key == AVANCAR)
 			  {
-				  IOStatus(&displayUpdateStatus,&cursorPosition);
-				  displayUpdateStatus = IDDLE;
+				  resetKeyPressed();
+				  readyUserInterface(&displayUpdateStatus,cursorPosition);
 				  menuTesteMain.menuState = getNextMain(START_TEST);
 			  }
+
 			  else if(key == CONFIRMAR)
 			  {
-				  IOStatus(&displayUpdateStatus,&cursorPosition);
+				  resetKeyPressed();
+				  readyUserInterface(&displayUpdateStatus,cursorPosition);
 				  menuTesteMain.menuState = setSelectMain(&menuTesteMain.menuState);
-//				  eraseStateMachine(&menuTesteSub);
+				  eraseStateMachine(&menuTesteSub);
 				  menuTesteSub.menuState = IDDLE;
 				  menuTesteSub.menuSelect = IDDLE;
 				  menuTesteMain.menuState = getNextMain(START_TEST);
 			  }
 		  break;
 	  }
+  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  }
+
   /* USER CODE END 3 */
 }
 
@@ -307,6 +370,44 @@ void SystemClock_Config(void)
 }
 
 /**
+  * @brief SPI1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_SPI1_Init(void)
+{
+
+  /* USER CODE BEGIN SPI1_Init 0 */
+
+  /* USER CODE END SPI1_Init 0 */
+
+  /* USER CODE BEGIN SPI1_Init 1 */
+
+  /* USER CODE END SPI1_Init 1 */
+  /* SPI1 parameter configuration*/
+  hspi1.Instance = SPI1;
+  hspi1.Init.Mode = SPI_MODE_MASTER;
+  hspi1.Init.Direction = SPI_DIRECTION_2LINES;
+  hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
+  hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
+  hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
+  hspi1.Init.NSS = SPI_NSS_SOFT;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
+  hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
+  hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
+  hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+  hspi1.Init.CRCPolynomial = 10;
+  if (HAL_SPI_Init(&hspi1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN SPI1_Init 2 */
+
+  /* USER CODE END SPI1_Init 2 */
+
+}
+
+/**
   * @brief TIM2 Initialization Function
   * @param None
   * @retval None
@@ -331,7 +432,7 @@ static void MX_TIM2_Init(void)
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   sConfig.EncoderMode = TIM_ENCODERMODE_TI12;
-  sConfig.IC1Polarity = TIM_ICPOLARITY_RISING;
+  sConfig.IC1Polarity = TIM_ICPOLARITY_FALLING;
   sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
   sConfig.IC1Filter = 15;
@@ -468,12 +569,12 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, LCD_D7_Pin|LCD_D6_Pin|LCD_D5_Pin|LCD_D4_Pin
-                          |LCD_RS_Pin|RELAY_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4|LCD_D3_Pin|LCD_D2_Pin|LCD_D1_Pin
+                          |LCD_D0_Pin|LCD_EN_Pin|LCD_RW_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LCD_D3_Pin|LCD_D2_Pin|LCD_D1_Pin|LCD_D0_Pin
-                          |LCD_EN_Pin|LCD_RW_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, LCD_D7_Pin|LCD_D6_Pin|LCD_D5_Pin|LCD_D4_Pin
+                          |LCD_RS_Pin|RELAY_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : LED_Pin */
   GPIO_InitStruct.Pin = LED_Pin;
@@ -481,6 +582,15 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LED_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PA4 LCD_D3_Pin LCD_D2_Pin LCD_D1_Pin
+                           LCD_D0_Pin LCD_EN_Pin LCD_RW_Pin */
+  GPIO_InitStruct.Pin = GPIO_PIN_4|LCD_D3_Pin|LCD_D2_Pin|LCD_D1_Pin
+                          |LCD_D0_Pin|LCD_EN_Pin|LCD_RW_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : LCD_D7_Pin LCD_D6_Pin LCD_D5_Pin LCD_D4_Pin
                            LCD_RS_Pin RELAY_Pin */
@@ -490,15 +600,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : LCD_D3_Pin LCD_D2_Pin LCD_D1_Pin LCD_D0_Pin
-                           LCD_EN_Pin LCD_RW_Pin */
-  GPIO_InitStruct.Pin = LCD_D3_Pin|LCD_D2_Pin|LCD_D1_Pin|LCD_D0_Pin
-                          |LCD_EN_Pin|LCD_RW_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : BT_MENU_Pin BT_AVANCA_Pin BT_SELECT_Pin BT_STOP_Pin
                            BT_INSERT_Pin */
@@ -521,12 +622,44 @@ static void MX_GPIO_Init(void)
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 {
+	timer3Count+=1;  //1ms
+	if(timer3Count == 1000)
+	{
+		timer3Data += 1;
+		timer3Count = 0;
+
+	}
+
+}
+
+void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
+{
+
+	uartBuffer[0]+=1;
+  HAL_UARTEx_ReceiveToIdle_DMA(&huart2, (uint8_t *)uartBuffer, sizeof(uartBuffer));
+  __HAL_DMA_DISABLE_IT(&hdma_usart2_rx, DMA_IT_HT);
 
 }
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 {
+	if(htim->Channel == 2) sensorFlag = 1;
+	else if(htim->Channel == 1) sensorFlag = 0;
+//	if(readingState == REPOUSO) sensorFlag = 1;
+//	else if(readingState == CONTATO) sensorFlag = 0; //usuário sobre do tapete;
+//	else if(readingState == VOO) sensorFlag = 1;
 
+
+
+//	 result[indexTest].sampleMeasurement[sampleCount].sampleNum = sampleCount+1;
+//	result[indexTest].sampleMeasurement[sampleCount].ucAltDistance+=5;
+//	result[indexTest].sampleMeasurement[sampleCount].uiVooTime+=10;
+//	result[indexTest].sampleMeasurement[sampleCount].ulReadingTime+= 100;
+//	arraySample[sampleCount] = result[indexTest].sampleMeasurement[sampleCount].sampleNum;
+//	arrayAltDistance[sampleCount] = result[indexTest].sampleMeasurement[sampleCount].ucAltDistance;
+//	arrayVooTime[sampleCount] = result[indexTest].sampleMeasurement[sampleCount].uiVooTime;
+//	arrayReadingTime[sampleCount] = result[indexTest].sampleMeasurement[sampleCount].ulReadingTime;
+//	sampleCount++;
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)

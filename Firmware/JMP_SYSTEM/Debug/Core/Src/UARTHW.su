@@ -1,0 +1,5 @@
+../Core/Src/UARTHW.c:5:15:SET_HW_UART	24	static
+../Core/Src/UARTHW.c:11:15:RESET_HW_UART	24	static
+../Core/Src/UARTHW.c:17:15:TRANSMISSION_HW_UART	64	static
+../Core/Src/UARTHW.c:27:15:RECEIVE_HW_UART2	4	static
+../Core/Src/UARTHW.c:32:15:STATUS_HW_UART2	4	static

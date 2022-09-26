@@ -18,13 +18,13 @@ unsigned char* massUserMsg = "MASSA CORPORAL";
 unsigned char* overmassUserMsg = "SOBRECARGA";
 
 unsigned char* startreadUserMsg = "TEMPO DE LEITURA";
-unsigned char* stopreadUserMsg = "CONFIRMAR PARADA";
+unsigned char* stopreadUserMsg = "CONFIRMAR PARADA?";
 
 
 unsigned char* resultsUserMsg = "VER RESULTADOS?";
-//VERIFICAR COMO COLOCAR OS PARAMETROS LIDOS
+unsigned char* showResults = "SALTO";
 unsigned char* saveUserMsg = "SALVAR DADOS?";
-unsigned char* savedUserMsg = "SALVANDO";
+unsigned char* savedUserMsg = "SALVANDO...";
 unsigned char* cancelUserMsg = "CANCELAR?";
 unsigned char* canceledUserMsg = "CANCELANDO";
 

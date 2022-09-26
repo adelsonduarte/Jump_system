@@ -1,8 +1,8 @@
-../Core/Src/SubMenu.c:37:15:getNextSub	16	static
+../Core/Src/SubMenu.c:38:15:getNextSub	16	static
 ../Core/Src/SubMenu.c:44:15:setSelectSub	24	static
-../Core/Src/SubMenu.c:52:15:setInsertSub	16	static
-../Core/Src/SubMenu.c:76:15:getInsertSub	16	static
-../Core/Src/SubMenu.c:88:15:getDisplaySub	24	static
-../Core/Src/SubMenu.c:94:15:getStateSub	16	static
-../Core/Src/SubMenu.c:99:15:setStateSub	24	static
-../Core/Src/SubMenu.c:106:16:getDataSubMenuTest	16	static
+../Core/Src/SubMenu.c:51:15:setInsertData	24	static
+../Core/Src/SubMenu.c:57:15:setTest	16	static
+../Core/Src/SubMenu.c:62:15:getDisplaySub	24	static
+../Core/Src/SubMenu.c:67:15:getStateSub	16	static
+../Core/Src/SubMenu.c:72:15:setStateSub	24	static
+../Core/Src/SubMenu.c:79:16:getDataSubMenuTest	4	static

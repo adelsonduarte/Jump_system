@@ -21,12 +21,13 @@ Core/Src/INICIAR_Component.o: ../Core/Src/INICIAR_Component.c \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h \
+ ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h \
  ../Core/Inc/INICIAR_Component.h ../Core/Inc/SubMenu.h \
  ../Core/Inc/Display_module.h ../Core/Inc/DisplayMessages.h \
- ../Core/Inc/IO_interface.h
+ ../Core/Inc/SD_module.h ../Core/Inc/Data.h ../Core/Inc/IO_interface.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:
 ../Core/Inc/stm32f1xx_hal_conf.h:
@@ -50,6 +51,7 @@ Core/Src/INICIAR_Component.o: ../Core/Src/INICIAR_Component.c \
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:
@@ -57,4 +59,6 @@ Core/Src/INICIAR_Component.o: ../Core/Src/INICIAR_Component.c \
 ../Core/Inc/SubMenu.h:
 ../Core/Inc/Display_module.h:
 ../Core/Inc/DisplayMessages.h:
+../Core/Inc/SD_module.h:
+../Core/Inc/Data.h:
 ../Core/Inc/IO_interface.h:
