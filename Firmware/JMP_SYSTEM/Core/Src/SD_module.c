@@ -16,9 +16,8 @@ static unsigned char* myHeaderString;
 
 struct samples{
     unsigned char sampleNum;
-    unsigned long int ulReadingTime;
     unsigned int uiVooTime;
-    unsigned char ucAltDistance;
+    unsigned int uiSoloTime;
 };
 struct results{
     unsigned char resultTestNum;
@@ -50,11 +49,10 @@ struct results{
 unsigned char* savedDataToString(struct results* dataToSave, unsigned char sample)
 {
     unsigned char* stringToSave = getStringToSave();
-    sprintf(stringToSave, "%d     %d     %ld     %d\n",
+    sprintf(stringToSave, "%d     %d     %d\n",
             dataToSave->sampleMeasurement[sample].sampleNum,
-            dataToSave->sampleMeasurement[sample].ulReadingTime,
             dataToSave->sampleMeasurement[sample].uiVooTime,
-            dataToSave->sampleMeasurement[sample].ucAltDistance);
+            dataToSave->sampleMeasurement[sample].uiSoloTime);
     return stringToSave;
 }
 
@@ -76,9 +74,8 @@ unsigned char save_data(unsigned char numTest)
     //TESTE SD
     ptr_resultDataSave->resultTestAcquiredSamples = 1;
     ptr_resultDataSave->sampleMeasurement[0].sampleNum = 1;
-    ptr_resultDataSave->sampleMeasurement[0].ulReadingTime =2;
     ptr_resultDataSave->sampleMeasurement[0].uiVooTime = 3;
-    ptr_resultDataSave->sampleMeasurement[0].ucAltDistance = 4;
+    ptr_resultDataSave->sampleMeasurement[0].uiSoloTime = 4;
     //TESTE SD
     save_SD_card(ptr_resultDataSave,numTest);
 }
@@ -108,9 +105,8 @@ unsigned char* loadDataArrayToStruct(unsigned char* data)
     for(unsigned char samples = 0; samples<samplesCounter;samples++)
     {
         ptr_loadedResults->sampleMeasurement[samples].sampleNum = (*loadData)[samples][0];
-        ptr_loadedResults->sampleMeasurement[samples].ulReadingTime = (*loadData)[samples][1];
-        ptr_loadedResults->sampleMeasurement[samples].uiVooTime = (*loadData)[samples][2];
-        ptr_loadedResults->sampleMeasurement[samples].ucAltDistance = (*loadData)[samples][3];
+        ptr_loadedResults->sampleMeasurement[samples].uiVooTime = (*loadData)[samples][1];
+        ptr_loadedResults->sampleMeasurement[samples].uiSoloTime = (*loadData)[samples][2];
     }
 
     return ptr_loadedResults;

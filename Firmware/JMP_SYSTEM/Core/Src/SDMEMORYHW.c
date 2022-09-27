@@ -11,9 +11,8 @@
 
 struct samples{
     unsigned char sampleNum;
-    unsigned long int ulReadingTime;
     unsigned int uiVooTime;
-    unsigned char ucAltDistance;
+    unsigned int uiSoloTime;
 };
 
 struct results{
@@ -71,11 +70,10 @@ unsigned char HW_EXT_MEMORY_WRITE(unsigned char* saveString, unsigned char* name
 //		printf( "abriu save_SD_card\n");
 		for(sampleToSave = 0;sampleToSave<1;sampleToSave++)
 		{
-			f_printf(&fil,"%d     %ld     %d     %d",
+			f_printf(&fil,"%d     %ld     %d",
 				   saveStruct->Measurement[sampleToSave].sampleNum,
-				   saveStruct->Measurement[sampleToSave].ulReadingTime,
 				   saveStruct->Measurement[sampleToSave].uiVooTime,
-				   saveStruct->Measurement[sampleToSave].ucAltDistance);
+				   saveStruct->Measurement[sampleToSave].uiSoloTime);
 			f_puts("\n", &fil);
 
 		}

@@ -9,14 +9,14 @@
 #include "SD_module.h"
 #include "Data.h"
 #include "IO_interface.h"
+#include "SENSORHW.h"
 
 //Teste results
 
 struct samples{
     unsigned char sampleNum;
-    unsigned long int ulReadingTime;
     unsigned int uiVooTime;
-    unsigned char ucAltDistance;
+    unsigned int uiSoloTime;
 };
 struct results{
     unsigned char resultTestNum;
@@ -80,10 +80,7 @@ unsigned char initStateMachine(struct Menu* subMenu)
     unsigned char i = 0;
     unsigned char sampleCount=0;
     unsigned char indexTest;
-    static unsigned char arraySample[9];
-    static unsigned long int arrayReadingTime[9];
-    static unsigned int arrayVooTime[9];
-    static unsigned char arrayAltDistance[9];
+
     //
     resetResultStruct(&result[0]);
     resetResultStruct(&result[1]);
@@ -91,19 +88,8 @@ unsigned char initStateMachine(struct Menu* subMenu)
     resetResultStruct(&result[3]);
     resetResultStruct(&result[4]);
 
-    unsigned int sensorFlag;
-    unsigned int timer3Data;
-    unsigned int T_initial;
-    unsigned int T_current;
-    unsigned int T_final;
-    unsigned char readingState = IDDLE;
-    unsigned char timer2DataString[5] = {0,0,0,0,0};
-    unsigned char timer3DataString[5] = {0,0,0,0,0};
-    unsigned char T_initialDataString[5] = {0,0,0,0,0};
-    unsigned char T_finalDataString[5] = {0,0,0,0,0};
-    unsigned char T_currentDataString[5] = {0,0,0,0,0};
-    unsigned char sensorFlagString[5] = {0,0,0,0,0};
-    unsigned char startTapete;
+
+    unsigned char startTapete,readingState;
 
 
     while(key != MENU)
@@ -255,13 +241,9 @@ unsigned char initStateMachine(struct Menu* subMenu)
                 if(key == CONFIRMAR)
                 {
                 	resetKeyPressed();
-//                	startTapete = getUserSelectTapete();
-//                	if(startTapete == TRUE) readingState = DENTRO;
-//                	else readingState = FORA;
-                	readingState = FORA;
-//                	if(startTapete == TRUE) setTimer2Variable();
-//                	else if(startTapete == FALSE) iddleTimer2Variable();
-                	//MSG PARA SUBIR NO TAPETE ANTES DE CONTINUAR e CONFIRMAR //alex
+                	startTapete = getUserSelectTapete();
+                	if(startTapete == TRUE) readingState = DENTRO;
+                	else readingState = FORA;
 
                     indexTest = getResultTestNumber();
                     readyUserInterface(&displayUpdateStatus,cursorPosition);
@@ -274,8 +256,9 @@ unsigned char initStateMachine(struct Menu* subMenu)
             	 updateUserMsg(0,0,"READING...",&displayUpdateStatus);
             	 startTM2();
 				 startTM3();
-            	 while(key != PARAR)
-            	 {
+//
+//            	 while(key != PARAR)
+//            	 {
             		 switch(readingState)
 					 {
 						 case FORA:
@@ -285,6 +268,7 @@ unsigned char initStateMachine(struct Menu* subMenu)
 							startReadingInsideSensor();
 						 break;
 					 }
+            		 key = getKeyPressed();
 
 
 //					 timer3Data = getTimer3Variable();
@@ -292,8 +276,8 @@ unsigned char initStateMachine(struct Menu* subMenu)
 //					 sprintf(timer2DataString,"%d",sensorFlag);
 //					 printDataDisplay(0,2,timer3DataString);
 //					 printDataDisplay(0,3,timer2DataString);
-					 key = getKeyPressed();
-            	 }
+//					 key = getKeyPressed();
+//            	 }
 
 	//                 printf("READING->->-> LOOP DE LEITURA DEVE FICAR AQUI\n");
 				 /*DISPLAY
@@ -325,13 +309,13 @@ unsigned char initStateMachine(struct Menu* subMenu)
                 if(key == CONFIRMAR)
                 {
 //                	transmissionCOMM(&timer3Data);
-                	transmissionCOMM();
+//                	transmissionCOMM();
                 	resetKeyPressed();
                     stopTM2();
                     stopTM3();
                     readyUserInterface(&displayUpdateStatus,cursorPosition);
                     //PARA LEITURA, DESLIGA TIMER, ENCODER, O QUE FOR I0_INTERFACE
-                    setUserResultData(&result[indexTest],indexTest,sampleCount);
+//                    setUserResultData(&result[indexTest],indexTest,sampleCount);
                     setResultTestNumber();
                     subMenuIniciar->menuState = getNextSub(DISP_RESULTS);
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);

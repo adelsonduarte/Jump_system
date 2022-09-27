@@ -15,9 +15,8 @@
 
 struct samples{
     unsigned char sampleNum;
-    unsigned long int ulReadingTime;
     unsigned int uiVooTime;
-    unsigned char ucAltDistance;
+    unsigned int uiSoloTime;
 };
 
 struct results{

@@ -349,90 +349,93 @@ unsigned char* setUserTime(unsigned char* inputUserTimer)
     }
 }
 
-void startReadingOutsideSensor()
-{
-	static unsigned char userState = REPOUSO;
-	unsigned char sensorFlag;
-	static unsigned int initialTime,currentTime,contatoTime,vooTime,totalTime = 0;
-	totalTime = getTimer3Variable();
-	switch(userState)
-	{
-		case REPOUSO:
-			sensorFlag = getTimer2Variable();
-			if(sensorFlag == 0)
-			{
-				userState = CONTATO;
-				initialTime = getTimer3Variable();
-			}
-
-			else
-			{
-				userState = REPOUSO;
-//				timer3Data = getTimer3Variable(); //somente para comparar e desligar a medida
-			}
-
-
-		break;
-
-		case CONTATO:
-			sensorFlag = getTimer2Variable();
-			if(sensorFlag == 1)
-			{
-				userState = VOO;
-				currentTime = getTimer3Variable();
-				contatoTime = currentTime-initialTime;
-				initialTime = currentTime;
-				vooTime = 0;
-			}
-			else
-			{
-				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, RESET);
-				userState = CONTATO;
-//				timer3Data = getTimer3Variable();
-			}
-
-		break;
-
-		case VOO:
-			sensorFlag = getTimer2Variable();
-			if(sensorFlag == 0)
-			{
-				userState = CONTATO;
-				currentTime = getTimer3Variable();
-				vooTime = currentTime - initialTime;
-				//guarda tudo num array resultado[amostra];
-
- 				contatoTime = 0;
-				initialTime = currentTime;
-			}
-			else
-			{
-				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, SET);
-				userState = VOO;
-//				timer3Data = getTimer3Variable();
-			}
-		break;
-
-	}
-
-
-}
-void startReadingInsideSensor()
-{
-//	unsigned char userState = CONTATO;
+//void startReadingOutsideSensor()
+//{
+//	static unsigned char userState = REPOUSO;
+//	unsigned char sensorFlag;
+//	static unsigned int initialTime,currentTime,contatoTime,vooTime = 0;
+//	//contatoTime[amostra], vooTime[amostra]//
+//
 //	switch(userState)
 //	{
-//		case CONTATO:
+//		case REPOUSO:
+//			sensorFlag = getTimer2Variable();
+//			if(sensorFlag == 0)
+//			{
+//				userState = CONTATO;
+//				referenceTime = getTimer3Variable();
+//			}
 //
-//			start_dentro_state = VOO;
+//			else
+//			{
+//				userState = REPOUSO;
+////				timer3Data = getTimer3Variable(); //somente para comparar e desligar a medida
+//			}
+//
+//
+//		break;
+//
+//		case CONTATO:
+//			sensorFlag = getTimer2Variable();
+//			if(sensorFlag == 1)
+//			{
+//				userState = VOO;
+//				currentTime = getTimer3Variable();
+//				contatoTime[sample] = currentTime-initialTime;
+//				referenceTime = currentTime;
+//				vooTime = 0;
+//			}
+//			else
+//			{
+//				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, RESET);
+//				userState = CONTATO;
+////				timer3Data = getTimer3Variable();
+//			}
+//
 //		break;
 //
 //		case VOO:
+//			sensorFlag = getTimer2Variable();
+//			if(sensorFlag == 0)
+//			{
+//				userState = CONTATO;
+//				currentTime = getTimer3Variable();
+//				vooTime[sample] = currentTime - referenceTime;
+//				sample++;
 //
-//			start_dentro_state = CONTATO;
+//				//guarda tudo num array resultado[amostra];
+//
+// 				contatoTime = 0;
+//				initialTime = currentTime;
+//			}
+//			else
+//			{
+//				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, SET);
+//				userState = VOO;
+////				timer3Data = getTimer3Variable();
+//			}
 //		break;
+//
 //	}
-
-}
+//
+//
+//}
+//void startReadingInsideSensor()
+//{
+////	unsigned char userState = CONTATO;
+////	switch(userState)
+////	{
+////		case CONTATO:
+////
+////			start_dentro_state = VOO;
+////		break;
+////
+////		case VOO:
+////
+////			start_dentro_state = CONTATO;
+////		break;
+////	}
+//
+//}
 
 

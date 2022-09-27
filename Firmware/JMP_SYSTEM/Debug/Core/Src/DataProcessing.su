@@ -33,5 +33,3 @@
 ../Core/Src/DataProcessing.c:267:15:setUserNumTest	24	static
 ../Core/Src/DataProcessing.c:275:16:setIntervalSaltosTime	24	static
 ../Core/Src/DataProcessing.c:306:16:setUserTime	24	static
-../Core/Src/DataProcessing.c:352:6:startReadingOutsideSensor	16	static
-../Core/Src/DataProcessing.c:419:6:startReadingInsideSensor	4	static

@@ -97,20 +97,6 @@ unsigned char resetTimer3Variable()
 	timer3Data = 0;
 }
 
-//unsigned char resetTimer2Variable()
-//{
-//	sensorFlag = RESET_SENSOR;
-//}
-//
-//unsigned char iddleTimer2Variable()
-//{
-//	sensorFlag = IDDLE_SENSOR;
-//}
-//
-//unsigned char setTimer2Variable()
-//{
-//	sensorFlag = SET_SENSOR;
-//}
 
 unsigned char getKeyPressed()
 {

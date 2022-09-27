@@ -1,0 +1,2 @@
+../Core/Src/SENSORHW.c:21:6:startReadingOutsideSensor	32	static
+../Core/Src/SENSORHW.c:96:6:startReadingInsideSensor	4	static

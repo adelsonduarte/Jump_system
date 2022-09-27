@@ -10,9 +10,8 @@
 
 struct samples{
     unsigned char sampleNum;
-    unsigned long int ulReadingTime;
     unsigned int uiVooTime;
-    unsigned char ucAltDistance;
+    unsigned int uiSoloTime;
 };
 
 struct results{
@@ -174,7 +173,7 @@ unsigned char exportStateMachine(struct Menu* subMenu)
 
                         updateUserMsg(0,0,"Altura do salto",&displayUpdateStatus);
                         readyUserInterface(&displayUpdateStatus,cursorPosition);
-                        ptr_alturaString = param_3_toString(&ptr_structExportResult->Measurement[testSamples].ucAltDistance);
+                        ptr_alturaString = param_3_toString(&ptr_structExportResult->Measurement[testSamples].uiSoloTime);
                         updateUserMsg(0,0,ptr_alturaString,&displayUpdateStatus);
                         readyUserInterface(&displayUpdateStatus,cursorPosition);
                     }

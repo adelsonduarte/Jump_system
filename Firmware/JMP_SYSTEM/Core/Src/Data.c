@@ -6,9 +6,8 @@
 
 struct samples{
     unsigned char sampleNum;
-    unsigned long int ulReadingTime;
     unsigned int uiVooTime;
-    unsigned char ucAltDistance;
+    unsigned int uiSoloTime;
 };
 
 struct results{
@@ -67,7 +66,7 @@ static unsigned char selectEraseArray[] = {0};
 static unsigned char numberTest = 0;
 
 
-unsigned long int getUserTest()
+unsigned long int getUserTest() //apagar
 {
    return myData.userTest;
 }
@@ -281,9 +280,8 @@ unsigned char setUserResultData(struct results* structDataResult, unsigned char 
     for(unsigned char i = 0;i<numSample;i++)
     {
         myResults[numTest].Measurement[i].sampleNum = structDataResult->Measurement[i].sampleNum;
-        myResults[numTest].Measurement[i].ulReadingTime = structDataResult->Measurement[i].ulReadingTime;
         myResults[numTest].Measurement[i].uiVooTime = structDataResult->Measurement[i].uiVooTime;
-        myResults[numTest].Measurement[i].ucAltDistance = structDataResult->Measurement[i].ucAltDistance;
+        myResults[numTest].Measurement[i].uiSoloTime = structDataResult->Measurement[i].uiSoloTime;
     }
 }
 
@@ -295,9 +293,8 @@ unsigned char resetResultStruct(struct results* structToReset) //verificar se va
     for(unsigned char i = 0;i<MEASUREMENT_SIZE;i++)
     {
         structToReset->Measurement[i].sampleNum = 0;
-        structToReset->Measurement[i].ulReadingTime = 0;
         structToReset->Measurement[i].uiVooTime = 0;
-        structToReset->Measurement[i].ucAltDistance = 0;
+        structToReset->Measurement[i].uiSoloTime = 0;
     }
 
 }
@@ -334,9 +331,8 @@ void resetMyResults()
         for(unsigned sample=0;sample<MEASUREMENT_SIZE;sample++)
         {
             myResults[test].Measurement[sample].sampleNum = 0;
-            myResults[test].Measurement[sample].ulReadingTime = 0;
             myResults[test].Measurement[sample].uiVooTime = 0;
-            myResults[test].Measurement[sample].ucAltDistance = 0;
+            myResults[test].Measurement[sample].uiSoloTime = 0;
         }
 
     }
