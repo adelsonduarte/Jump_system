@@ -19,6 +19,7 @@ struct results{
     unsigned char resultTestNum;
     unsigned char resultTestAcquiredSamples;
     unsigned char thereAreData;
+    unsigned char timeout;
     struct samples Measurement[MEASUREMENT_SIZE];
 };
 

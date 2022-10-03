@@ -69,6 +69,10 @@ unsigned char configStateMachine(struct Menu* subMenu)
     unsigned char key = 0;
     unsigned char displayUpdateStatus = IDDLE;
     short index = 2;
+    unsigned int altMin = 0;
+    unsigned int altMax = 0;
+    unsigned int tmin = 0;
+    unsigned int tmax = 0;
     while(key != MENU)
     {
         switch(subMenuTesteConfigurar->menuState)
@@ -140,6 +144,11 @@ unsigned char configStateMachine(struct Menu* subMenu)
                 {
                 	resetKeyPressed();
                     index = 2;
+
+                    altMin = stringToInt(getAltMinString());
+                    altMax = stringToInt(getAltMaxString());
+                    tmin = alturaToTempo(altMin);
+					tmax = alturaToTempo(altMax);
                     readyUserInterface(&displayUpdateStatus,cursorPosition);
                     subMenuTesteConfigurar->menuState = getNextSub(SENSOR_ALTMAX);
                     subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);

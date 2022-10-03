@@ -23,6 +23,7 @@ struct results{
     unsigned char resultTestNum;
     unsigned char resultTestAcquiredSamples;
     unsigned char thereAreData;
+    unsigned char timeout;
     struct samples sampleMeasurement[MEASUREMENT_SIZE];
 };
 
@@ -71,12 +72,6 @@ unsigned char save_data(unsigned char numTest)
     numTest++;
     struct results* ptr_resultDataSave;
     ptr_resultDataSave = getUserResultData(numTest);
-    //TESTE SD
-    ptr_resultDataSave->resultTestAcquiredSamples = 1;
-    ptr_resultDataSave->sampleMeasurement[0].sampleNum = 1;
-    ptr_resultDataSave->sampleMeasurement[0].uiVooTime = 3;
-    ptr_resultDataSave->sampleMeasurement[0].uiSoloTime = 4;
-    //TESTE SD
     save_SD_card(ptr_resultDataSave,numTest);
 }
 

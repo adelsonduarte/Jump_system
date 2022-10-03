@@ -609,11 +609,11 @@ static void MX_GPIO_Init(void)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 {
 	timer3Count+=1;  //1ms
-	if(timer3Count == 1000)
+	if(timer3Count == 100) //100ms
 	{
-		timer3Data += 1;
+		timer3Data += 1; //cada unidade aqui deve ser multiplicada por 100 para ter o valor real em ms.
+		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 		timer3Count = 0;
-
 	}
 
 }

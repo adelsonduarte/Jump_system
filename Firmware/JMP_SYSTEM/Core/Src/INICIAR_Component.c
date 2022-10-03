@@ -22,6 +22,7 @@ struct results{
     unsigned char resultTestNum;
     unsigned char resultTestAcquiredSamples;
     unsigned char thereAreData;
+    unsigned char timeout;
     struct samples sampleMeasurement[MEASUREMENT_SIZE];
 };
 
@@ -80,6 +81,7 @@ unsigned char initStateMachine(struct Menu* subMenu)
     unsigned char i = 0;
     unsigned char sampleCount=0;
     unsigned char indexTest;
+    unsigned char readingStatus = IDDLE;
 
     //
     resetResultStruct(&result[0]);
@@ -167,9 +169,10 @@ unsigned char initStateMachine(struct Menu* subMenu)
                 	resetKeyPressed();
                 	insertColumn = 4; //colocar um define talvez -> definicao de caracteres no display massa e overmass
                     readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    //COLOCAR UMA FUNCAO PARA TRANSFORMAR O TEMPO CAPTURADO EM ms
                     strftime(procTimeString, sizeof(procTimeString), "%H%M%S", userTimeStruct);
-                    ptr_userConfiguration->userTime = stringToLong(procTimeString);
-                    //Configurar TIMER
+					ptr_userConfiguration->userTime = milisecondsTime(userTimeStruct);
+//                    ptr_userConfiguration->userTime = stringToLong(procTimeString);
                     subMenuIniciar->menuState = getNextSub(MASSA_READ);
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
                 }
@@ -256,28 +259,20 @@ unsigned char initStateMachine(struct Menu* subMenu)
             	 updateUserMsg(0,0,"READING...",&displayUpdateStatus);
             	 startTM2();
 				 startTM3();
-//
-//            	 while(key != PARAR)
-//            	 {
-            		 switch(readingState)
-					 {
-						 case FORA:
-							startReadingOutsideSensor();
-						 break;
-						 case DENTRO:
-							startReadingInsideSensor();
-						 break;
-					 }
-            		 key = getKeyPressed();
+
+				 switch(readingState)
+				 {
+					 case FORA:
+						 readingStatus = startReadingOutsideSensor();
+					 break;
+					 case DENTRO:
+						 readingStatus = startReadingInsideSensor();
+					 break;
+				 }
+
+				 key = getKeyPressed();
 
 
-//					 timer3Data = getTimer3Variable();
-//					 sprintf(timer3DataString,"%d",timer3Data);
-//					 sprintf(timer2DataString,"%d",sensorFlag);
-//					 printDataDisplay(0,2,timer3DataString);
-//					 printDataDisplay(0,3,timer2DataString);
-//					 key = getKeyPressed();
-//            	 }
 
 	//                 printf("READING->->-> LOOP DE LEITURA DEVE FICAR AQUI\n");
 				 /*DISPLAY
@@ -294,7 +289,7 @@ unsigned char initStateMachine(struct Menu* subMenu)
 				 */
 
 
-				if(key == PARAR)
+				if(key == PARAR || readingStatus == TIMEOUT)
 				{
 					resetKeyPressed();
 					readyUserInterface(&displayUpdateStatus,cursorPosition);
@@ -393,7 +388,7 @@ unsigned char initStateMachine(struct Menu* subMenu)
                 else if(key == CONFIRMAR)
                 {
                 	resetKeyPressed();
-                    save_data(indexTest);
+//                    save_data(indexTest);
                     readyUserInterface(&displayUpdateStatus,cursorPosition);
                     updateUserMsg(0,0,savedUserMsg,&displayUpdateStatus);
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);

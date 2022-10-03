@@ -14,6 +14,7 @@ struct results{
     unsigned char resultTestNum;
     unsigned char resultTestAcquiredSamples;
     unsigned char thereAreData;
+    unsigned char timeout;
     struct samples Measurement[MEASUREMENT_SIZE];
 };
 
@@ -52,8 +53,8 @@ struct tm* intervalTime = &intervalSaltosTime;
 
 static unsigned char massArray[] = {0,0,0,0,0};
 static unsigned char overMassArray[] = {0,0,0,0,0};
-static unsigned char altMinArray[] = {0,0,0};
-static unsigned char altMaxArray[] = {0,0,0};
+static unsigned char altMinArray[] = {1,3,0}; //cm
+static unsigned char altMaxArray[] = {7,5,0}; //cm
 static unsigned char numSaltosArray[] = {0,0,0};
 
 static unsigned char altDJArray[] = {0,0};
@@ -257,6 +258,11 @@ unsigned char getThereAreData(unsigned char numTest)
     return myResults[numTest].thereAreData;
 }
 
+unsigned char getTimeout(unsigned char numTest)
+{
+    return myResults[numTest].timeout;
+}
+
 unsigned char getResultOccupiedFlag(unsigned char numTest)
 {
     return  myResults[numTest].thereAreData;
@@ -272,8 +278,9 @@ unsigned char setResultTestNumber()
      numberTest++;
 }
 
-unsigned char setUserResultData(struct results* structDataResult, unsigned char numTest, unsigned char numSample)
+unsigned char setUserResultData(struct results* structDataResult, unsigned char numTest)
 {
+	unsigned char numSample = structDataResult->resultTestAcquiredSamples;
     myResults[numTest].resultTestNum = numTest+1;
     myResults[numTest].resultTestAcquiredSamples = numSample;
     myResults[numTest].thereAreData = TRUE;

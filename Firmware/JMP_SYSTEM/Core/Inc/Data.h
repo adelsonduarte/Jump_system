@@ -39,7 +39,7 @@ unsigned char setUserInputConfigData(struct dataInsert* dataToInsert);
 unsigned char* getUserConfigStruct();
 unsigned char* getUserResultData(unsigned char numTest);
 
-unsigned char setUserResultData(struct results* , unsigned char, unsigned char);
+unsigned char setUserResultData(struct results* , unsigned char);
 
 
 void resetMyResults();

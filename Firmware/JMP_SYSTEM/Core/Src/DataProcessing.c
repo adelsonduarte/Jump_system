@@ -39,6 +39,19 @@ unsigned char indexColumn(short* currentColumn, unsigned char size)
     }
 }
 
+unsigned long milisecondsTime(unsigned char* ptr_inputTime)
+{
+	struct tm* time = ptr_inputTime;
+	unsigned long int msTime = 0;
+
+	msTime = time->tm_hour*3600;
+	msTime += time->tm_min*60;
+	msTime += time->tm_sec;
+	msTime = msTime*1000;
+
+	return msTime;
+}
+
 unsigned long stringToLong(unsigned char* string)
 {
     char *ptr;
@@ -347,6 +360,17 @@ unsigned char* setUserTime(unsigned char* inputUserTimer)
             strftime(timeString, sizeof(timeString), "%H:%M:%S", insertTime);
         break;
     }
+}
+
+unsigned int alturaToTempo(unsigned int altura)
+{
+	unsigned int tempo = 0;
+	unsigned int nominator = 8 * altura;
+	unsigned int  g = 981; // cm/s^2
+	float relation =  nominator/g;
+	tempo = sqrt(relation);
+	tempo = tempo*1000;
+	return tempo;
 }
 
 //void startReadingOutsideSensor()

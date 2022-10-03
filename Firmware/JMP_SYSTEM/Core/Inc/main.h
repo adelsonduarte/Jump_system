@@ -54,6 +54,7 @@ unsigned char getKeyPressed();
 #define REPOUSO '2'
 #define CONTATO '3'
 #define VOO     '4'
+#define TIMEOUT	'5'
 
 #define SUBMENU_SIZE    15
 #define MAINMENU_SIZE   4

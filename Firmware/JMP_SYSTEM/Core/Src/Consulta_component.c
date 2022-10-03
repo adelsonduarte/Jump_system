@@ -18,6 +18,7 @@ struct results{
     unsigned char resultTestNum;
     unsigned char resultTestAcquiredSamples;
     unsigned char thereAreData;
+    unsigned char timeout;
     struct samples Measurement[MEASUREMENT_SIZE];
 };
 
@@ -101,36 +102,57 @@ unsigned char consultStateMachine(struct Menu* subMenu)
             case RESULT_TESTE:
             	updateUserMsg(0,0,consultTestUserMsg,&displayUpdateStatus);
                 selectedUserTest = stringToInt(ptr_consultTestString);
-                ptr_structConsultResult = load_data(selectedUserTest);
-
-                if(testSamples<(ptr_structConsultResult->resultTestAcquiredSamples))
-                {
-                	resetKeyPressed();
-                    updateUserMsg(0,0,"Amostra",&displayUpdateStatus);
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
-                    ptr_sampleString = param_1_toString(&ptr_structConsultResult->Measurement[testSamples].sampleNum);
-                    updateUserMsg(0,1,ptr_sampleString,&displayUpdateStatus);
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
-
-                    updateUserMsg(0,0,"Tempo de Voo",&displayUpdateStatus);
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
-                    ptr_vooTimeString = param_2_toString(&ptr_structConsultResult->Measurement[testSamples].uiVooTime);
-                    updateUserMsg(0,1,ptr_vooTimeString,&displayUpdateStatus);
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
-
-                    updateUserMsg(0,0,"Altura do salto",&displayUpdateStatus);
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
-                    ptr_alturaString = param_3_toString(&ptr_structConsultResult->Measurement[testSamples].uiSoloTime);
-                    updateUserMsg(0,1,ptr_alturaString,&displayUpdateStatus);
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
-                }
-                else  printDataDisplay(0,0,"VAZIO");
+//                ptr_structConsultResult = load_data(selectedUserTest); //APENAS PARA APLICAÇÃO COM SD
+                ptr_structConsultResult = getUserResultData(selectedUserTest);
+//                if(testSamples<(ptr_structConsultResult->resultTestAcquiredSamples))
+//                {
+//                	resetKeyPressed();
+//                    updateUserMsg(0,0,"Amostra",&displayUpdateStatus);
+//                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+//                    ptr_sampleString = param_1_toString(&ptr_structConsultResult->Measurement[testSamples].sampleNum);
+//                    updateUserMsg(0,1,ptr_sampleString,&displayUpdateStatus);
+//                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+//
+//                    updateUserMsg(0,0,"Tempo de Voo",&displayUpdateStatus);
+//                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+//                    ptr_vooTimeString = param_2_toString(&ptr_structConsultResult->Measurement[testSamples].uiVooTime);
+//                    updateUserMsg(0,1,ptr_vooTimeString,&displayUpdateStatus);
+//                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+//
+//                    updateUserMsg(0,0,"Altura do salto",&displayUpdateStatus);
+//                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+//                    ptr_alturaString = param_3_toString(&ptr_structConsultResult->Measurement[testSamples].uiSoloTime);
+//                    updateUserMsg(0,1,ptr_alturaString,&displayUpdateStatus);
+//                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+//                }
+//                else  printDataDisplay(0,0,"VAZIO");
 
                 key = getKeyPressed();
 
                 if(key == AVANCAR)
                 {
                 	resetKeyPressed();
+                    if(testSamples<(ptr_structConsultResult->resultTestAcquiredSamples))
+                    {
+                        updateUserMsg(0,0,"Amostra",&displayUpdateStatus);
+                        readyUserInterface(&displayUpdateStatus,cursorPosition);
+                        ptr_sampleString = param_1_toString(&ptr_structConsultResult->Measurement[testSamples].sampleNum);
+                        updateUserMsg(9,0,ptr_sampleString,&displayUpdateStatus);
+                        readyUserInterface(&displayUpdateStatus,cursorPosition);
+
+                        updateUserMsg(0,1,"Tempo de Voo",&displayUpdateStatus);
+                        readyUserInterface(&displayUpdateStatus,cursorPosition);
+                        ptr_vooTimeString = param_2_toString(&ptr_structConsultResult->Measurement[testSamples].uiVooTime);
+                        updateUserMsg(9,1,ptr_vooTimeString,&displayUpdateStatus);
+                        readyUserInterface(&displayUpdateStatus,cursorPosition);
+
+                        updateUserMsg(0,2,"Altura do salto",&displayUpdateStatus);
+                        readyUserInterface(&displayUpdateStatus,cursorPosition);
+                        ptr_alturaString = param_3_toString(&ptr_structConsultResult->Measurement[testSamples].uiSoloTime);
+                        updateUserMsg(9,2,ptr_alturaString,&displayUpdateStatus);
+                        readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    }
+                    else  printDataDisplay(0,0,"VAZIO");
                     testSamples++;
                     if(testSamples == ptr_structConsultResult->resultTestAcquiredSamples) testSamples = 0;
                     subMenuTesteConsultar->menuState = getNextSub(RESULT_TESTE);

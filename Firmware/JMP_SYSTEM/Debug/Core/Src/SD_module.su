@@ -1,8 +1,8 @@
-../Core/Src/SD_module.c:49:16:savedDataToString	40	static
-../Core/Src/SD_module.c:59:15:setFileLineCounter	16	static
-../Core/Src/SD_module.c:64:15:getFileLineCounter	4	static
-../Core/Src/SD_module.c:69:15:save_data	24	static
-../Core/Src/SD_module.c:83:16:load_data	24	static
-../Core/Src/SD_module.c:93:16:loadDataArrayToStruct	32	static
-../Core/Src/SD_module.c:116:16:getArqName	16	static
-../Core/Src/SD_module.c:123:15:lineCounter	32	static
+../Core/Src/SD_module.c:50:16:savedDataToString	40	static
+../Core/Src/SD_module.c:60:15:setFileLineCounter	16	static
+../Core/Src/SD_module.c:65:15:getFileLineCounter	4	static
+../Core/Src/SD_module.c:70:15:save_data	24	static
+../Core/Src/SD_module.c:78:16:load_data	24	static
+../Core/Src/SD_module.c:88:16:loadDataArrayToStruct	32	static
+../Core/Src/SD_module.c:111:16:getArqName	16	static
+../Core/Src/SD_module.c:118:15:lineCounter	32	static
