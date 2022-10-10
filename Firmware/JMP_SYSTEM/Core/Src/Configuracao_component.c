@@ -17,8 +17,8 @@ struct dataInsert{
     unsigned char userMass;
     unsigned char userOverMass;
     unsigned char userConsultTest;
-    unsigned char userAlturaMin;
-    unsigned char userAlturaMax;
+    unsigned int userAlturaMin;
+    unsigned int userAlturaMax;
     unsigned char userNumSaltos;
     unsigned char userIntervalSaltos;
     unsigned char userCMJ;
@@ -146,9 +146,8 @@ unsigned char configStateMachine(struct Menu* subMenu)
                     index = 2;
 
                     altMin = stringToInt(getAltMinString());
-                    altMax = stringToInt(getAltMaxString());
                     tmin = alturaToTempo(altMin);
-					tmax = alturaToTempo(altMax);
+                    ptr_userConfiguration->userAlturaMin = tmin;
                     readyUserInterface(&displayUpdateStatus,cursorPosition);
                     subMenuTesteConfigurar->menuState = getNextSub(SENSOR_ALTMAX);
                     subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
@@ -177,6 +176,9 @@ unsigned char configStateMachine(struct Menu* subMenu)
                 {
                 	resetKeyPressed();
                     index = 2;
+                    altMax = stringToInt(getAltMaxString());
+                    tmax = alturaToTempo(altMax);
+                    ptr_userConfiguration->userAlturaMax = tmax;
                     readyUserInterface(&displayUpdateStatus,cursorPosition);
                     subMenuTesteConfigurar->menuState = getNextSub(SENSOR_SALTOS);
                     subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);

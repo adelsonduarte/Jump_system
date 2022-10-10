@@ -38,6 +38,7 @@
 #include "Apagar_component.h"
 #include "IO_interface.h"
 #include "DataProcessing.h"
+#include "SENSORHW.h"
 
 #include "fatfs.h"
 #include "fatfs_sd.h"
@@ -73,7 +74,7 @@ volatile char key = IDDLE;
  volatile unsigned int timer3Count = 0;
  volatile char sensorFlag = 1; //ESTADO INICIAL 1->FORA DO TAPETE 0> SOBRE O TAPETE
  volatile char uartBuffer[5];
- volatile char readingState = REPOUSO;
+ volatile char* readingState;
 
 /* USER CODE END PV */
 
@@ -92,11 +93,10 @@ static void MX_SPI1_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-unsigned char resetTimer3Variable()
+void resetTimer3Variable()
 {
 	timer3Data = 0;
 }
-
 
 unsigned char getKeyPressed()
 {
@@ -129,10 +129,11 @@ unsigned char getTimer2Variable()
 	return sensorFlag;
 }
 
-unsigned char getTimer3Variable()
+unsigned int getTimer3Variable()
 {
 	return timer3Data;
 }
+
 /* USER CODE END 0 */
 
 /**
@@ -417,7 +418,7 @@ static void MX_TIM2_Init(void)
   htim2.Init.Period = 65535;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  sConfig.EncoderMode = TIM_ENCODERMODE_TI12;
+  sConfig.EncoderMode = TIM_ENCODERMODE_TI1;
   sConfig.IC1Polarity = TIM_ICPOLARITY_FALLING;
   sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
@@ -608,13 +609,22 @@ static void MX_GPIO_Init(void)
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 {
-	timer3Count+=1;  //1ms
-	if(timer3Count == 100) //100ms
+//	timer3Count+=1;  //1ms
+//	if(timer3Count == 100) //100ms
+//	{
+//		timer3Data += 1; //cada unidade aqui deve ser multiplicada por 100 para ter o valor real em ms.
+//		timer3Count = 0;
+//	}
+	if(htim == &htim3)
 	{
-		timer3Data += 1; //cada unidade aqui deve ser multiplicada por 100 para ter o valor real em ms.
-		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-		timer3Count = 0;
+		timer3Count+=1;  //1ms
+		if(timer3Count == 10) //100ms
+		{
+			timer3Data += 10;
+			timer3Count = 0;
+		}
 	}
+
 
 }
 
@@ -629,11 +639,21 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 {
-	if(htim->Channel == 2) sensorFlag = 1;
-	else if(htim->Channel == 1) sensorFlag = 0;
-//	if(readingState == REPOUSO) sensorFlag = 1;
-//	else if(readingState == CONTATO) sensorFlag = 0; //usuário sobre do tapete;
-//	else if(readingState == VOO) sensorFlag = 1;
+	if(htim == &htim2)
+	{
+		if(htim->Channel == 2)
+		{
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, SET);
+			sensorFlag = 1;
+		}
+		else if(htim->Channel == 1)
+		{
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, RESET);
+			sensorFlag = 0;
+		}
+	}
+
+
 
 
 

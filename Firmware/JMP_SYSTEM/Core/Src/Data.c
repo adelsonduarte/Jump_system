@@ -24,8 +24,8 @@ struct dataInsert{
     unsigned char userMass;
     unsigned char userOverMass;
     unsigned char userConsultTest;
-    unsigned char userAlturaMin;
-    unsigned char userAlturaMax;
+    unsigned int userAlturaMin;
+    unsigned int userAlturaMax;
     unsigned char userNumSaltos;
     unsigned char userIntervalSaltos;
     unsigned char userCMJ;
@@ -222,6 +222,17 @@ unsigned char* getUserConfigStruct() //VERIFICAR SE VOU USAR
     configStruct = myData;
     return &configStruct;
 }
+
+unsigned int getTimeAltMin()
+{
+	return myData.userAlturaMin;
+}
+
+unsigned int getTimeAltMax()
+{
+	return myData.userAlturaMax;
+}
+
 
 unsigned char setUserInputConfigData(struct dataInsert* dataToInsert)
 {

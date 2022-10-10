@@ -3,5 +3,6 @@
 
 unsigned char startReadingOutsideSensor();
 unsigned char startReadingInsideSensor();
+unsigned char* getMeasureState();
 
 #endif // SENSORHW_H_INCLUDED

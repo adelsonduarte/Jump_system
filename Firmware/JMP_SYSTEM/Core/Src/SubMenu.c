@@ -12,8 +12,8 @@ struct dataInsert{
     unsigned char userMass;
     unsigned char userOverMass;
     unsigned char userConsultTest;
-    unsigned char userAlturaMin;
-    unsigned char userAlturaMax;
+    unsigned int userAlturaMin;
+    unsigned int userAlturaMax;
     unsigned char userNumSaltos;
     unsigned char userIntervalSaltos;
     unsigned char userCMJ;

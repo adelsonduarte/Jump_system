@@ -34,4 +34,4 @@
 ../Core/Src/DataProcessing.c:280:15:setUserNumTest	24	static
 ../Core/Src/DataProcessing.c:288:16:setIntervalSaltosTime	24	static
 ../Core/Src/DataProcessing.c:319:16:setUserTime	24	static
-../Core/Src/DataProcessing.c:365:15:alturaToTempo	32	static
+../Core/Src/DataProcessing.c:365:14:alturaToTempo	32	static

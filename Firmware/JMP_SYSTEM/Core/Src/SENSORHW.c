@@ -23,7 +23,7 @@ unsigned char startReadingOutsideSensor()
 {
 	unsigned char userState = REPOUSO;
 	unsigned char sensorFlag;
-	unsigned int referenceTime,currentTime,totalTime = 0;
+	unsigned int referenceTime,currentTime,totalTime,spentTimeVoo,spentTimeSolo = 0;
 	unsigned int contatoTime[5] = {0,0,0,0,0};
 	unsigned int vooTime[5]= {0,0,0,0,0};
 	unsigned char key = 0;
@@ -32,13 +32,16 @@ unsigned char startReadingOutsideSensor()
 
 	unsigned char indexTest = getResultTestNumber();
 	unsigned long int userTime = getUserTime();
-	userTime = userTime/100;
+//	unsigned int timeMin = getTimeAltMin();
+//	unsigned int timeMax = getTimeAltMax();
+	unsigned int timeMin = 2000;
+	unsigned int timeMax = 5000;
+//	userTime = userTime/100;
 	key = getKeyPressed();
-//	unsigned int altMin = stringToInt(getAltMinString());
-//	unsigned int altMax = stringToInt(getAltMaxString());
 
-	while(key != PARAR && totalTime != userTime) //&& totalTime != COLOCAR O VALOR DE TEMPO DE ENTRADA
-	{ //parei aqui, pensar em alguma flag para avisar que o totaltime == usertime e forçar a parada da leitura
+//	while(key != PARAR && totalTime != userTime)
+	while(key != PARAR)
+	{
 		totalTime = getTimer3Variable();
 		key = getKeyPressed();
 		switch(userState)
@@ -50,9 +53,7 @@ unsigned char startReadingOutsideSensor()
 					userState = CONTATO;
 					referenceTime = getTimer3Variable();
 				}
-
 				else userState = REPOUSO;
-
 
 			break;
 
@@ -62,7 +63,8 @@ unsigned char startReadingOutsideSensor()
 				{
 					userState = VOO;
 					currentTime = getTimer3Variable();
-					contatoTime[samples] = currentTime-referenceTime;
+					spentTimeSolo = currentTime-referenceTime;
+//					contatoTime[samples] = currentTime-referenceTime;
 					referenceTime = currentTime;
 				}
 				else
@@ -75,14 +77,33 @@ unsigned char startReadingOutsideSensor()
 
 			case VOO:
 				sensorFlag = getTimer2Variable();
-
 				if(sensorFlag == 0)
 				{
 					userState = CONTATO;
 					currentTime = getTimer3Variable();
-					vooTime[samples] = currentTime - referenceTime;
-					referenceTime = currentTime;
-					samples++;
+					spentTimeVoo= currentTime - referenceTime;
+					if(spentTimeVoo<timeMin)
+					{
+						//leitura invalida
+//						HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, SET);
+						contatoTime[samples] = 0;
+						referenceTime = currentTime;
+
+					}
+					else if(spentTimeVoo>timeMax)
+					{
+						contatoTime[samples] = 0;
+						referenceTime = currentTime;
+//						HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, RESET);
+						//leitura invalida
+					}
+					else
+					{
+						vooTime[samples] = spentTimeVoo;
+						contatoTime[samples] = spentTimeSolo;
+						referenceTime = currentTime;
+						samples++;
+					}
 				}
 				else
 				{
@@ -93,8 +114,10 @@ unsigned char startReadingOutsideSensor()
 
 		}
 	}
+
 	if(totalTime == userTime)
 	{
+		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 		measuredData.timeout = TRUE;
 		return TIMEOUT;
 	}

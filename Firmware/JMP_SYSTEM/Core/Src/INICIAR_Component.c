@@ -33,8 +33,8 @@ struct dataInsert{
     unsigned char userMass;
     unsigned char userOverMass;
     unsigned char userConsultTest;
-    unsigned char userAlturaMin;
-    unsigned char userAlturaMax;
+    unsigned int userAlturaMin;
+    unsigned int userAlturaMax;
     unsigned char userNumSaltos;
     unsigned char userIntervalSaltos;
     unsigned char userCMJ;
@@ -172,7 +172,6 @@ unsigned char initStateMachine(struct Menu* subMenu)
                     //COLOCAR UMA FUNCAO PARA TRANSFORMAR O TEMPO CAPTURADO EM ms
                     strftime(procTimeString, sizeof(procTimeString), "%H%M%S", userTimeStruct);
 					ptr_userConfiguration->userTime = milisecondsTime(userTimeStruct);
-//                    ptr_userConfiguration->userTime = stringToLong(procTimeString);
                     subMenuIniciar->menuState = getNextSub(MASSA_READ);
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
                 }
@@ -257,6 +256,7 @@ unsigned char initStateMachine(struct Menu* subMenu)
 
             case READING:
             	 updateUserMsg(0,0,"READING...",&displayUpdateStatus);
+            	 resetTimer3Variable();
             	 startTM2();
 				 startTM3();
 
