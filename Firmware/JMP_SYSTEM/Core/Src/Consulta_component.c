@@ -30,11 +30,11 @@ struct dataInsert{
     unsigned int userAlturaMin;
     unsigned int userAlturaMax;
     unsigned char userNumSaltos;
-    unsigned char userIntervalSaltos;
+    unsigned long int  userIntervalSaltos;
     unsigned char userCMJ;
     unsigned char userAlturaDJ;
     unsigned char userNumSeries;
-    unsigned char userIntervalSeries;
+    unsigned long int userIntervalSeries;
     unsigned char userCommConfig;
     unsigned char userSelectTapete;
     unsigned char userSelectSensorChannel;
@@ -47,8 +47,6 @@ struct Menu{
         struct dataInsert menuInsert;
     };
 
-//toda maquina de estado deve ter um loop - > LEMBRAR LABVIEW
-
 unsigned char consultStateMachine(struct Menu* subMenu)
 {
     struct Menu* subMenuTesteConsultar = subMenu;
@@ -56,6 +54,7 @@ unsigned char consultStateMachine(struct Menu* subMenu)
     unsigned char* ptr_sampleString;
     unsigned char* ptr_vooTimeString;
     unsigned char* ptr_alturaString;
+    unsigned char* ptr_potString;
     struct results* ptr_structConsultResult;
     unsigned char selectedUserTest = 0;
     unsigned char testSamples=0;
@@ -74,10 +73,15 @@ unsigned char consultStateMachine(struct Menu* subMenu)
             break;
 
             case CONSULTA_TESTE:
-                updateUserMsg(0,0,consultTestUserMsg,&displayUpdateStatus);
+                updateUserMsg(0,USERMSG1,consultTestUserMsg,&displayUpdateStatus);
                 ptr_consultTestString = getNumTestString();
-                printDataDisplay(0,1,ptr_consultTestString);
-                updateDataDisplay(index,1);
+                printDataDisplay(0,USERMSG2,ptr_consultTestString);
+                updateDataDisplay(index,USERMSG2);
+
+                printDataDisplay(0,INSERTMSG,avancarUserMsg);
+				printDataDisplay(strlen(avancarUserMsg),INSERTMSG,menuUserMsg);
+				printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
+				printDataDisplay(strlen(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
                 key = getKeyPressed();
                 if(key == INSERIR)
                 {
@@ -100,59 +104,38 @@ unsigned char consultStateMachine(struct Menu* subMenu)
             break;
 
             case RESULT_TESTE:
-            	updateUserMsg(0,0,consultTestUserMsg,&displayUpdateStatus);
                 selectedUserTest = stringToInt(ptr_consultTestString);
+                printDataDisplay(0,OPTIONMSG,avancarUserMsg);
+                printDataDisplay(strlen(avancarUserMsg),OPTIONMSG,pararUserMsg);
 //                ptr_structConsultResult = load_data(selectedUserTest); //APENAS PARA APLICAÇÃO COM SD
                 ptr_structConsultResult = getUserResultData(selectedUserTest);
-//                if(testSamples<(ptr_structConsultResult->resultTestAcquiredSamples))
-//                {
-//                	resetKeyPressed();
-//                    updateUserMsg(0,0,"Amostra",&displayUpdateStatus);
-//                    readyUserInterface(&displayUpdateStatus,cursorPosition);
-//                    ptr_sampleString = param_1_toString(&ptr_structConsultResult->Measurement[testSamples].sampleNum);
-//                    updateUserMsg(0,1,ptr_sampleString,&displayUpdateStatus);
-//                    readyUserInterface(&displayUpdateStatus,cursorPosition);
-//
-//                    updateUserMsg(0,0,"Tempo de Voo",&displayUpdateStatus);
-//                    readyUserInterface(&displayUpdateStatus,cursorPosition);
-//                    ptr_vooTimeString = param_2_toString(&ptr_structConsultResult->Measurement[testSamples].uiVooTime);
-//                    updateUserMsg(0,1,ptr_vooTimeString,&displayUpdateStatus);
-//                    readyUserInterface(&displayUpdateStatus,cursorPosition);
-//
-//                    updateUserMsg(0,0,"Altura do salto",&displayUpdateStatus);
-//                    readyUserInterface(&displayUpdateStatus,cursorPosition);
-//                    ptr_alturaString = param_3_toString(&ptr_structConsultResult->Measurement[testSamples].uiSoloTime);
-//                    updateUserMsg(0,1,ptr_alturaString,&displayUpdateStatus);
-//                    readyUserInterface(&displayUpdateStatus,cursorPosition);
-//                }
-//                else  printDataDisplay(0,0,"VAZIO");
+                if(testSamples<(ptr_structConsultResult->resultTestAcquiredSamples))
+                {
+                	printDataDisplay(0,USERMSG1,amostraUserMsg);
+					ptr_sampleString = param_1_toString(&ptr_structConsultResult->Measurement[testSamples].sampleNum);
+					printDataDisplay(strlen(amostraUserMsg),USERMSG1 , ptr_sampleString);
+
+					printDataDisplay(0,USERMSG2,tempoVooUserMsg);
+					ptr_vooTimeString = param_2_toString(&ptr_structConsultResult->Measurement[testSamples].uiVooTime);
+					printDataDisplay(strlen(tempoVooUserMsg),USERMSG2 ,ptr_vooTimeString);
+
+
+					printDataDisplay(0,INSERTMSG,tempoSoloUserMsg);
+					ptr_alturaString = param_2_toString(&ptr_structConsultResult->Measurement[testSamples].uiSoloTime);
+					printDataDisplay(strlen(tempoSoloUserMsg),INSERTMSG , ptr_alturaString);
+
+//                  ptr_potString; = param_3_toString(&ptr_structExportResult->Measurement[testSamples].uiSoloTime);
+//					printDataDisplay(0, INSERTMSG, ptr_potString);
+
+                }
+                else  printDataDisplay(0,0,"VAZIO");
 
                 key = getKeyPressed();
 
                 if(key == AVANCAR)
                 {
                 	resetKeyPressed();
-                    if(testSamples<(ptr_structConsultResult->resultTestAcquiredSamples))
-                    {
-                        updateUserMsg(0,0,"Amostra",&displayUpdateStatus);
-                        readyUserInterface(&displayUpdateStatus,cursorPosition);
-                        ptr_sampleString = param_1_toString(&ptr_structConsultResult->Measurement[testSamples].sampleNum);
-                        updateUserMsg(9,0,ptr_sampleString,&displayUpdateStatus);
-                        readyUserInterface(&displayUpdateStatus,cursorPosition);
-
-                        updateUserMsg(0,1,"Tempo de Voo",&displayUpdateStatus);
-                        readyUserInterface(&displayUpdateStatus,cursorPosition);
-                        ptr_vooTimeString = param_2_toString(&ptr_structConsultResult->Measurement[testSamples].uiVooTime);
-                        updateUserMsg(9,1,ptr_vooTimeString,&displayUpdateStatus);
-                        readyUserInterface(&displayUpdateStatus,cursorPosition);
-
-                        updateUserMsg(0,2,"Altura do salto",&displayUpdateStatus);
-                        readyUserInterface(&displayUpdateStatus,cursorPosition);
-                        ptr_alturaString = param_3_toString(&ptr_structConsultResult->Measurement[testSamples].uiSoloTime);
-                        updateUserMsg(9,2,ptr_alturaString,&displayUpdateStatus);
-                        readyUserInterface(&displayUpdateStatus,cursorPosition);
-                    }
-                    else  printDataDisplay(0,0,"VAZIO");
+                	readyUserInterface(&displayUpdateStatus,cursorPosition);
                     testSamples++;
                     if(testSamples == ptr_structConsultResult->resultTestAcquiredSamples) testSamples = 0;
                     subMenuTesteConsultar->menuState = getNextSub(RESULT_TESTE);
@@ -166,14 +149,16 @@ unsigned char consultStateMachine(struct Menu* subMenu)
                 break;
 
             case EXPORTAR:
-                updateUserMsg(0,0,consultExportUserMsg,&displayUpdateStatus);
+                updateUserMsg(0,USERMSG1,consultExportUserMsg,&displayUpdateStatus);
+                printDataDisplay(0,INSERTMSG,selecionarUserMsg);
+                printDataDisplay(0,OPTIONMSG,pararUserMsg);
                 key = getKeyPressed();
 
                 if(key == PARAR)
                 {
                 	resetKeyPressed();
                 	readyUserInterface(&displayUpdateStatus,cursorPosition);
-                    key = MENU; // ta errado mas coloquei aqui pra teste
+                    key = MENU;
                     subMenuTesteConsultar->menuState = getNextSub(CONSULTA_TESTE);
                 }
                 else if(key == CONFIRMAR)
@@ -183,8 +168,7 @@ unsigned char consultStateMachine(struct Menu* subMenu)
                     updateUserMsg(0,0,exportedUserMsg,&displayUpdateStatus);
                     subMenuTesteConsultar->menuSelect = setSelectSub(&subMenuTesteConsultar->menuState);
                     subMenuTesteConsultar->menuState = getNextSub(CONSULTA_TESTE);
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
-                    key = MENU; // ta errado mas coloquei aqui pra teste
+                    key = MENU;
                 }
                 break;
         }

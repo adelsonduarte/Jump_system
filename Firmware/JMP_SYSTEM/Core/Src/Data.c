@@ -4,6 +4,20 @@
 #include "main.h"
 #include "time.h"
 
+//struct samples{
+//    unsigned char sampleNum;
+//    unsigned int uiVooTime;
+//    unsigned int uiSoloTime;
+//};
+//
+//struct results{
+//    unsigned char resultTestNum;
+//    unsigned char resultTestAcquiredSamples;
+//    unsigned char thereAreData;
+//    unsigned char timeout;
+//    struct samples Measurement[MEASUREMENT_SIZE];
+//};
+
 struct samples{
     unsigned char sampleNum;
     unsigned int uiVooTime;
@@ -27,11 +41,11 @@ struct dataInsert{
     unsigned int userAlturaMin;
     unsigned int userAlturaMax;
     unsigned char userNumSaltos;
-    unsigned char userIntervalSaltos;
+    unsigned long int  userIntervalSaltos;
     unsigned char userCMJ;
     unsigned char userAlturaDJ;
     unsigned char userNumSeries;
-    unsigned char userIntervalSeries;
+    unsigned long int userIntervalSeries;
     unsigned char userCommConfig;
     unsigned char userSelectTapete;
     unsigned char userSelectSensorChannel;
@@ -51,6 +65,9 @@ struct tm* insertTime = &myTime;
 static struct tm intervalSaltosTime;
 struct tm* intervalTime = &intervalSaltosTime;
 
+static struct tm intervalSeriesTime;
+struct tm* intervalSeries = &intervalSeriesTime;
+
 static unsigned char massArray[] = {0,0,0,0,0};
 static unsigned char overMassArray[] = {0,0,0,0,0};
 static unsigned char altMinArray[] = {1,3,0}; //cm
@@ -60,17 +77,13 @@ static unsigned char numSaltosArray[] = {0,0,0};
 static unsigned char altDJArray[] = {0,0};
 static unsigned char JumpTypeArray[] = {0};
 static unsigned char numSeriesArray[] = {0,0,0};
-static unsigned char intervalSeriesArray[] = {0,0,0};
+//static unsigned char intervalSeriesArray[] = {0,0,0};
 static unsigned char numTestArray[] = {0,0,1};
 static unsigned char selectEraseArray[] = {0};
 
 static unsigned char numberTest = 0;
 
 
-unsigned long int getUserTest() //apagar
-{
-   return myData.userTest;
-}
 unsigned long int getUserTime()
 {
     return myData.userTime;
@@ -156,6 +169,11 @@ unsigned char* getIntervalTimeStruct()
     return intervalTime;
 }
 
+unsigned char* getintervalSeriesTimeStruct()
+{
+    return intervalSeries;
+}
+
 unsigned char* getMassArray()
 {
     return massArray;
@@ -181,10 +199,6 @@ unsigned char* getNumSaltosArray()
     return numSaltosArray;
 }
 
-//unsigned char* getIntervalSaltosArray()
-//{
-//    return intervalSaltosArray;
-//}
 
 unsigned char* getTypeJumpArray()
 {
@@ -199,11 +213,6 @@ unsigned char* getAltDJArray()
 unsigned char* getNumSeriesArray()
 {
     return numSeriesArray;
-}
-
-unsigned char* getIntervalSeriesArray()
-{
-    return intervalSeriesArray;
 }
 
 unsigned char* getNumTestArray()
@@ -254,7 +263,7 @@ unsigned char setUserInputConfigData(struct dataInsert* dataToInsert)
     myData.userSelectSensorChannel = dataToInsert->userSelectSensorChannel;
 }
 
-unsigned char* getUserResultData(unsigned char numTest)
+unsigned int* getUserResultData(unsigned char numTest)
 {
     return &myResults[numTest-1];
 }

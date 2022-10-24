@@ -19,7 +19,7 @@ struct results{
 
 static struct results measuredData;
 
-unsigned char startReadingOutsideSensor()
+unsigned char readingSensor()
 {
 	unsigned char userState = REPOUSO;
 	unsigned char sensorFlag;
@@ -28,19 +28,39 @@ unsigned char startReadingOutsideSensor()
 	unsigned int vooTime[5]= {0,0,0,0,0};
 	unsigned char key = 0;
 	unsigned char samples = 0;
+	unsigned long int intervalSaltos = 0;
+	unsigned long int intervalSeries = 0;
+	unsigned char numSaltos = 0;
+	unsigned char numSeries = 0;
 
 
 	unsigned char indexTest = getResultTestNumber();
 	unsigned long int userTime = getUserTime();
-//	unsigned int timeMin = getTimeAltMin();
-//	unsigned int timeMax = getTimeAltMax();
-	unsigned int timeMin = 2000;
-	unsigned int timeMax = 5000;
-//	userTime = userTime/100;
+	unsigned long int userIntervalSeries = getUserIntervalSeries();
+	unsigned char userNumSeries = getUserNumSeries();
+	unsigned char userTapete = getUserSelectTapete();
+	unsigned long int userIntervalSaltos = getUserIntervalSaltos();
+	unsigned char userNumSaltos = getUserNumSaltos();
+	unsigned int timeMin = getTimeAltMin();
+	unsigned int timeMax = getTimeAltMax();
+	/*The definition below are used just for debugging proposes
+	 *
+	 */
+//	unsigned long int userIntervalSeries = 2000;
+//	unsigned char userNumSeries = 1;
+//	unsigned char userTapete = TRUE;
+//	unsigned long int userIntervalSaltos = 10000;
+//	unsigned char userNumSaltos = 2;
+//	unsigned int timeMin = 500;
+//	unsigned int timeMax = 5000;
+
+	//
 	key = getKeyPressed();
 
-//	while(key != PARAR && totalTime != userTime)
-	while(key != PARAR)
+//	while(key != PARAR && totalTime != userTime && numSaltos != userNumSaltos) //WHILE COMPLETO
+//	while(key != PARAR && numSaltos != userNumSaltos) //USADO PARA DEBUGGER DESCONSIDERANDO O TIMEOUT
+	while(key != PARAR && numSeries != userNumSeries) //USADO PARA DEBUGGER DESCONSIDERANDO O TIMEOUT e NUM SALTOS
+
 	{
 		totalTime = getTimer3Variable();
 		key = getKeyPressed();
@@ -48,10 +68,15 @@ unsigned char startReadingOutsideSensor()
 		{
 			case REPOUSO:
 				sensorFlag = getTimer2Variable();
-				if(sensorFlag == 0)
+				if(sensorFlag == 0 && userTapete == FALSE) //INICIO FORA DO TAPETE
 				{
 					userState = CONTATO;
 					referenceTime = getTimer3Variable();
+				}
+				else if(sensorFlag == 0 && userTapete == TRUE) // INICIO DENTRO DO TAPETE
+				{
+					userState = CONTATO;
+					referenceTime = 0;
 				}
 				else userState = REPOUSO;
 
@@ -64,12 +89,10 @@ unsigned char startReadingOutsideSensor()
 					userState = VOO;
 					currentTime = getTimer3Variable();
 					spentTimeSolo = currentTime-referenceTime;
-//					contatoTime[samples] = currentTime-referenceTime;
 					referenceTime = currentTime;
 				}
 				else
 				{
-//					HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, RESET);
 					userState = CONTATO;
 				}
 
@@ -85,33 +108,61 @@ unsigned char startReadingOutsideSensor()
 					if(spentTimeVoo<timeMin)
 					{
 						//leitura invalida
-//						HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, SET);
-						contatoTime[samples] = 0;
 						referenceTime = currentTime;
 
 					}
 					else if(spentTimeVoo>timeMax)
 					{
-						contatoTime[samples] = 0;
+
 						referenceTime = currentTime;
-//						HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, RESET);
 						//leitura invalida
 					}
-					else
+					else if((spentTimeVoo+spentTimeSolo)>userIntervalSaltos)
 					{
+						/*leitura invalida --- confirmar com alex. Aqui estou consi
+						 * derando que o tempo do ciclo (voo+contato) é um salto
+						 * completo e portanto, userIntervalSaltos que é um param
+						 * de configuração que limita o valor máximo que o ciclo
+						 * deve ter.
+						 */
+						intervalSaltos = spentTimeVoo+spentTimeSolo;
+						referenceTime = currentTime;
+
+
+					}
+					else
+					{	//CONDIÇÃO NA QUAL O SALTO É VALIDO
 						vooTime[samples] = spentTimeVoo;
 						contatoTime[samples] = spentTimeSolo;
 						referenceTime = currentTime;
+						numSaltos++;
 						samples++;
+						if(numSaltos == userNumSaltos)
+						{
+							numSeries++;
+							userState = INTERVALO;
+							HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, RESET);
+						}
+						else userState = CONTATO;
 					}
 				}
 				else
 				{
-//					HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, SET);
 					userState = VOO;
 				}
 			break;
 
+			case INTERVALO:
+				currentTime = getTimer3Variable();
+				intervalSeries = currentTime - referenceTime;
+				if(intervalSeries == userIntervalSeries)
+				{
+					HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, SET);
+					userState = CONTATO;
+					numSaltos = 0;
+				}
+				else userState = INTERVALO;
+				break;
 		}
 	}
 
@@ -122,6 +173,20 @@ unsigned char startReadingOutsideSensor()
 		return TIMEOUT;
 	}
 
+	else if(numSaltos == userNumSaltos)
+	{
+		measuredData.timeout = FALSE;
+		measuredData.resultTestAcquiredSamples = samples;
+		for(unsigned i=0;i<samples;i++)
+		{
+			measuredData.Measurement[i].sampleNum = i+1;
+			measuredData.Measurement[i].uiVooTime = vooTime[i];
+			measuredData.Measurement[i].uiSoloTime = contatoTime[i];
+			setUserResultData(&measuredData,indexTest);
+		}
+		return MAX_SALTOS;
+	}
+
 	else
 	{
 		measuredData.timeout = FALSE;
@@ -129,38 +194,21 @@ unsigned char startReadingOutsideSensor()
 		for(unsigned i=0;i<samples;i++)
 		{
 			measuredData.Measurement[i].sampleNum = i+1;
-			measuredData.Measurement[i].uiVooTime = vooTime[i]*100;
-			measuredData.Measurement[i].uiSoloTime = contatoTime[i]*100;
+			measuredData.Measurement[i].uiVooTime = vooTime[i];
+			measuredData.Measurement[i].uiSoloTime = contatoTime[i];
 			setUserResultData(&measuredData,indexTest);
-			return PARAR;
 		}
+		return PARAR;
 	}
 }
 
-unsigned char startReadingInsideSensor()
-{
-//	unsigned char userState = CONTATO;
-//	switch(userState)
-//	{
-//		case CONTATO:
-//
-//			start_dentro_state = VOO;
-//		break;
-//
-//		case VOO:
-//
-//			start_dentro_state = CONTATO;
-//		break;
-//	}
-
-}
 
 void calcAltura()
 {
-
+	//PAREI AQUI
 }
 
 void calcPotencia()
 {
-
+	//PAREI AQUI
 }

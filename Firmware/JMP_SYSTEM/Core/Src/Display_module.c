@@ -14,7 +14,7 @@ unsigned char updateUserMsg(unsigned char col, unsigned char linha, unsigned cha
 	{
 	    printDataDisplay(col,linha,userMessage);
 		*status = PRINTED;
-		HAL_Delay(250);
+//		HAL_Delay(50);
 	}
 }
 

@@ -15,11 +15,11 @@ struct dataInsert{
     unsigned int userAlturaMin;
     unsigned int userAlturaMax;
     unsigned char userNumSaltos;
-    unsigned char userIntervalSaltos;
+    unsigned long int  userIntervalSaltos;
     unsigned char userCMJ;
     unsigned char userAlturaDJ;
     unsigned char userNumSeries;
-    unsigned char userIntervalSeries;
+    unsigned long int userIntervalSeries;
     unsigned char userCommConfig;
     unsigned char userSelectTapete;
     unsigned char userSelectSensorChannel;

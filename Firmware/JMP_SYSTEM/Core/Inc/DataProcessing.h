@@ -38,6 +38,7 @@ unsigned char setUserIntervalSeries(unsigned char* idx);
 unsigned char setUserErase(unsigned char* idx);
 
 unsigned char indexChange(unsigned char* index, unsigned char size);
+//unsigned long milisecondsTime(unsigned char* ptr_inputTime);
 
 
 

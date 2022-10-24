@@ -17,6 +17,8 @@ unsigned char* getAltDJArray();
 unsigned char* getNumSeriesArray();
 unsigned char* getIntervalSeriesArray();
 unsigned char* getNumTestArray();
+unsigned int* getUserResultData(unsigned char);
+unsigned char* getintervalSeriesTimeStruct();
 
 unsigned long int getUserTest();
 unsigned long int getUserTime();
@@ -37,7 +39,7 @@ unsigned char getUserSelectTapete();
 
 unsigned char setUserInputConfigData(struct dataInsert* dataToInsert);
 unsigned char* getUserConfigStruct();
-unsigned char* getUserResultData(unsigned char numTest);
+unsigned int* getUserResultData(unsigned char numTest);
 
 unsigned char setUserResultData(struct results* , unsigned char);
 

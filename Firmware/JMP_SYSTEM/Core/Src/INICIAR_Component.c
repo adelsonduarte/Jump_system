@@ -36,11 +36,11 @@ struct dataInsert{
     unsigned int userAlturaMin;
     unsigned int userAlturaMax;
     unsigned char userNumSaltos;
-    unsigned char userIntervalSaltos;
+    unsigned long int userIntervalSaltos;
     unsigned char userCMJ;
     unsigned char userAlturaDJ;
     unsigned char userNumSeries;
-    unsigned char userIntervalSeries;
+    unsigned long int userIntervalSeries;
     unsigned char userCommConfig;
     unsigned char userSelectTapete;
     unsigned char userSelectSensorChannel;
@@ -68,27 +68,30 @@ unsigned char initStateMachine(struct Menu* subMenu)
     unsigned char procTimeString[9];
     unsigned char* ptr_massString;
     unsigned char* ptr_overMassString;
+    struct results* ptr_result;
+    unsigned char* ptr_sampleString;
+    unsigned int* ptr_vooTimeString;
+    unsigned int* ptr_alturaString;
+    unsigned int* ptr_potString;
+
 
     unsigned char displayUpdateStatus = IDDLE;
     unsigned char cursorPosition[2] = {0,0};
 
     //Teste results
-    unsigned char* ptr_Sample;
-    unsigned char* ptr_ulReadingTime;
-    unsigned char* ptr_uiVooTime;
-    unsigned char* ptr_ucAltDistance;
-    struct results result[TEST_SIZE]; //verificar se vou usar o endere�o de data.c assim como fiz com a estrutura de configuracao
-    unsigned char i = 0;
-    unsigned char sampleCount=0;
+//    unsigned char* ptr_Sample;
+//    unsigned char* ptr_ulReadingTime;
+//    unsigned char* ptr_uiVooTime;
+//    unsigned char* ptr_ucAltDistance;
+//    struct results result[TEST_SIZE]; //verificar se vou usar o endere�o de data.c assim como fiz com a estrutura de configuracao
+
     unsigned char indexTest;
     unsigned char readingStatus = IDDLE;
+    unsigned char selectedUserTest = 0;
+    unsigned char testSamples = 0;
 
     //
-    resetResultStruct(&result[0]);
-    resetResultStruct(&result[1]);
-    resetResultStruct(&result[2]);
-    resetResultStruct(&result[3]);
-    resetResultStruct(&result[4]);
+
 
 
     unsigned char startTapete,readingState;
@@ -104,7 +107,10 @@ unsigned char initStateMachine(struct Menu* subMenu)
             break;
 
             case COMM_OFF:
-                updateUserMsg(0,0,noTransmissionMsg,&displayUpdateStatus);
+                updateUserMsg(0,USERMSG1,noTransmissionMsg,&displayUpdateStatus);
+                printDataDisplay(0,INSERTMSG,avancarUserMsg);
+                printDataDisplay(strlen(avancarUserMsg),INSERTMSG,menuUserMsg);
+                printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
                 key = getKeyPressed();
                 if(key == AVANCAR)
                 {
@@ -125,6 +131,9 @@ unsigned char initStateMachine(struct Menu* subMenu)
 
             case COMM_ON:
 				updateUserMsg(0,0,yesTransmissionMsg,&displayUpdateStatus);
+				printDataDisplay(0,INSERTMSG,avancarUserMsg);
+				printDataDisplay(strlen(avancarUserMsg),INSERTMSG,menuUserMsg);
+				printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
 				key = getKeyPressed();
                 if(key == AVANCAR)
 				{
@@ -146,11 +155,17 @@ unsigned char initStateMachine(struct Menu* subMenu)
                 break;
 
             case TEMPO_READ:
-                updateUserMsg(0,0,timeUserMsg,&displayUpdateStatus);
+                updateUserMsg(0,USERMSG1,timeUserMsg,&displayUpdateStatus);
+
                 userTimeStruct = getTimeStruct();
                 strftime(userTimeString, sizeof(userTimeString), "%H:%M:%S", userTimeStruct);
-                printDataDisplay(0,1,userTimeString);
-                updateDataDisplay(insertColumn,1);
+                printDataDisplay(0,USERMSG2,userTimeString);
+                updateDataDisplay(insertColumn,USERMSG2);
+
+                printDataDisplay(0,INSERTMSG,avancarUserMsg);
+                printDataDisplay(strlen(avancarUserMsg),INSERTMSG,menuUserMsg);
+                printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
+                printDataDisplay(strlen(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
                 key = getKeyPressed();
 
                 if(key == INSERIR)
@@ -169,8 +184,6 @@ unsigned char initStateMachine(struct Menu* subMenu)
                 	resetKeyPressed();
                 	insertColumn = 4; //colocar um define talvez -> definicao de caracteres no display massa e overmass
                     readyUserInterface(&displayUpdateStatus,cursorPosition);
-                    //COLOCAR UMA FUNCAO PARA TRANSFORMAR O TEMPO CAPTURADO EM ms
-                    strftime(procTimeString, sizeof(procTimeString), "%H%M%S", userTimeStruct);
 					ptr_userConfiguration->userTime = milisecondsTime(userTimeStruct);
                     subMenuIniciar->menuState = getNextSub(MASSA_READ);
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
@@ -178,10 +191,14 @@ unsigned char initStateMachine(struct Menu* subMenu)
                 break;
 
             case MASSA_READ:
-                 updateUserMsg(0,0,massUserMsg,&displayUpdateStatus);
+                 updateUserMsg(0,USERMSG1,massUserMsg,&displayUpdateStatus);
                  ptr_massString = getMassString();
-                 printDataDisplay(0,1,ptr_massString);
+                 printDataDisplay(0,USERMSG2,ptr_massString);
                  updateDataDisplay(insertColumn,1);
+                 printDataDisplay(0,INSERTMSG,avancarUserMsg);
+				 printDataDisplay(strlen(avancarUserMsg),INSERTMSG,menuUserMsg);
+				 printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
+				printDataDisplay(strlen(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
                 key = getKeyPressed();
                 if(key == INSERIR)
                 {
@@ -206,10 +223,16 @@ unsigned char initStateMachine(struct Menu* subMenu)
                 break;
 
             case SOBREC_READ:
-                updateUserMsg(0,0,overmassUserMsg,&displayUpdateStatus);
+                updateUserMsg(0,USERMSG1,overmassUserMsg,&displayUpdateStatus);
                 ptr_overMassString = getOverMassString();
-                printDataDisplay(0,1,ptr_overMassString);
+                printDataDisplay(0,USERMSG2,ptr_overMassString);
                 updateDataDisplay(insertColumn,1);
+
+                printDataDisplay(0,INSERTMSG,avancarUserMsg);
+				 printDataDisplay(strlen(avancarUserMsg),INSERTMSG,menuUserMsg);
+				 printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
+				printDataDisplay(strlen(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
+
                 key = getKeyPressed();
 
                 if(key == INSERIR)
@@ -236,17 +259,17 @@ unsigned char initStateMachine(struct Menu* subMenu)
 
             case START:
                 setInsertData(ptr_userConfiguration);
-                updateUserMsg(0,0,startreadUserMsg,&displayUpdateStatus);
-                printDataDisplay(0,1,userTimeString);
+                updateUserMsg(0,USERMSG1,startreadUserMsg,&displayUpdateStatus);
+                printDataDisplay(0,USERMSG2,userTimeString);
+                printDataDisplay(0,INSERTMSG,menuUserMsg);
+				printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
+
+
                 key = getKeyPressed();
 
                 if(key == CONFIRMAR)
                 {
                 	resetKeyPressed();
-                	startTapete = getUserSelectTapete();
-                	if(startTapete == TRUE) readingState = DENTRO;
-                	else readingState = FORA;
-
                     indexTest = getResultTestNumber();
                     readyUserInterface(&displayUpdateStatus,cursorPosition);
                     subMenuIniciar->menuState = getNextSub(READING);
@@ -255,63 +278,35 @@ unsigned char initStateMachine(struct Menu* subMenu)
             break;
 
             case READING:
-            	 updateUserMsg(0,0,"READING...",&displayUpdateStatus);
+            	 updateUserMsg(0,USERMSG1,medindoUserMsg,&displayUpdateStatus);
             	 resetTimer3Variable();
+				 printDataDisplay(0,OPTIONMSG,pararUserMsg);
             	 startTM2();
 				 startTM3();
-
-				 switch(readingState)
-				 {
-					 case FORA:
-						 readingStatus = startReadingOutsideSensor();
-					 break;
-					 case DENTRO:
-						 readingStatus = startReadingInsideSensor();
-					 break;
-				 }
-
+				 readingStatus = readingSensor();
 				 key = getKeyPressed();
 
-
-
-	//                 printf("READING->->-> LOOP DE LEITURA DEVE FICAR AQUI\n");
-				 /*DISPLAY
-				 BASICAMENTE, CHAMAR FUN��ES PARA ACESSAR O MAIN  E AS VARIAVEIS DE TEMPO E LEITURA DO SENSOR
-				 ATUALIZAR SOMENTE QUANDO TIVER NOVO DADO DA INTERRUP��O
-				 CALCULA O PARAMETRO PASSADO PELO ALEX DE CADA AMOSTRA :Altura do Salto em Cent�metros = ((Tempo Voo^2) *  (9,81/8)) * 10
-				 processResult : calcula o parametro acima
-				 APRESENTAR O RESULTADO PARA O USU�RIO
-				 O LOOP DE READING DEVE PARAR QUANDO:
-				 1 - DER O TEMPO CONFIGURADO
-				 2 - DER O NUMERO DE SALTOS CONFIGURADO
-				 3 - PRESSIONAR O BOTAO PARAR
-
-				 */
-
-
-				if(key == PARAR || readingStatus == TIMEOUT)
-				{
-					resetKeyPressed();
-					readyUserInterface(&displayUpdateStatus,cursorPosition);
-					subMenuIniciar->menuState = getNextSub(STOP);
-				}
+				 if(key == PARAR || readingStatus != IDDLE)
+				 {
+					 resetKeyPressed();
+					 readyUserInterface(&displayUpdateStatus,cursorPosition);
+					 subMenuIniciar->menuState = getNextSub(STOP);
+				 }
             break;
 
             case STOP:
+            	key = getKeyPressed();
                 updateUserMsg(0,0,stopreadUserMsg,&displayUpdateStatus);
-                key = getKeyPressed();
+				printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
 
                 if(key == CONFIRMAR)
                 {
-//                	transmissionCOMM(&timer3Data);
-//                	transmissionCOMM();
                 	resetKeyPressed();
                     stopTM2();
                     stopTM3();
                     readyUserInterface(&displayUpdateStatus,cursorPosition);
-                    //PARA LEITURA, DESLIGA TIMER, ENCODER, O QUE FOR I0_INTERFACE
-//                    setUserResultData(&result[indexTest],indexTest,sampleCount);
                     setResultTestNumber();
+                    transmissionCOMM();
                     subMenuIniciar->menuState = getNextSub(DISP_RESULTS);
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
 
@@ -320,6 +315,8 @@ unsigned char initStateMachine(struct Menu* subMenu)
 
             case DISP_RESULTS:
                 updateUserMsg(0,0,resultsUserMsg,&displayUpdateStatus);
+                printDataDisplay(0,INSERTMSG,selecionarUserMsg);
+				printDataDisplay(0,OPTIONMSG,pularUserMsg);
                 key = getKeyPressed();
 
                 if(key == PARAR)
@@ -338,33 +335,40 @@ unsigned char initStateMachine(struct Menu* subMenu)
             break;
 
             case RESULTS:
-                //Teste results
-//                if(i<sampleCount)
-//                {
-//                printDataDisplay(0,0,"SALTO");
-//                ptr_Sample = param_1_toString(&arraySample[i]);
-//                ptr_uiVooTime = param_2_toString(&arrayVooTime[i]);
-//                ptr_ucAltDistance = param_3_toString(&arrayAltDistance[i]);
-//                printDataDisplay(0,0,ptr_Sample);
-//                printDataDisplay(0,0,ptr_ucAltDistance);
-//                printDataDisplay(0,0,ptr_uiVooTime);
-//                }
-//
-//                //
-//                subMenuIniciar->menuDisplay = getDisplaySub(&subMenuIniciar->menuDisplay);
-//                key = getKeyPressed();
-//
-//                if(key == AVANCAR)
-//                {
-//                    //Teste results
-//                    i++;
-//                    if(i==sampleCount)
-//                    {
-//                        i=0;
-//                    }
-//                    //
-//                    subMenuIniciar->menuState = getNextSub(RESULTS);
-//                }
+            	selectedUserTest = getResultTestNumber();
+            	ptr_result = getUserResultData(selectedUserTest);
+				if(testSamples<(ptr_result->resultTestAcquiredSamples))
+				{
+					updateUserMsg(0,USERMSG1,amostraUserMsg,&displayUpdateStatus);
+					ptr_sampleString = param_1_toString(&ptr_result->sampleMeasurement[testSamples].sampleNum);
+					printDataDisplay(strlen(amostraUserMsg),USERMSG1 , ptr_sampleString);
+
+					printDataDisplay(0,USERMSG2,tempoVooUserMsg);
+					ptr_vooTimeString = param_2_toString(&ptr_result->sampleMeasurement[testSamples].uiVooTime);
+					printDataDisplay(strlen(tempoVooUserMsg),USERMSG2 ,ptr_vooTimeString);
+
+
+					printDataDisplay(0,INSERTMSG,tempoSoloUserMsg);
+					ptr_alturaString = param_2_toString(&ptr_result->sampleMeasurement[testSamples].uiSoloTime);
+					printDataDisplay(strlen(tempoSoloUserMsg),INSERTMSG , ptr_alturaString);
+
+//                  ptr_potString; = param_3_toString(&ptr_structExportResult->Measurement[testSamples].uiSoloTime);
+//					printDataDisplay(0, INSERTMSG, ptr_potString);
+
+				}
+				else  printDataDisplay((16-strlen("VAZIO"))/2,INSERTMSG,"VAZIO");
+
+				key = getKeyPressed();
+
+				if(key == AVANCAR)
+				{
+					resetKeyPressed();
+					readyUserInterface(&displayUpdateStatus,cursorPosition);
+					testSamples++;
+					if(testSamples == ptr_result->resultTestAcquiredSamples) testSamples = 0;
+					subMenuIniciar->menuState = getNextSub(RESULTS);
+				}
+
                 if(key == PARAR)
                 {
                 	resetKeyPressed();
@@ -376,13 +380,14 @@ unsigned char initStateMachine(struct Menu* subMenu)
 
             case SAVE_DATA:
                 updateUserMsg(0,0,saveUserMsg,&displayUpdateStatus);
+                printDataDisplay(0,INSERTMSG,avancarUserMsg);
+                printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
                 key = getKeyPressed();
 
                 if(key == AVANCAR)
                 {
                 	resetKeyPressed();
                     readyUserInterface(&displayUpdateStatus,cursorPosition);
-                    updateUserMsg(0,0,cancelUserMsg,&displayUpdateStatus);
                     subMenuIniciar->menuState = getNextSub(CANCEL_SAVE);
                 }
                 else if(key == CONFIRMAR)
@@ -392,17 +397,17 @@ unsigned char initStateMachine(struct Menu* subMenu)
                     readyUserInterface(&displayUpdateStatus,cursorPosition);
                     updateUserMsg(0,0,savedUserMsg,&displayUpdateStatus);
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
-                    //display
                     subMenuIniciar->menuState = getNextSub(COMM_OFF);
-                    sampleCount = 0;
-                    i=0;
+                    testSamples = 0;
   				  readyUserInterface(&displayUpdateStatus,cursorPosition);
-                    key = MENU; // ta errado mas coloquei aqui pra teste
+                    key = MENU;
                 }
             break;
 
             case CANCEL_SAVE:
                 updateUserMsg(0,0,cancelUserMsg,&displayUpdateStatus);
+                printDataDisplay(0,INSERTMSG,avancarUserMsg);
+				printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
                 key = getKeyPressed();
 
                 if(key == AVANCAR)
@@ -414,19 +419,15 @@ unsigned char initStateMachine(struct Menu* subMenu)
                 else if(key == CONFIRMAR)
                 {
                 	resetKeyPressed();
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
-                    updateUserMsg(0,0,canceledUserMsg,&displayUpdateStatus);
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
-                    sampleCount = 0;
-                    i=0;
+                    testSamples = 0;
                     indexTest++;
                     //
                     subMenuIniciar->menuState = getNextSub(COMM_OFF);
-  				  readyUserInterface(&displayUpdateStatus,cursorPosition);
-                    key = MENU; // ta errado mas coloquei aqui pra teste
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    key = MENU;
                 }
             break;
         }
     }
-    readyUserInterface(&displayUpdateStatus,cursorPosition);
 }

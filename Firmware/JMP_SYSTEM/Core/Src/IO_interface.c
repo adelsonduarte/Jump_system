@@ -13,6 +13,22 @@
 
 //
 
+union vooTime
+{
+	unsigned int all;
+	unsigned char pt[2];
+
+};
+union vooTime vooTimeUnion = {.all=0};
+
+union soloTime
+{
+	unsigned int all;
+	unsigned char pt[2];
+
+};
+union soloTime soloTimeUnion = {.all=0};
+
 struct samples{
     unsigned char sampleNum;
     unsigned int uiVooTime;
@@ -182,13 +198,75 @@ unsigned char stopCOMM()
 	RESET_HW_UART(uartInstance);
 }
 
-unsigned char transmissionCOMM(unsigned char* msg)
+unsigned char transmissionCOMM()
 {
-//        printf("TRANSMISSION_HW_UART2()\n");
-	unsigned char uartMsg[10] = "ADELSON10";
-//	unsigned char uartMsg[10];
-//	sprintf(uartMsg,"%d",msg);
-	unsigned char* uartInstance = getUARTInstance();
+	//	unsigned char numTeste = 1;
+	unsigned char numTeste = getResultTestNumber();
+	unsigned char count = 0;
+	unsigned char aux = 0;
+	struct results* teste = getUserResultData(numTeste);
+	unsigned char uartMsg[50];
+	/*PayloadSize (resultTestAcquiredSamples) = 4 + 5 x resultTestAcquiredSamples
+	 * Defined: resultTestAcquiredSamples = 100
+	 * Result: PayloadSize = 504 bytes
+	 * Justify: It is an engineering in order to transmission up to 100 samples for each test
+	 * I am extrapolating here...
+	 *
+	 * For debug : resultTestAcquiredSamples = 5
+	 *
+	 *
+	 */
+
+
+// For debug
+//	teste->resultTestNum = 1;
+//	teste->resultTestAcquiredSamples = 5;
+//	teste->thereAreData = 0;
+//	teste->timeout = 0;
+//	teste->Measurement[0].sampleNum = 1;
+//	teste->Measurement[0].uiVooTime = 1140;
+//	teste->Measurement[0].uiSoloTime = 4040;
+//	teste->Measurement[1].sampleNum = 2;
+//	teste->Measurement[1].uiVooTime = 2260;
+//	teste->Measurement[1].uiSoloTime = 2010;
+//	teste->Measurement[2].sampleNum = 3;
+//	teste->Measurement[2].uiVooTime = 3260;
+//	teste->Measurement[2].uiSoloTime = 3010;
+//	teste->Measurement[3].sampleNum = 4;
+//	teste->Measurement[3].uiVooTime = 4260;
+//	teste->Measurement[3].uiSoloTime = 4010;
+//	teste->Measurement[4].sampleNum = 5;
+//	teste->Measurement[4].uiVooTime = 5260;
+//	teste->Measurement[4].uiSoloTime = 5010;
+//
+
+	uartMsg[0] = teste->resultTestNum;
+	uartMsg[1] = teste->resultTestAcquiredSamples;
+	uartMsg[2] = teste->thereAreData;
+	uartMsg[3] = teste->timeout;
+
+	for(unsigned char i=0;i<teste->resultTestAcquiredSamples;i++)
+	{
+		uartMsg[4+aux] = teste->Measurement[i].sampleNum;
+		vooTimeUnion.all = teste->Measurement[i].uiVooTime;
+		for(unsigned j=2;j>0;j--)
+		{
+			uartMsg[5+count+aux] = vooTimeUnion.pt[j-1];
+			count++;
+		}
+		count = 0;
+
+		soloTimeUnion.all = teste->Measurement[i].uiSoloTime;
+		for(unsigned j=2;j>0;j--)
+		{
+			uartMsg[7+count+aux] = soloTimeUnion.pt[j-1];
+			count++;
+		}
+		count = 0;
+		aux += 5;
+	}
+	//Tamanho do pacote = 4+5xresultTestAcquiredSamples
+	unsigned long int* uartInstance = getUARTInstance();
 	TRANSMISSION_HW_UART(uartInstance,uartMsg);
 }
 

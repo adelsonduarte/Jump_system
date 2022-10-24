@@ -5,7 +5,7 @@ unsigned char SET_HW_UART(unsigned char* instance);
 
 unsigned char RESET_HW_UART(unsigned char* instance);
 
-unsigned char TRANSMISSION_HW_UART(unsigned char* instance, unsigned char TX[10]);
+unsigned char TRANSMISSION_HW_UART(unsigned long int* instance, unsigned char* TX);
 
 unsigned char RECEIVE_HW_UART2(void);
 

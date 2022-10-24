@@ -1,4 +1,4 @@
-../Core/Src/SENSORHW.c:22:15:startReadingOutsideSensor	96	static
-../Core/Src/SENSORHW.c:140:15:startReadingInsideSensor	4	static
-../Core/Src/SENSORHW.c:158:6:calcAltura	4	static
-../Core/Src/SENSORHW.c:163:6:calcPotencia	4	static
+../Core/Src/SENSORHW.c:22:15:readingSensor	128	static
+../Core/Src/SENSORHW.c:203:15:startReadingInsideSensor	4	static
+../Core/Src/SENSORHW.c:232:6:calcAltura	4	static
+../Core/Src/SENSORHW.c:237:6:calcPotencia	4	static

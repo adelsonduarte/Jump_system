@@ -21,14 +21,6 @@ unsigned char getNextMain(unsigned char nextState)
     return menuMain.menuNext;
 }
 
-unsigned char setSelectMain(unsigned char *selectedState)
-{
-    unsigned char state = *selectedState;
-    menuMain.menuSelect = state;
-    return menuMain.menuSelect;
-}
-
-
 unsigned char getDisplayMain(unsigned char *data)
 {
     unsigned char state = *data;

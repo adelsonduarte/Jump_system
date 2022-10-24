@@ -7,7 +7,7 @@ static LiquidCrystal lcdDisplay;
 unsigned char HW_PRINT_DATA(unsigned char col, unsigned char linha,unsigned char* userData)
 {
     setCursor(&lcdDisplay, col, linha);
-    HAL_Delay(250);
+    HAL_Delay(10);
     print(&lcdDisplay,userData);
 }
 

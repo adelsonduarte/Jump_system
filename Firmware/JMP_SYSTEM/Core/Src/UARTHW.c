@@ -14,12 +14,11 @@ unsigned char RESET_HW_UART(unsigned char* addr)
     __HAL_UART_DISABLE(instance);
 }
 
-unsigned char TRANSMISSION_HW_UART(unsigned char* addr, unsigned char* TX)
+unsigned char TRANSMISSION_HW_UART(unsigned long int* addr, unsigned char* TX)
 {
-	unsigned int buffer[10];
-	for(unsigned char i = 0; i<10;i++) buffer[i] = TX[i];
+	unsigned char buffer[50];
+	for(unsigned char i=0;i<50;i++) buffer[i] = TX[i];
 	UART_HandleTypeDef* instance = addr;
-
     HAL_UART_Transmit(instance, buffer, sizeof(buffer), HAL_MAX_DELAY);
 
 }

@@ -27,11 +27,11 @@ struct dataInsert{
     unsigned int userAlturaMin;
     unsigned int userAlturaMax;
     unsigned char userNumSaltos;
-    unsigned char userIntervalSaltos;
+    unsigned long int  userIntervalSaltos;
     unsigned char userCMJ;
     unsigned char userAlturaDJ;
     unsigned char userNumSeries;
-    unsigned char userIntervalSeries;
+    unsigned long int userIntervalSeries;
     unsigned char userCommConfig;
     unsigned char userSelectTapete;
     unsigned char userSelectSensorChannel;
@@ -50,6 +50,7 @@ unsigned char eraseStateMachine(struct Menu* subMenu)
     unsigned char key = 0;
     unsigned char index = 0;
     unsigned char displayUpdateStatus = IDDLE;
+    unsigned char cursorPosition[2] = {0,0};
     unsigned char* ptr_eraseString;
     while(key != MENU)
     {
@@ -60,9 +61,12 @@ unsigned char eraseStateMachine(struct Menu* subMenu)
             break;
 
             case VERFICA_APAGAR:
-                updateUserMsg(3,2,eraseselectUserMsg,&displayUpdateStatus);
+                updateUserMsg(0,USERMSG1,eraseselectUserMsg,&displayUpdateStatus);
                 ptr_eraseString = getEraseTestString();
-                printDataDisplay(0,0,ptr_eraseString);
+                printDataDisplay(0,INSERTMSG,ptr_eraseString);
+				printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
+				printDataDisplay(strlen(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
+
                 key = getKeyPressed();
 
                 if(key == INSERIR)
@@ -74,6 +78,7 @@ unsigned char eraseStateMachine(struct Menu* subMenu)
                 else if(key == CONFIRMAR)
                 {
                 	resetKeyPressed();
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
                     if(*ptr_eraseString == '5')
                     {
                         updateUserMsg(3,2,erasingUserMsg,&displayUpdateStatus);

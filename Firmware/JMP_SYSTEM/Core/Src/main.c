@@ -73,7 +73,8 @@ volatile char key = IDDLE;
  volatile unsigned int timer3Data = 0;
  volatile unsigned int timer3Count = 0;
  volatile char sensorFlag = 1; //ESTADO INICIAL 1->FORA DO TAPETE 0> SOBRE O TAPETE
- volatile char uartBuffer[5];
+ volatile char uartBuffer[20];
+ volatile char uartFlagRx = FALSE;
  volatile char* readingState;
 
 /* USER CODE END PV */
@@ -93,6 +94,16 @@ static void MX_SPI1_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+void getRxFlag()
+{
+	return uartFlagRx;
+}
+
+void resetRxFlag()
+{
+	uartFlagRx = FALSE;
+}
+
 void resetTimer3Variable()
 {
 	timer3Data = 0;
@@ -106,10 +117,10 @@ unsigned char getKeyPressed()
 unsigned char resetKeyPressed()
 {
 	key = IDDLE;
-	HAL_Delay(250);
+	HAL_Delay(200);
 }
 
-unsigned char* getUARTInstance()
+unsigned long int* getUARTInstance()
 {
 	return &huart2;
 }
@@ -190,15 +201,16 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  HAL_UARTEx_ReceiveToIdle_DMA(&huart2, (uint8_t *)uartBuffer, 1);
-  __HAL_DMA_DISABLE_IT(&hdma_usart2_rx, DMA_IT_HT);
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, SET);
+  HAL_UARTEx_ReceiveToIdle_DMA(&huart2, (uint8_t *)uartBuffer, sizeof(uartBuffer));
+  __HAL_DMA_DISABLE_IT(&hdma_usart2_rx, DMA_IT_HT);
   homeDataDisplay(appNameMsg,companyNameMsg,appVersionMsg);
   while(1)
   {
 	  switch(menuTesteMain.menuState)
 	  {
 		  case IDDLE:
+			  menuTesteMain.menuState = getNextMain(IDDLE);
 			  if(key == AVANCAR)
 			  {
 				  resetKeyPressed();
@@ -208,7 +220,9 @@ int main(void)
 		  break;
 
 		  case START_TEST:
-			  updateUserMsg(0,0,startUserMsg,&displayUpdateStatus);
+			  updateUserMsg(0,USERMSG1,startUserMsg,&displayUpdateStatus);
+			  printDataDisplay(0,INSERTMSG,avancarUserMsg);
+			  printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
 			  if(key == AVANCAR)
 			  {
 				  resetKeyPressed();
@@ -219,16 +233,18 @@ int main(void)
 			  {
 				  resetKeyPressed();
 				  readyUserInterface(&displayUpdateStatus,cursorPosition);
-				  menuTesteMain.menuState = setSelectMain(&menuTesteMain.menuState);
 				  menuTesteMain.menuSelect = menuTesteMain.menuState;
 				  initStateMachine(&menuTesteSub);
+				  readyUserInterface(&displayUpdateStatus,cursorPosition);
+
 				  menuTesteSub.menuState = IDDLE;
-				  menuTesteSub.menuSelect = IDDLE;
 			  }
 		  break;
 
 		  case CONSULT_DATA:
 			  updateUserMsg(0,0,consultUserMsg,&displayUpdateStatus);
+			  printDataDisplay(0,INSERTMSG,avancarUserMsg);
+			  printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
 			  if(key == AVANCAR)
 			  {
 				  resetKeyPressed();
@@ -240,16 +256,19 @@ int main(void)
 			  {
 				  resetKeyPressed();
 				  readyUserInterface(&displayUpdateStatus,cursorPosition);
-				 menuTesteMain.menuState = setSelectMain(&menuTesteMain.menuState);
 				 consultStateMachine(&menuTesteSub);
+				  readyUserInterface(&displayUpdateStatus,cursorPosition);
+
+				  readyUserInterface(&displayUpdateStatus,cursorPosition);
 				 menuTesteMain.menuState = getNextMain(START_TEST);
 				 menuTesteSub.menuState = IDDLE;
-				 menuTesteSub.menuSelect = IDDLE;
 			  }
 		  break;
 
 		  case CONFIG_SENSOR:
 			  updateUserMsg(0,0,configUserMsg,&displayUpdateStatus);
+			  printDataDisplay(0,INSERTMSG,avancarUserMsg);
+			  printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
 			  if(key == AVANCAR)
 			  {
 				  resetKeyPressed();
@@ -260,16 +279,17 @@ int main(void)
 			  {
 				  resetKeyPressed();
 				  readyUserInterface(&displayUpdateStatus,cursorPosition);
-				  menuTesteMain.menuState = setSelectMain(&menuTesteMain.menuState);
 				  configStateMachine(&menuTesteSub);
+				  readyUserInterface(&displayUpdateStatus,cursorPosition);
 				  menuTesteSub.menuState = IDDLE;
-				  menuTesteSub.menuSelect = IDDLE;
 				  menuTesteMain.menuState = getNextMain(START_TEST);
 			  }
 		  break;
 
 		  case EXPORT_DATA:
 			  updateUserMsg(0,0,exportUserMsg,&displayUpdateStatus);
+			  printDataDisplay(0,INSERTMSG,avancarUserMsg);
+			  printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
 			  if(key == AVANCAR)
 			  {
 				  resetKeyPressed();
@@ -280,16 +300,18 @@ int main(void)
 			  {
 				  resetKeyPressed();
 				  readyUserInterface(&displayUpdateStatus,cursorPosition);
-				  menuTesteMain.menuState = setSelectMain(&menuTesteMain.menuState);
 				  exportStateMachine(&menuTesteSub);
+				  readyUserInterface(&displayUpdateStatus,cursorPosition);
+
 				  menuTesteSub.menuState = IDDLE;
-				  menuTesteSub.menuSelect = IDDLE;
 				  menuTesteMain.menuState = getNextMain(START_TEST);
 			  }
 		  break;
 
 		  case ERASE_DATA:
 			  updateUserMsg(0,0,eraseUserMsg,&displayUpdateStatus);
+			  printDataDisplay(0,INSERTMSG,avancarUserMsg);
+			  printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
 			  if(key == AVANCAR)
 			  {
 				  resetKeyPressed();
@@ -301,10 +323,10 @@ int main(void)
 			  {
 				  resetKeyPressed();
 				  readyUserInterface(&displayUpdateStatus,cursorPosition);
-				  menuTesteMain.menuState = setSelectMain(&menuTesteMain.menuState);
 				  eraseStateMachine(&menuTesteSub);
+				  readyUserInterface(&displayUpdateStatus,cursorPosition);
+
 				  menuTesteSub.menuState = IDDLE;
-				  menuTesteSub.menuSelect = IDDLE;
 				  menuTesteMain.menuState = getNextMain(START_TEST);
 			  }
 		  break;
@@ -609,29 +631,24 @@ static void MX_GPIO_Init(void)
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 {
-//	timer3Count+=1;  //1ms
-//	if(timer3Count == 100) //100ms
-//	{
-//		timer3Data += 1; //cada unidade aqui deve ser multiplicada por 100 para ter o valor real em ms.
-//		timer3Count = 0;
-//	}
 	if(htim == &htim3)
 	{
 		timer3Count+=1;  //1ms
-		if(timer3Count == 10) //100ms
+		if(timer3Count == 10) //10ms
 		{
 			timer3Data += 10;
 			timer3Count = 0;
 		}
 	}
 
-
 }
 
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 {
 
-	uartBuffer[0]+=1;
+	//uartBuffer[0]+=1;
+	uartFlagRx = TRUE;
+	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
   HAL_UARTEx_ReceiveToIdle_DMA(&huart2, (uint8_t *)uartBuffer, sizeof(uartBuffer));
   __HAL_DMA_DISABLE_IT(&hdma_usart2_rx, DMA_IT_HT);
 
@@ -643,29 +660,16 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 	{
 		if(htim->Channel == 2)
 		{
-			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, SET);
+//			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, SET);
 			sensorFlag = 1;
 		}
 		else if(htim->Channel == 1)
 		{
-			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, RESET);
+//			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, RESET);
 			sensorFlag = 0;
 		}
 	}
 
-
-
-
-
-//	 result[indexTest].sampleMeasurement[sampleCount].sampleNum = sampleCount+1;
-//	result[indexTest].sampleMeasurement[sampleCount].ucAltDistance+=5;
-//	result[indexTest].sampleMeasurement[sampleCount].uiVooTime+=10;
-//	result[indexTest].sampleMeasurement[sampleCount].ulReadingTime+= 100;
-//	arraySample[sampleCount] = result[indexTest].sampleMeasurement[sampleCount].sampleNum;
-//	arrayAltDistance[sampleCount] = result[indexTest].sampleMeasurement[sampleCount].ucAltDistance;
-//	arrayVooTime[sampleCount] = result[indexTest].sampleMeasurement[sampleCount].uiVooTime;
-//	arrayReadingTime[sampleCount] = result[indexTest].sampleMeasurement[sampleCount].ulReadingTime;
-//	sampleCount++;
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
