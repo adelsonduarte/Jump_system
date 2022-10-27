@@ -1,4 +1,4 @@
-Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
+Core/Src/flash_v1.0.o: ../Core/Src/flash_v1.0.c ../Core/Inc/flash_v1.0.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h \
  ../Core/Inc/stm32f1xx_hal_conf.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h \
@@ -24,19 +24,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h \
- ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h \
- ../FATFS/App/fatfs.h ../Middlewares/Third_Party/FatFs/src/ff.h \
- ../Middlewares/Third_Party/FatFs/src/integer.h ../FATFS/Target/ffconf.h \
- ../Middlewares/Third_Party/FatFs/src/ff_gen_drv.h \
- ../Middlewares/Third_Party/FatFs/src/diskio.h \
- ../Middlewares/Third_Party/FatFs/src/ff.h ../FATFS/Target/user_diskio.h \
- ../Core/Inc/menu_module.h ../Core/Inc/Display_module.h \
- ../Core/Inc/DisplayMessages.h ../Core/Inc/INICIAR_Component.h \
- ../Core/Inc/IO_interface.h ../Core/Inc/Consulta_component.h \
- ../Core/Inc/Configuracao_component.h ../Core/Inc/Exportar_component.h \
- ../Core/Inc/Apagar_component.h ../Core/Inc/DataProcessing.h \
- ../Core/Inc/SENSORHW.h ../Core/Inc/flash_v1.0.h ../Core/Inc/fatfs_sd.h
-../Core/Inc/main.h:
+ ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
+../Core/Inc/flash_v1.0.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:
 ../Core/Inc/stm32f1xx_hal_conf.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h:
@@ -63,24 +52,3 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:
-../FATFS/App/fatfs.h:
-../Middlewares/Third_Party/FatFs/src/ff.h:
-../Middlewares/Third_Party/FatFs/src/integer.h:
-../FATFS/Target/ffconf.h:
-../Middlewares/Third_Party/FatFs/src/ff_gen_drv.h:
-../Middlewares/Third_Party/FatFs/src/diskio.h:
-../Middlewares/Third_Party/FatFs/src/ff.h:
-../FATFS/Target/user_diskio.h:
-../Core/Inc/menu_module.h:
-../Core/Inc/Display_module.h:
-../Core/Inc/DisplayMessages.h:
-../Core/Inc/INICIAR_Component.h:
-../Core/Inc/IO_interface.h:
-../Core/Inc/Consulta_component.h:
-../Core/Inc/Configuracao_component.h:
-../Core/Inc/Exportar_component.h:
-../Core/Inc/Apagar_component.h:
-../Core/Inc/DataProcessing.h:
-../Core/Inc/SENSORHW.h:
-../Core/Inc/flash_v1.0.h:
-../Core/Inc/fatfs_sd.h:

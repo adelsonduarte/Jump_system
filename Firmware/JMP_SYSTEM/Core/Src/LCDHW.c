@@ -36,16 +36,5 @@ unsigned char HW_HOME_DISP(unsigned char* appName, unsigned char* companyName, u
 	return &(lcdDisplay);
 }
 
-//unsigned char HW_INSERT_DATA(unsigned char col, unsigned char linha,unsigned char* userData)
-//{
-//	unsigned char teste = 7;
-//	setCursor(&lcdDisplay, (teste-col), linha);
-//	print(&lcdDisplay,userData);
-//	setCursor(&lcdDisplay, col, linha);
-//	cursor(&lcdDisplay);
-//	HAL_Delay(200);
-//	noCursor(&lcdDisplay);
-//
-//}
 
 

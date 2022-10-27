@@ -56,22 +56,30 @@ unsigned long milisecondsTime(unsigned char* ptr_inputTime)
 unsigned long stringToLong(unsigned char* string)
 {
     char *ptr;
-    unsigned long int intTime = strtol(string,&ptr,10);
+    unsigned long int intTime = strtol(string,&ptr,10); //REFAZER
     //fazer a convers�o de hhmmss para ms
     return intTime;
 }
 
-unsigned int stringToInt(unsigned char* string)
+unsigned int stringToInt(unsigned char* string) //REFAZER
 {
     char *ptr;
     unsigned int x = strtol(string,&ptr,10);
     return x;
 }
 
-unsigned char stringToFloat(unsigned char* string)
+unsigned char stringToFloat(unsigned char* string) //REFAZER
 {
     float x = strtof(string,NULL);
     return x;
+}
+
+unsigned char stringLenght(unsigned char* str)
+{
+    unsigned char strLen = 0;
+    for(unsigned i = 0; str[i] != '\0';i++)
+        strLen++;
+    return strLen;
 }
 
 unsigned char indexMass(short* index)
@@ -206,10 +214,10 @@ unsigned char setUserAltMin(unsigned char* idx)
     if(altMinArray[index]>9) altMinArray[index]= 0;
 }
 
-unsigned char setUserErase(unsigned char* idx)
+unsigned char setUserErase(unsigned int* idx)
 {
     unsigned char* eraseArray = getEraseTestArray();
-    unsigned char index = *idx;
+    unsigned int index = *idx;
     eraseArray[index] = eraseArray[index]+1;
     if(eraseArray[index]>9) eraseArray[index]= 0;
 }
@@ -321,44 +329,44 @@ unsigned char* setUserTime(unsigned char* inputUserTimer)
 {
     unsigned char index = *inputUserTimer;
     struct tm* insertTime = getTimeStruct();
-    static unsigned char timeString[9];
+//    static unsigned char timeString[9];
 
     switch(index)
     {
         case DEZENA_H:
             insertTime->tm_hour = insertTime->tm_hour+10;
             if(insertTime->tm_hour>23) insertTime->tm_hour = 0;
-            strftime(timeString, sizeof(timeString), "%H:%M:%S", insertTime);
+//            strftime(timeString, sizeof(timeString), "%H:%M:%S", insertTime);
         break;
 
         case UNIDADE_H:
             insertTime->tm_hour = insertTime->tm_hour+1;
             if(insertTime->tm_hour>23) insertTime->tm_hour = 0;
-            strftime(timeString, sizeof(timeString), "%H:%M:%S", insertTime);
+//            strftime(timeString, sizeof(timeString), "%H:%M:%S", insertTime);
         break;
 
         case DEZENA_M:
             insertTime->tm_min = insertTime->tm_min+10;
             if(insertTime->tm_min>60) insertTime->tm_min = 0;
-            strftime(timeString, sizeof(timeString), "%H:%M:%S", insertTime);
+//            strftime(timeString, sizeof(timeString), "%H:%M:%S", insertTime);
         break;
 
         case UNIDADE_M:
         	insertTime->tm_min = insertTime->tm_min+1;
             if(insertTime->tm_min>60) insertTime->tm_min = 0;
-            strftime(timeString, sizeof(timeString), "%H:%M:%S", insertTime);
+//            strftime(timeString, sizeof(timeString), "%H:%M:%S", insertTime);
         break;
 
         case DEZENA_S:
             insertTime->tm_sec =insertTime->tm_sec+10 ;
             if(insertTime->tm_sec>60) insertTime->tm_sec = 0;
-            strftime(timeString, sizeof(timeString), "%H:%M:%S", insertTime);
+//            strftime(timeString, sizeof(timeString), "%H:%M:%S", insertTime);
         break;
 
         case UNIDADE_S:
             insertTime->tm_sec =insertTime->tm_sec+1 ;
             if(insertTime->tm_sec>60) insertTime->tm_sec = 0;
-            strftime(timeString, sizeof(timeString), "%H:%M:%S", insertTime);
+//            strftime(timeString, sizeof(timeString), "%H:%M:%S", insertTime);
         break;
     }
 }

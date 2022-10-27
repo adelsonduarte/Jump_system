@@ -12,17 +12,17 @@ unsigned char updateUserMsg(unsigned char col, unsigned char linha, unsigned cha
 {
 	if(*status == IDDLE)
 	{
-	    printDataDisplay(col,linha,userMessage);
+	    HW_PRINT_DATA(col,linha,userMessage);
 		*status = PRINTED;
-//		HAL_Delay(50);
 	}
 }
 
-unsigned char readyUserInterface(unsigned char* displayStatus,unsigned char* cursorPosition)
+//unsigned char readyUserInterface(unsigned char* displayStatus,unsigned char* cursorPosition)
+unsigned char readyUserInterface(unsigned char* displayStatus)
 {
 	statusUserInterface(displayStatus);
 	resetKeyPressed();
-	resetCursorInterface(cursorPosition);
+//	resetCursorInterface(cursorPosition);
 	eraseDataDisplay();
 }
 
@@ -40,8 +40,8 @@ unsigned char cursorChangeInterface(unsigned char col, unsigned char linha)
 	return actualposition;
 }
 
-unsigned char resetCursorInterface(unsigned char* cursorPosition)
-{
-	cursorPosition[0] = 0;
-	cursorPosition[1] = 0;
-}
+//unsigned char resetCursorInterface(unsigned char* cursorPosition)
+//{
+//	cursorPosition[0] = 0;
+//	cursorPosition[1] = 0;
+//}

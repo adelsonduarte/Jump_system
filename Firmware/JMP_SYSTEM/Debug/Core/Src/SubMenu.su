@@ -1,5 +1,4 @@
 ../Core/Src/SubMenu.c:38:15:getNextSub	16	static
-../Core/Src/SubMenu.c:44:15:setSelectSub	24	static
 ../Core/Src/SubMenu.c:51:15:setInsertData	24	static
 ../Core/Src/SubMenu.c:57:15:setTest	16	static
 ../Core/Src/SubMenu.c:62:15:getDisplaySub	24	static

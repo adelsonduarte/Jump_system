@@ -225,11 +225,12 @@ unsigned char* getEraseTestArray()
     return selectEraseArray;
 }
 
-unsigned char* getUserConfigStruct() //VERIFICAR SE VOU USAR
+unsigned char* getUserConfigStruct() //VERIFICAR SE VOU USAR -- por enquanto sim 26/10
 {
-    static struct dataInsert configStruct;
-    configStruct = myData;
-    return &configStruct;
+//    static struct dataInsert configStruct;
+//    configStruct = myData;
+//    return &configStruct;
+	return &myData;
 }
 
 unsigned int getTimeAltMin()
@@ -243,7 +244,7 @@ unsigned int getTimeAltMax()
 }
 
 
-unsigned char setUserInputConfigData(struct dataInsert* dataToInsert)
+unsigned char setUserInputConfigData(struct dataInsert* dataToInsert) //alterar
 {
     myData.userTest = dataToInsert->userTest;
     myData.userTime = dataToInsert->userTime;

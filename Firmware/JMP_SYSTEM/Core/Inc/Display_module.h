@@ -18,7 +18,8 @@ unsigned char statusUserInterface(unsigned char* displayStatus);
 
 unsigned char cursorChangeInterface(unsigned char col, unsigned char linha);
 
-unsigned char readyUserInterface(unsigned char* displayStatus,unsigned char* cursorPosition);
+//unsigned char readyUserInterface(unsigned char* displayStatus,unsigned char* cursorPosition);
+unsigned char readyUserInterface(unsigned char* displayStatus);
 
 unsigned char resetCursorInterface(unsigned char* cursorPosition);
 

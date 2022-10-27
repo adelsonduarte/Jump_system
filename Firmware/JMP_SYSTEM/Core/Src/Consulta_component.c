@@ -22,29 +22,29 @@ struct results{
     struct samples Measurement[MEASUREMENT_SIZE];
 };
 
-struct dataInsert{
-    unsigned char userTime;
-    unsigned char userMass;
-    unsigned char userOverMass;
-    unsigned char userConsultTest;
-    unsigned int userAlturaMin;
-    unsigned int userAlturaMax;
-    unsigned char userNumSaltos;
-    unsigned long int  userIntervalSaltos;
-    unsigned char userCMJ;
-    unsigned char userAlturaDJ;
-    unsigned char userNumSeries;
-    unsigned long int userIntervalSeries;
-    unsigned char userCommConfig;
-    unsigned char userSelectTapete;
-    unsigned char userSelectSensorChannel;
-};
+//struct dataInsert{
+//    unsigned char userTime;
+//    unsigned char userMass;
+//    unsigned char userOverMass;
+//    unsigned char userConsultTest;
+//    unsigned int userAlturaMin;
+//    unsigned int userAlturaMax;
+//    unsigned char userNumSaltos;
+//    unsigned long int  userIntervalSaltos;
+//    unsigned char userCMJ;
+//    unsigned char userAlturaDJ;
+//    unsigned char userNumSeries;
+//    unsigned long int userIntervalSeries;
+//    unsigned char userCommConfig;
+//    unsigned char userSelectTapete;
+//    unsigned char userSelectSensorChannel;
+//};
 struct Menu{
         unsigned char menuNext;
         unsigned char menuSelect;
         unsigned char menuDisplay;
         unsigned char menuState;
-        struct dataInsert menuInsert;
+//        struct dataInsert menuInsert;
     };
 
 unsigned char consultStateMachine(struct Menu* subMenu)
@@ -58,7 +58,7 @@ unsigned char consultStateMachine(struct Menu* subMenu)
     struct results* ptr_structConsultResult;
     unsigned char selectedUserTest = 0;
     unsigned char testSamples=0;
-    unsigned char cursorPosition[2] = {0,0};
+    //unsigned char cursorPosition[2] = {0,0};
     short index = 2; //(000 MENU)
     unsigned char key = 0;
     static unsigned char results = 0;
@@ -75,13 +75,13 @@ unsigned char consultStateMachine(struct Menu* subMenu)
             case CONSULTA_TESTE:
                 updateUserMsg(0,USERMSG1,consultTestUserMsg,&displayUpdateStatus);
                 ptr_consultTestString = getNumTestString();
-                printDataDisplay(0,USERMSG2,ptr_consultTestString);
-                updateDataDisplay(index,USERMSG2);
+                HW_PRINT_DATA(0,USERMSG2,ptr_consultTestString);
+                HW_UPDATE_DATA(index,USERMSG2);
 
-                printDataDisplay(0,INSERTMSG,avancarUserMsg);
-				printDataDisplay(strlen(avancarUserMsg),INSERTMSG,menuUserMsg);
-				printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
-				printDataDisplay(strlen(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
+                HW_PRINT_DATA(0,INSERTMSG,avancarUserMsg);
+				HW_PRINT_DATA(stringLenght(avancarUserMsg),INSERTMSG,menuUserMsg);
+				HW_PRINT_DATA(0,OPTIONMSG,selecionarUserMsg);
+				HW_PRINT_DATA(stringLenght(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
                 key = getKeyPressed();
                 if(key == INSERIR)
                 {
@@ -97,45 +97,45 @@ unsigned char consultStateMachine(struct Menu* subMenu)
                 else if(key == CONFIRMAR)
                 {
                 	resetKeyPressed();
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    readyUserInterface(&displayUpdateStatus);
                     subMenuTesteConsultar->menuState = getNextSub(RESULT_TESTE);
-                    subMenuTesteConsultar->menuSelect = setSelectSub(&subMenuTesteConsultar->menuState);
+                    //subMenuTesteConsultar->menuSelect = setSelectSub(&subMenuTesteConsultar->menuState);
                 }
             break;
 
             case RESULT_TESTE:
                 selectedUserTest = stringToInt(ptr_consultTestString);
-                printDataDisplay(0,OPTIONMSG,avancarUserMsg);
-                printDataDisplay(strlen(avancarUserMsg),OPTIONMSG,pararUserMsg);
+                HW_PRINT_DATA(0,OPTIONMSG,avancarUserMsg);
+                HW_PRINT_DATA(stringLenght(avancarUserMsg),OPTIONMSG,pararUserMsg);
 //                ptr_structConsultResult = load_data(selectedUserTest); //APENAS PARA APLICAÇÃO COM SD
                 ptr_structConsultResult = getUserResultData(selectedUserTest);
                 if(testSamples<(ptr_structConsultResult->resultTestAcquiredSamples))
                 {
-                	printDataDisplay(0,USERMSG1,amostraUserMsg);
+                	HW_PRINT_DATA(0,USERMSG1,amostraUserMsg);
 					ptr_sampleString = param_1_toString(&ptr_structConsultResult->Measurement[testSamples].sampleNum);
-					printDataDisplay(strlen(amostraUserMsg),USERMSG1 , ptr_sampleString);
+					HW_PRINT_DATA(stringLenght(amostraUserMsg),USERMSG1 , ptr_sampleString);
 
-					printDataDisplay(0,USERMSG2,tempoVooUserMsg);
+					HW_PRINT_DATA(0,USERMSG2,tempoVooUserMsg);
 					ptr_vooTimeString = param_2_toString(&ptr_structConsultResult->Measurement[testSamples].uiVooTime);
-					printDataDisplay(strlen(tempoVooUserMsg),USERMSG2 ,ptr_vooTimeString);
+					HW_PRINT_DATA(stringLenght(tempoVooUserMsg),USERMSG2 ,ptr_vooTimeString);
 
 
-					printDataDisplay(0,INSERTMSG,tempoSoloUserMsg);
+					HW_PRINT_DATA(0,INSERTMSG,tempoSoloUserMsg);
 					ptr_alturaString = param_2_toString(&ptr_structConsultResult->Measurement[testSamples].uiSoloTime);
-					printDataDisplay(strlen(tempoSoloUserMsg),INSERTMSG , ptr_alturaString);
+					HW_PRINT_DATA(stringLenght(tempoSoloUserMsg),INSERTMSG , ptr_alturaString);
 
 //                  ptr_potString; = param_3_toString(&ptr_structExportResult->Measurement[testSamples].uiSoloTime);
-//					printDataDisplay(0, INSERTMSG, ptr_potString);
+//					HW_PRINT_DATA(0, INSERTMSG, ptr_potString);
 
                 }
-                else  printDataDisplay(0,0,"VAZIO");
+                else  HW_PRINT_DATA(0,0,"VAZIO");
 
                 key = getKeyPressed();
 
                 if(key == AVANCAR)
                 {
                 	resetKeyPressed();
-                	readyUserInterface(&displayUpdateStatus,cursorPosition);
+                	readyUserInterface(&displayUpdateStatus);
                     testSamples++;
                     if(testSamples == ptr_structConsultResult->resultTestAcquiredSamples) testSamples = 0;
                     subMenuTesteConsultar->menuState = getNextSub(RESULT_TESTE);
@@ -143,30 +143,29 @@ unsigned char consultStateMachine(struct Menu* subMenu)
                 else if(key == PARAR)
                 {
                 	resetKeyPressed();
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    readyUserInterface(&displayUpdateStatus);
                     subMenuTesteConsultar->menuState = getNextSub(EXPORTAR);
                 }
                 break;
 
             case EXPORTAR:
                 updateUserMsg(0,USERMSG1,consultExportUserMsg,&displayUpdateStatus);
-                printDataDisplay(0,INSERTMSG,selecionarUserMsg);
-                printDataDisplay(0,OPTIONMSG,pararUserMsg);
+                HW_PRINT_DATA(0,INSERTMSG,selecionarUserMsg);
+                HW_PRINT_DATA(0,OPTIONMSG,pararUserMsg);
                 key = getKeyPressed();
 
                 if(key == PARAR)
                 {
                 	resetKeyPressed();
-                	readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    readyUserInterface(&displayUpdateStatus);
                     key = MENU;
                     subMenuTesteConsultar->menuState = getNextSub(CONSULTA_TESTE);
                 }
                 else if(key == CONFIRMAR)
                 {
-                    //display
                 	resetKeyPressed();
                     updateUserMsg(0,0,exportedUserMsg,&displayUpdateStatus);
-                    subMenuTesteConsultar->menuSelect = setSelectSub(&subMenuTesteConsultar->menuState);
+                    //subMenuTesteConsultar->menuSelect = setSelectSub(&subMenuTesteConsultar->menuState);
                     subMenuTesteConsultar->menuState = getNextSub(CONSULTA_TESTE);
                     key = MENU;
                 }

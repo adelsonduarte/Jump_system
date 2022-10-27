@@ -67,13 +67,13 @@ unsigned char getFileLineCounter()
     return loadFileLineCounter;
 }
 
-unsigned char save_data(unsigned char numTest)
-{
-    numTest++;
-    struct results* ptr_resultDataSave;
-    ptr_resultDataSave = getUserResultData(numTest);
-    save_SD_card(ptr_resultDataSave,numTest);
-}
+//unsigned char save_data(unsigned char numTest)
+//{
+//    numTest++;
+//    struct results* ptr_resultDataSave;
+//    ptr_resultDataSave = getUserResultData(numTest);
+//    save_SD_card(ptr_resultDataSave,numTest);
+//}
 
 unsigned char* load_data(unsigned char numTest)
 {

@@ -9,39 +9,39 @@
 #include "Display_module.h"
 
 
-struct samples{
-    unsigned char sampleNum;
-    unsigned int uiVooTime;
-    unsigned int uiSoloTime;
-};
-struct results{
-    unsigned char resultTestNum;
-    unsigned char resultTestAcquiredSamples;
-    struct samples Measurement[MEASUREMENT_SIZE];
-};
-struct dataInsert{
-    unsigned char userTime;
-    unsigned char userMass;
-    unsigned char userOverMass;
-    unsigned char userConsultTest;
-    unsigned int userAlturaMin;
-    unsigned int userAlturaMax;
-    unsigned char userNumSaltos;
-    unsigned long int  userIntervalSaltos;
-    unsigned char userCMJ;
-    unsigned char userAlturaDJ;
-    unsigned char userNumSeries;
-    unsigned long int userIntervalSeries;
-    unsigned char userCommConfig;
-    unsigned char userSelectTapete;
-    unsigned char userSelectSensorChannel;
-};
+//struct samples{
+//    unsigned char sampleNum;
+//    unsigned int uiVooTime;
+//    unsigned int uiSoloTime;
+//};
+//struct results{
+//    unsigned char resultTestNum;
+//    unsigned char resultTestAcquiredSamples;
+//    struct samples Measurement[MEASUREMENT_SIZE];
+//};
+//struct dataInsert{
+//    unsigned char userTime;
+//    unsigned char userMass;
+//    unsigned char userOverMass;
+//    unsigned char userConsultTest;
+//    unsigned int userAlturaMin;
+//    unsigned int userAlturaMax;
+//    unsigned char userNumSaltos;
+//    unsigned long int  userIntervalSaltos;
+//    unsigned char userCMJ;
+//    unsigned char userAlturaDJ;
+//    unsigned char userNumSeries;
+//    unsigned long int userIntervalSeries;
+//    unsigned char userCommConfig;
+//    unsigned char userSelectTapete;
+//    unsigned char userSelectSensorChannel;
+//};
 struct Menu{
         unsigned char menuNext;
         unsigned char menuSelect;
         unsigned char menuDisplay;
         unsigned char menuState;
-        struct dataInsert menuInsert;
+//        struct dataInsert menuInsert;
     };
 
 unsigned char eraseStateMachine(struct Menu* subMenu)
@@ -50,7 +50,7 @@ unsigned char eraseStateMachine(struct Menu* subMenu)
     unsigned char key = 0;
     unsigned char index = 0;
     unsigned char displayUpdateStatus = IDDLE;
-    unsigned char cursorPosition[2] = {0,0};
+    //unsigned char cursorPosition[2] = {0,0};
     unsigned char* ptr_eraseString;
     while(key != MENU)
     {
@@ -63,9 +63,9 @@ unsigned char eraseStateMachine(struct Menu* subMenu)
             case VERFICA_APAGAR:
                 updateUserMsg(0,USERMSG1,eraseselectUserMsg,&displayUpdateStatus);
                 ptr_eraseString = getEraseTestString();
-                printDataDisplay(0,INSERTMSG,ptr_eraseString);
-				printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
-				printDataDisplay(strlen(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
+                HW_PRINT_DATA(0,INSERTMSG,ptr_eraseString);
+				HW_PRINT_DATA(0,OPTIONMSG,selecionarUserMsg);
+				HW_PRINT_DATA(stringLenght(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
 
                 key = getKeyPressed();
 
@@ -78,12 +78,12 @@ unsigned char eraseStateMachine(struct Menu* subMenu)
                 else if(key == CONFIRMAR)
                 {
                 	resetKeyPressed();
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    readyUserInterface(&displayUpdateStatus);
                     if(*ptr_eraseString == '5')
                     {
                         updateUserMsg(3,2,erasingUserMsg,&displayUpdateStatus);
                         resetMyResults();
-                        subMenuErase->menuSelect = setSelectSub(&subMenuErase->menuState);
+                        //subMenuErase->menuSelect = setSelectSub(&subMenuErase->menuState);
                         subMenuErase->menuState = getNextSub(CONFIRMA_APAGAR);
                     }
                     else if(*ptr_eraseString == '2')

@@ -41,12 +41,12 @@ unsigned char getNextSub(unsigned char nextState)
     return menuSub.menuNext;
 }
 
-unsigned char setSelectSub(unsigned char *selectedState)
-{
-    unsigned char state = *selectedState;
-    menuSub.menuSelect = state;
-    return menuSub.menuSelect;
-}
+//unsigned char setSelectSub(unsigned char *selectedState)
+//{
+//    unsigned char state = *selectedState;
+//    menuSub.menuSelect = state;
+//    return menuSub.menuSelect;
+//}
 
 unsigned char setInsertData(struct dataInsert* dataToInsert)
 {

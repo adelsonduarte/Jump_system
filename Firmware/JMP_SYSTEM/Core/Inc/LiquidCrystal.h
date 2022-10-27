@@ -27,19 +27,19 @@ void print(LiquidCrystal *lcd, int8_t *value);
 void clear(LiquidCrystal *lcd);
 
 // Posiciona o cursor do display apontado por *lcd na primeira linha e primeira coluna
-void home(LiquidCrystal *lcd);
+//void home(LiquidCrystal *lcd);
 
 // Desabilita a exibição dos caracteres no display sem perder o texto de sua memória
-void noDisplay(LiquidCrystal *lcd);
+//void noDisplay(LiquidCrystal *lcd);
 
 // Habilita a exibição dos caracteres no display e exibe o que estiver armazenado em sua memória.
-void display(LiquidCrystal *lcd);
+//void display(LiquidCrystal *lcd);
 
 // Desabilita cursor piscante apontado por *lcd
-void noBlink(LiquidCrystal *lcd);
+//void noBlink(LiquidCrystal *lcd);
 
 // Habilita cursor piscante apontado por *lcd
-void blink(LiquidCrystal *lcd);
+//void blink(LiquidCrystal *lcd);
 
 // Desabilita cursor underscore (_) apontado por *lcd
 void noCursor(LiquidCrystal *lcd);
@@ -48,33 +48,33 @@ void noCursor(LiquidCrystal *lcd);
 void cursor(LiquidCrystal *lcd);
 
 // Movimenta todo o conteúdo no display apontado por *lcd uma posição para esquerda
-void scrollDisplayLeft(LiquidCrystal *lcd);
+//void scrollDisplayLeft(LiquidCrystal *lcd);
 
 // Movimenta todo o conteúdo no display apontado por *lcd uma posição para direita
-void scrollDisplayRight(LiquidCrystal *lcd);
+//void scrollDisplayRight(LiquidCrystal *lcd);
 
 // Especifica a direção do texto escrito  no display apontado por *lcd da esquerda para a direita.
-void leftToRight(LiquidCrystal *lcd);
+//void leftToRight(LiquidCrystal *lcd);
 
 // Especifica a direção do texto escrito  no display apontado por *lcd da direita para a esquerda.
-void rightToLeft(LiquidCrystal *lcd);
+//void rightToLeft(LiquidCrystal *lcd);
 
 // Para cada novo caractere inserido no display apontado por *lcd, o texto anterior move-se automaticamente para o lado
-void autoscroll(LiquidCrystal *lcd);
+//void autoscroll(LiquidCrystal *lcd);
 
 // Para cada novo caractere inserido no display apontado por *lcd, o texto anterior não move-se automaticamente para o lado
-void noAutoscroll(LiquidCrystal *lcd);
+//void noAutoscroll(LiquidCrystal *lcd);
 
 // Cria caractere personalizado na memória interna do display apontado por *lcd
-void createChar(LiquidCrystal *lcd, uint8_t location, uint8_t charmap[]);
+//void createChar(LiquidCrystal *lcd, uint8_t location, uint8_t charmap[]);
 
 // Posiciona o cursor do display apontado por *lcd na posição indicada por col e row (primeira linha e primeira coluna: 0,0)
 void setCursor(LiquidCrystal *lcd, uint8_t col, uint8_t row);
 
 // Escreve caractere no display apontado por *lcd
-void write(LiquidCrystal *lcd, uint8_t value);
+//void write(LiquidCrystal *lcd, uint8_t value);
 
 // Escreve comando no display apontado por *lcd (verificar comandos disponíveis no datasheet do display LCD)
-void command(LiquidCrystal *lcd, uint8_t value);
+//void command(LiquidCrystal *lcd, uint8_t value);
 
 #endif

@@ -34,7 +34,7 @@ struct Menu{
         unsigned char menuSelect;
         unsigned char menuDisplay;
         unsigned char menuState;
-        struct dataInsert menuInsert;
+//        struct dataInsert menuInsert;
     };
 
 unsigned char configStateMachine(struct Menu* subMenu)
@@ -42,22 +42,21 @@ unsigned char configStateMachine(struct Menu* subMenu)
     unsigned char* ptr_altMinString;
     unsigned char* ptr_altMaxString;
     unsigned char* ptr_numSaltosString;
-    unsigned char* ptr_intervalNumSaltosString;
+//    unsigned char* ptr_intervalNumSaltosString;
     unsigned char* ptr_jumpSelectString;
     unsigned char* ptr_altDJString;
     unsigned char* ptr_numSeriesString;
-    unsigned char* ptr_intervalSeriesString;
+//    unsigned char* ptr_intervalSeriesString;
 
     unsigned char userIntervalTimeString[9];
-    struct tm myTime;
-	struct tm* configIntervalTimeStruct = &myTime;
+	struct tm* configIntervalTimeStruct;
 
 	struct tm* configIntervalSeriesTimeStruct;
 
 
 
     struct Menu* subMenuTesteConfigurar = subMenu;
-    unsigned char cursorPosition[2] = {0,0};
+    //unsigned char cursorPosition[2] = {0,0};
     //verificar se vou usar
 //    struct dataInsert measurementSensor1;
 //    struct dataInsert measurementSensor2;
@@ -73,6 +72,7 @@ unsigned char configStateMachine(struct Menu* subMenu)
     unsigned int altMax = 0;
     unsigned int tmin = 0;
     unsigned int tmax = 0;
+
     while(key != MENU)
     {
         switch(subMenuTesteConfigurar->menuState)
@@ -83,23 +83,23 @@ unsigned char configStateMachine(struct Menu* subMenu)
             break;
             case CONFIG_SENSOR_1:
                 updateUserMsg(0,USERMSG1,sensor1UserMsg,&displayUpdateStatus);
-                printDataDisplay(0,INSERTMSG,avancarUserMsg);
-                printDataDisplay(strlen(avancarUserMsg),INSERTMSG,menuUserMsg);
-                printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
+                HW_PRINT_DATA(0,INSERTMSG,avancarUserMsg);
+                HW_PRINT_DATA(stringLenght(avancarUserMsg),INSERTMSG,menuUserMsg);
+                HW_PRINT_DATA(0,OPTIONMSG,selecionarUserMsg);
                 key = getKeyPressed();
 
                 if(key == AVANCAR)
                 {
                 	resetKeyPressed();
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    readyUserInterface(&displayUpdateStatus);
                     subMenuTesteConfigurar->menuState = getNextSub(CONFIG_SENSOR_2);
                 }
                 else if(key == CONFIRMAR)
                 {
                 	resetKeyPressed();
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    readyUserInterface(&displayUpdateStatus);
                     ptr_userConfiguration->userSelectSensorChannel = 1;
-                    subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
+//subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
                     subMenuTesteConfigurar->menuState = getNextSub(SENSOR_ALTMIN);
                 }
 
@@ -107,23 +107,23 @@ unsigned char configStateMachine(struct Menu* subMenu)
 
             case CONFIG_SENSOR_2:
                 updateUserMsg(0,0,sensor2UserMsg,&displayUpdateStatus);
-                printDataDisplay(0,INSERTMSG,avancarUserMsg);
-                printDataDisplay(strlen(avancarUserMsg),INSERTMSG,menuUserMsg);
-                printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
+                HW_PRINT_DATA(0,INSERTMSG,avancarUserMsg);
+                HW_PRINT_DATA(stringLenght(avancarUserMsg),INSERTMSG,menuUserMsg);
+                HW_PRINT_DATA(0,OPTIONMSG,selecionarUserMsg);
                 key = getKeyPressed();
 
                 if(key == AVANCAR)
                 {
                 	resetKeyPressed();
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    readyUserInterface(&displayUpdateStatus);
                     subMenuTesteConfigurar->menuState = getNextSub(CONFIG_SENSOR_1);
                 }
                 else if(key == CONFIRMAR)
                 {
                 	resetKeyPressed();
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    readyUserInterface(&displayUpdateStatus);
                     ptr_userConfiguration->userSelectSensorChannel = 2;
-                    subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
+//subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
                     subMenuTesteConfigurar->menuState = getNextSub(SENSOR_ALTMIN);
                 }
                 break;
@@ -131,13 +131,13 @@ unsigned char configStateMachine(struct Menu* subMenu)
             case SENSOR_ALTMIN:
                 updateUserMsg(0,USERMSG1,altminUserMsg,&displayUpdateStatus);
                 ptr_altMinString = getAltMinString();
-                printDataDisplay(0,USERMSG2,ptr_altMinString);
-                updateDataDisplay(index,USERMSG2);
+                HW_PRINT_DATA(0,USERMSG2,ptr_altMinString);
+                HW_UPDATE_DATA(index,USERMSG2);
 
-				printDataDisplay(0,INSERTMSG,avancarUserMsg);
-				printDataDisplay(strlen(avancarUserMsg),INSERTMSG,menuUserMsg);
-				printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
-				printDataDisplay(strlen(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
+				HW_PRINT_DATA(0,INSERTMSG,avancarUserMsg);
+				HW_PRINT_DATA(stringLenght(avancarUserMsg),INSERTMSG,menuUserMsg);
+				HW_PRINT_DATA(0,OPTIONMSG,selecionarUserMsg);
+				HW_PRINT_DATA(stringLenght(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
 
                 key = getKeyPressed();
 
@@ -160,22 +160,22 @@ unsigned char configStateMachine(struct Menu* subMenu)
                     altMin = stringToInt(getAltMinString());
                     tmin = alturaToTempo(altMin);
                     ptr_userConfiguration->userAlturaMin = tmin;
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    readyUserInterface(&displayUpdateStatus);
                     subMenuTesteConfigurar->menuState = getNextSub(SENSOR_ALTMAX);
-                    subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
+//subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
                 }
                 break;
 
             case SENSOR_ALTMAX:
                 updateUserMsg(0,USERMSG1,altmaxUserMsg,&displayUpdateStatus);
                 ptr_altMaxString = getAltMaxString();
-                printDataDisplay(0,USERMSG2,ptr_altMinString);
-                updateDataDisplay(index,USERMSG2);
+                HW_PRINT_DATA(0,USERMSG2,ptr_altMinString);
+                HW_UPDATE_DATA(index,USERMSG2);
 
-                printDataDisplay(0,INSERTMSG,avancarUserMsg);
-				printDataDisplay(strlen(avancarUserMsg),INSERTMSG,menuUserMsg);
-				printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
-				printDataDisplay(strlen(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
+                HW_PRINT_DATA(0,INSERTMSG,avancarUserMsg);
+				HW_PRINT_DATA(stringLenght(avancarUserMsg),INSERTMSG,menuUserMsg);
+				HW_PRINT_DATA(0,OPTIONMSG,selecionarUserMsg);
+				HW_PRINT_DATA(stringLenght(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
                 key = getKeyPressed();
 
                 if(key == INSERIR)
@@ -196,9 +196,9 @@ unsigned char configStateMachine(struct Menu* subMenu)
                     altMax = stringToInt(getAltMaxString());
                     tmax = alturaToTempo(altMax);
                     ptr_userConfiguration->userAlturaMax = tmax;
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    readyUserInterface(&displayUpdateStatus);
                     subMenuTesteConfigurar->menuState = getNextSub(SENSOR_SALTOS);
-                    subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
+//subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
                 }
 
                 break;
@@ -206,13 +206,13 @@ unsigned char configStateMachine(struct Menu* subMenu)
             case SENSOR_SALTOS:
                 updateUserMsg(0,USERMSG1,numsaltosUserMsg,&displayUpdateStatus);
                 ptr_numSaltosString = getNumSaltosString();
-                printDataDisplay(0,USERMSG2,ptr_numSaltosString);
-                updateDataDisplay(index,USERMSG2);
+                HW_PRINT_DATA(0,USERMSG2,ptr_numSaltosString);
+                HW_UPDATE_DATA(index,USERMSG2);
 
-                printDataDisplay(0,INSERTMSG,avancarUserMsg);
-				printDataDisplay(strlen(avancarUserMsg),INSERTMSG,menuUserMsg);
-				printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
-				printDataDisplay(strlen(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
+                HW_PRINT_DATA(0,INSERTMSG,avancarUserMsg);
+				HW_PRINT_DATA(stringLenght(avancarUserMsg),INSERTMSG,menuUserMsg);
+				HW_PRINT_DATA(0,OPTIONMSG,selecionarUserMsg);
+				HW_PRINT_DATA(stringLenght(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
                 key = getKeyPressed();
 
                 if(key == INSERIR)
@@ -230,9 +230,9 @@ unsigned char configStateMachine(struct Menu* subMenu)
                 {
                 	resetKeyPressed();
                     index = 4;
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    readyUserInterface(&displayUpdateStatus);
                     subMenuTesteConfigurar->menuState = getNextSub(SENSOR_INT_SALTOS);
-                    subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
+//subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
                 }
                 break;
 
@@ -240,13 +240,13 @@ unsigned char configStateMachine(struct Menu* subMenu)
                 updateUserMsg(0,USERMSG1,intersaltosUserMsg,&displayUpdateStatus);
                 configIntervalTimeStruct = getIntervalTimeStruct();
                 strftime(userIntervalTimeString, sizeof(userIntervalTimeString), "%M:%S", configIntervalTimeStruct);
-                printDataDisplay(0,USERMSG2,userIntervalTimeString);
-                updateDataDisplay(index,USERMSG2);
+                HW_PRINT_DATA(0,USERMSG2,userIntervalTimeString);
+                HW_UPDATE_DATA(index,USERMSG2);
 
-                printDataDisplay(0,INSERTMSG,avancarUserMsg);
-				printDataDisplay(strlen(avancarUserMsg),INSERTMSG,menuUserMsg);
-				printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
-				printDataDisplay(strlen(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
+                HW_PRINT_DATA(0,INSERTMSG,avancarUserMsg);
+				HW_PRINT_DATA(stringLenght(avancarUserMsg),INSERTMSG,menuUserMsg);
+				HW_PRINT_DATA(0,OPTIONMSG,selecionarUserMsg);
+				HW_PRINT_DATA(stringLenght(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
                 key = getKeyPressed();
 
                 if(key == INSERIR)
@@ -265,9 +265,9 @@ unsigned char configStateMachine(struct Menu* subMenu)
                 	resetKeyPressed();
                     index = 0;
                     ptr_userConfiguration->userIntervalSaltos = milisecondsTime(configIntervalTimeStruct);
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    readyUserInterface(&displayUpdateStatus);
                     subMenuTesteConfigurar->menuState = getNextSub(SENSOR_JMP_SELECT);
-                    subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
+//subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
                 }
 
                 break;
@@ -275,11 +275,11 @@ unsigned char configStateMachine(struct Menu* subMenu)
             case SENSOR_JMP_SELECT:
                 updateUserMsg(0,USERMSG1,tiposaltoUserMsg,&displayUpdateStatus);
                 ptr_jumpSelectString = getTypeJumpString();
-                printDataDisplay(0,USERMSG2,ptr_jumpSelectString);
-                updateDataDisplay(index,USERMSG2);
+                HW_PRINT_DATA(0,USERMSG2,ptr_jumpSelectString);
+                HW_UPDATE_DATA(index,USERMSG2);
 
-				printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
-				printDataDisplay(strlen(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
+				HW_PRINT_DATA(0,OPTIONMSG,selecionarUserMsg);
+				HW_PRINT_DATA(stringLenght(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
                 key = getKeyPressed();
 
                 if(key == INSERIR)
@@ -296,16 +296,16 @@ unsigned char configStateMachine(struct Menu* subMenu)
                     {
                     	index = 1;
                         subMenuTesteConfigurar->menuState = getNextSub(SENSOR_ALTDJ);
-                        subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
+    //subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
                     }
                     else
                     {
                     	index = 2;
                         subMenuTesteConfigurar->menuState = getNextSub(SENSOR_SERIES);
-                        subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
+    //subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
                     }
                     //TESTE trocar a variavel por uma local e o resultado enviar para ptr_userConfiguration->userCMJ.
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    readyUserInterface(&displayUpdateStatus);
 
                 }
 
@@ -314,13 +314,13 @@ unsigned char configStateMachine(struct Menu* subMenu)
             case SENSOR_ALTDJ:
                 updateUserMsg(0,USERMSG1,altdjUserMsg,&displayUpdateStatus);
                 ptr_altDJString = getAltDJString();
-                printDataDisplay(0,USERMSG2,ptr_altDJString);
-                updateDataDisplay(index,USERMSG2);
+                HW_PRINT_DATA(0,USERMSG2,ptr_altDJString);
+                HW_UPDATE_DATA(index,USERMSG2);
 
-                printDataDisplay(0,INSERTMSG,avancarUserMsg);
-				printDataDisplay(strlen(avancarUserMsg),INSERTMSG,menuUserMsg);
-				printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
-				printDataDisplay(strlen(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
+                HW_PRINT_DATA(0,INSERTMSG,avancarUserMsg);
+				HW_PRINT_DATA(stringLenght(avancarUserMsg),INSERTMSG,menuUserMsg);
+				HW_PRINT_DATA(0,OPTIONMSG,selecionarUserMsg);
+				HW_PRINT_DATA(stringLenght(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
                 key = getKeyPressed();
 
                 if(key == INSERIR)
@@ -333,9 +333,9 @@ unsigned char configStateMachine(struct Menu* subMenu)
                 {
                 	resetKeyPressed();
                     index = 2;
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    readyUserInterface(&displayUpdateStatus);
                     subMenuTesteConfigurar->menuState = getNextSub(SENSOR_SERIES);
-                    subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
+//subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
                 }
 
                 break;
@@ -343,13 +343,13 @@ unsigned char configStateMachine(struct Menu* subMenu)
             case SENSOR_SERIES:
                 updateUserMsg(0,USERMSG1,numserieUserMsg,&displayUpdateStatus);
                 ptr_numSeriesString = getNumSeriesString();
-                printDataDisplay(0,USERMSG2,ptr_numSeriesString);
-                updateDataDisplay(index,USERMSG2);
+                HW_PRINT_DATA(0,USERMSG2,ptr_numSeriesString);
+                HW_UPDATE_DATA(index,USERMSG2);
 
-                printDataDisplay(0,INSERTMSG,avancarUserMsg);
-				printDataDisplay(strlen(avancarUserMsg),INSERTMSG,menuUserMsg);
-				printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
-				printDataDisplay(strlen(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
+                HW_PRINT_DATA(0,INSERTMSG,avancarUserMsg);
+				HW_PRINT_DATA(stringLenght(avancarUserMsg),INSERTMSG,menuUserMsg);
+				HW_PRINT_DATA(0,OPTIONMSG,selecionarUserMsg);
+				HW_PRINT_DATA(stringLenght(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
                 key = getKeyPressed();
 
                 if(key == INSERIR)
@@ -367,9 +367,9 @@ unsigned char configStateMachine(struct Menu* subMenu)
                 {
                 	resetKeyPressed();
                     index = 2;
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    readyUserInterface(&displayUpdateStatus);
                     subMenuTesteConfigurar->menuState = getNextSub(SENSOR_INT_SERIES);
-                    subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
+//subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
                 }
 
                 break;
@@ -378,13 +378,13 @@ unsigned char configStateMachine(struct Menu* subMenu)
                 updateUserMsg(0,USERMSG1,interseriesUserMsg,&displayUpdateStatus);
                 configIntervalSeriesTimeStruct = getintervalSeriesTimeStruct();
 				strftime(userIntervalTimeString, sizeof(userIntervalTimeString), "%M:%S", configIntervalSeriesTimeStruct);
-				printDataDisplay(0,USERMSG2,userIntervalTimeString);
-                updateDataDisplay(index,USERMSG2);
+				HW_PRINT_DATA(0,USERMSG2,userIntervalTimeString);
+                HW_UPDATE_DATA(index,USERMSG2);
 
-                printDataDisplay(0,INSERTMSG,avancarUserMsg);
-				printDataDisplay(strlen(avancarUserMsg),INSERTMSG,menuUserMsg);
-				printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
-				printDataDisplay(strlen(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
+                HW_PRINT_DATA(0,INSERTMSG,avancarUserMsg);
+				HW_PRINT_DATA(stringLenght(avancarUserMsg),INSERTMSG,menuUserMsg);
+				HW_PRINT_DATA(0,OPTIONMSG,selecionarUserMsg);
+				HW_PRINT_DATA(stringLenght(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
                 key = getKeyPressed();
 
                 if(key == INSERIR)
@@ -403,31 +403,31 @@ unsigned char configStateMachine(struct Menu* subMenu)
                 	resetKeyPressed();
                     index = 2;
                     ptr_userConfiguration->userIntervalSeries = milisecondsTime(configIntervalSeriesTimeStruct);
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    readyUserInterface(&displayUpdateStatus);
                     subMenuTesteConfigurar->menuState = getNextSub(TAPETE_ON);
-                    subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
+//subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
                 }
 
             break;
 
             case TAPETE_ON:
                 updateUserMsg(0,USERMSG1,intapeteUserMsg,&displayUpdateStatus);
-                printDataDisplay(0,INSERTMSG,avancarUserMsg);
-				printDataDisplay(strlen(avancarUserMsg),INSERTMSG,menuUserMsg);
-				printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
+                HW_PRINT_DATA(0,INSERTMSG,avancarUserMsg);
+				HW_PRINT_DATA(stringLenght(avancarUserMsg),INSERTMSG,menuUserMsg);
+				HW_PRINT_DATA(0,OPTIONMSG,selecionarUserMsg);
                 key = getKeyPressed();
 
                 if(key == AVANCAR)
                 {
                 	resetKeyPressed();
-                	readyUserInterface(&displayUpdateStatus,cursorPosition);
+                	readyUserInterface(&displayUpdateStatus);
                     subMenuTesteConfigurar->menuState = getNextSub(TAPETE_OFF);
                 }
                 else if(key == CONFIRMAR)
                 {
                 	resetKeyPressed();
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
-                    subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
+                    readyUserInterface(&displayUpdateStatus);
+//subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
                     ptr_userConfiguration->userSelectTapete = TRUE;
                     subMenuTesteConfigurar->menuState = getNextSub(SAVE_CONFIGS);
                 }
@@ -435,22 +435,22 @@ unsigned char configStateMachine(struct Menu* subMenu)
 
             case TAPETE_OFF:
                 updateUserMsg(0,USERMSG1,outtapeteUserMsg,&displayUpdateStatus);
-                printDataDisplay(0,INSERTMSG,avancarUserMsg);
-				printDataDisplay(strlen(avancarUserMsg),INSERTMSG,menuUserMsg);
-				printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
+                HW_PRINT_DATA(0,INSERTMSG,avancarUserMsg);
+				HW_PRINT_DATA(stringLenght(avancarUserMsg),INSERTMSG,menuUserMsg);
+				HW_PRINT_DATA(0,OPTIONMSG,selecionarUserMsg);
                 key = getKeyPressed();
 
                 if(key == AVANCAR)
                 {
                 	resetKeyPressed();
-                	readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    readyUserInterface(&displayUpdateStatus);
                     subMenuTesteConfigurar->menuState = getNextSub(TAPETE_ON);
                 }
                 else if(key == CONFIRMAR)
                 {
                 	resetKeyPressed();
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
-                    subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
+                    readyUserInterface(&displayUpdateStatus);
+//subMenuTesteConfigurar->menuSelect = setSelectSub(&subMenuTesteConfigurar->menuState);
                     ptr_userConfiguration->userSelectTapete = FALSE;
                     subMenuTesteConfigurar->menuState = getNextSub(SAVE_CONFIGS);
                 }
@@ -459,7 +459,7 @@ unsigned char configStateMachine(struct Menu* subMenu)
             case SAVE_CONFIGS:
                 subMenuTesteConfigurar->menuState = getNextSub(CONFIG_SENSOR_1);
                 setInsertData(ptr_userConfiguration);
-                readyUserInterface(&displayUpdateStatus,cursorPosition);
+                readyUserInterface(&displayUpdateStatus);
                 key = MENU;
                 break;
         }

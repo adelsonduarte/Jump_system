@@ -39,6 +39,7 @@
 #include "IO_interface.h"
 #include "DataProcessing.h"
 #include "SENSORHW.h"
+#include "flash_v1.0.h"
 
 #include "fatfs.h"
 #include "fatfs_sd.h"
@@ -94,15 +95,16 @@ static void MX_SPI1_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-void getRxFlag()
-{
-	return uartFlagRx;
-}
-
 void resetRxFlag()
 {
 	uartFlagRx = FALSE;
 }
+
+unsigned char getRxFlag()
+{
+	return uartFlagRx;
+}
+
 
 void resetTimer3Variable()
 {
@@ -114,7 +116,7 @@ unsigned char getKeyPressed()
 	return key;
 }
 
-unsigned char resetKeyPressed()
+void resetKeyPressed()
 {
 	key = IDDLE;
 	HAL_Delay(200);
@@ -175,7 +177,7 @@ int main(void)
   struct Menu menuTesteMain = {IDDLE,IDDLE,IDDLE,IDDLE};
   struct Menu menuTesteSub = {IDDLE,IDDLE,IDDLE,IDDLE};
   unsigned char displayUpdateStatus = IDDLE;
-  unsigned char cursorPosition[2] = {0,0};
+  //unsigned char cursorPosition[2] = {0,0};
 
   /* USER CODE END Init */
 
@@ -214,28 +216,28 @@ int main(void)
 			  if(key == AVANCAR)
 			  {
 				  resetKeyPressed();
-				  readyUserInterface(&displayUpdateStatus,cursorPosition);
+				                      readyUserInterface(&displayUpdateStatus);
 				  menuTesteMain.menuState = getNextMain(START_TEST);
 			  }
 		  break;
 
 		  case START_TEST:
 			  updateUserMsg(0,USERMSG1,startUserMsg,&displayUpdateStatus);
-			  printDataDisplay(0,INSERTMSG,avancarUserMsg);
-			  printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
+			  HW_PRINT_DATA(0,INSERTMSG,avancarUserMsg);
+			  HW_PRINT_DATA(0,OPTIONMSG,selecionarUserMsg);
 			  if(key == AVANCAR)
 			  {
 				  resetKeyPressed();
-				  readyUserInterface(&displayUpdateStatus,cursorPosition);
+				                      readyUserInterface(&displayUpdateStatus);
 				  menuTesteMain.menuState = getNextMain(CONSULT_DATA);
 			  }
 			  else if(key == CONFIRMAR)
 			  {
 				  resetKeyPressed();
-				  readyUserInterface(&displayUpdateStatus,cursorPosition);
+				  readyUserInterface(&displayUpdateStatus);
 				  menuTesteMain.menuSelect = menuTesteMain.menuState;
 				  initStateMachine(&menuTesteSub);
-				  readyUserInterface(&displayUpdateStatus,cursorPosition);
+				  readyUserInterface(&displayUpdateStatus);
 
 				  menuTesteSub.menuState = IDDLE;
 			  }
@@ -243,23 +245,21 @@ int main(void)
 
 		  case CONSULT_DATA:
 			  updateUserMsg(0,0,consultUserMsg,&displayUpdateStatus);
-			  printDataDisplay(0,INSERTMSG,avancarUserMsg);
-			  printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
+			  HW_PRINT_DATA(0,INSERTMSG,avancarUserMsg);
+			  HW_PRINT_DATA(0,OPTIONMSG,selecionarUserMsg);
 			  if(key == AVANCAR)
 			  {
 				  resetKeyPressed();
-				  readyUserInterface(&displayUpdateStatus,cursorPosition);
+				                      readyUserInterface(&displayUpdateStatus);
 				  menuTesteMain.menuState = getNextMain(CONFIG_SENSOR);
 			  }
 
 			  else if(key == CONFIRMAR)
 			  {
 				  resetKeyPressed();
-				  readyUserInterface(&displayUpdateStatus,cursorPosition);
+				  readyUserInterface(&displayUpdateStatus);
 				 consultStateMachine(&menuTesteSub);
-				  readyUserInterface(&displayUpdateStatus,cursorPosition);
-
-				  readyUserInterface(&displayUpdateStatus,cursorPosition);
+				  readyUserInterface(&displayUpdateStatus);
 				 menuTesteMain.menuState = getNextMain(START_TEST);
 				 menuTesteSub.menuState = IDDLE;
 			  }
@@ -267,20 +267,20 @@ int main(void)
 
 		  case CONFIG_SENSOR:
 			  updateUserMsg(0,0,configUserMsg,&displayUpdateStatus);
-			  printDataDisplay(0,INSERTMSG,avancarUserMsg);
-			  printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
+			  HW_PRINT_DATA(0,INSERTMSG,avancarUserMsg);
+			  HW_PRINT_DATA(0,OPTIONMSG,selecionarUserMsg);
 			  if(key == AVANCAR)
 			  {
 				  resetKeyPressed();
-				  readyUserInterface(&displayUpdateStatus,cursorPosition);
+				  readyUserInterface(&displayUpdateStatus);
 				  menuTesteMain.menuState = getNextMain(EXPORT_DATA);
 			  }
 			  else if(key == CONFIRMAR)
 			  {
 				  resetKeyPressed();
-				  readyUserInterface(&displayUpdateStatus,cursorPosition);
+				  readyUserInterface(&displayUpdateStatus);
 				  configStateMachine(&menuTesteSub);
-				  readyUserInterface(&displayUpdateStatus,cursorPosition);
+				  readyUserInterface(&displayUpdateStatus);
 				  menuTesteSub.menuState = IDDLE;
 				  menuTesteMain.menuState = getNextMain(START_TEST);
 			  }
@@ -288,20 +288,20 @@ int main(void)
 
 		  case EXPORT_DATA:
 			  updateUserMsg(0,0,exportUserMsg,&displayUpdateStatus);
-			  printDataDisplay(0,INSERTMSG,avancarUserMsg);
-			  printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
+			  HW_PRINT_DATA(0,INSERTMSG,avancarUserMsg);
+			  HW_PRINT_DATA(0,OPTIONMSG,selecionarUserMsg);
 			  if(key == AVANCAR)
 			  {
 				  resetKeyPressed();
-				  readyUserInterface(&displayUpdateStatus,cursorPosition);
+				  readyUserInterface(&displayUpdateStatus);
 				  menuTesteMain.menuState = getNextMain(ERASE_DATA);
 			  }
 			  else if(key == CONFIRMAR)
 			  {
 				  resetKeyPressed();
-				  readyUserInterface(&displayUpdateStatus,cursorPosition);
+				  readyUserInterface(&displayUpdateStatus);
 				  exportStateMachine(&menuTesteSub);
-				  readyUserInterface(&displayUpdateStatus,cursorPosition);
+				  readyUserInterface(&displayUpdateStatus);
 
 				  menuTesteSub.menuState = IDDLE;
 				  menuTesteMain.menuState = getNextMain(START_TEST);
@@ -310,21 +310,21 @@ int main(void)
 
 		  case ERASE_DATA:
 			  updateUserMsg(0,0,eraseUserMsg,&displayUpdateStatus);
-			  printDataDisplay(0,INSERTMSG,avancarUserMsg);
-			  printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
+			  HW_PRINT_DATA(0,INSERTMSG,avancarUserMsg);
+			  HW_PRINT_DATA(0,OPTIONMSG,selecionarUserMsg);
 			  if(key == AVANCAR)
 			  {
 				  resetKeyPressed();
-				  readyUserInterface(&displayUpdateStatus,cursorPosition);
+				  readyUserInterface(&displayUpdateStatus);
 				  menuTesteMain.menuState = getNextMain(START_TEST);
 			  }
 
 			  else if(key == CONFIRMAR)
 			  {
 				  resetKeyPressed();
-				  readyUserInterface(&displayUpdateStatus,cursorPosition);
+				  readyUserInterface(&displayUpdateStatus);
 				  eraseStateMachine(&menuTesteSub);
-				  readyUserInterface(&displayUpdateStatus,cursorPosition);
+				  readyUserInterface(&displayUpdateStatus);
 
 				  menuTesteSub.menuState = IDDLE;
 				  menuTesteMain.menuState = getNextMain(START_TEST);

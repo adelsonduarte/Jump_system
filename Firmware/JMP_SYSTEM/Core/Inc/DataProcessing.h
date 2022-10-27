@@ -6,6 +6,7 @@ unsigned long stringToLong(unsigned char* string);
 unsigned int stringToInt(unsigned char* string);
 unsigned char indexMass(unsigned char* index);
 unsigned char stringToFloat(unsigned char* string);
+unsigned char stringLenght(unsigned char* str);
 unsigned int* param_1_toString(unsigned char* string);
 unsigned int* param_2_toString(unsigned char* string);
 unsigned int* param_3_toString(unsigned char* string);
@@ -35,7 +36,7 @@ unsigned char setUserTypeJump(unsigned char* idx);
 unsigned char setUserAltDJ(unsigned char* idx);
 unsigned char setUserNumSeries(unsigned char* idx);
 unsigned char setUserIntervalSeries(unsigned char* idx);
-unsigned char setUserErase(unsigned char* idx);
+unsigned char setUserErase(unsigned int* idx);
 
 unsigned char indexChange(unsigned char* index, unsigned char size);
 //unsigned long milisecondsTime(unsigned char* ptr_inputTime);

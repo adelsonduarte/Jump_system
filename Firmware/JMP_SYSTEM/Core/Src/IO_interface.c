@@ -43,54 +43,54 @@ struct results{
     struct samples Measurement[MEASUREMENT_SIZE];
 };
 
-unsigned char startTM2(void)
+void startTM2(void)
 {
         SET_HW_TIMER2();
 }
 
-unsigned char stopTM2(void)
+void stopTM2(void)
 {
     RESET_HW_TIMER2();
 }
 
-unsigned char startTM3(void)
+void startTM3(void)
 {
         SET_HW_TIMER3();
 //        resetTimer3Variable();
 }
 
-unsigned char stopTM3(void)
+void stopTM3(void)
 {
     RESET_HW_TIMER3();
 }
 
-unsigned char rstHardware(void)
-{
-//    RESET_HARDWARE();
-}
+//unsigned char rstHardware(void)
+//{
+////    RESET_HARDWARE();
+//}
 
-unsigned char printDataDisplay(unsigned char col, unsigned char linha,unsigned char* userData)
-{
-    HW_PRINT_DATA(col, linha,userData);
-}
+//void printDataDisplay(unsigned char col, unsigned char linha,unsigned char* userData)
+//{
+//    HW_PRINT_DATA(col, linha,userData);
+//}
 
-unsigned char insertDataDisplay(unsigned char col, unsigned char linha,unsigned char* userData)
-{
-	HW_INSERT_DATA(col, linha,userData);
-}
+//void insertDataDisplay(unsigned char col, unsigned char linha,unsigned char* userData)
+//{
+//	HW_INSERT_DATA(col, linha,userData);
+//}
 
 
-unsigned char eraseDataDisplay()
+void eraseDataDisplay()
 {
     HW_ERASE_DATA();
 }
 
-unsigned char updateDataDisplay(unsigned char col, unsigned char linha)
-{
-	HW_UPDATE_DATA(col,linha);
-}
+//void updateDataDisplay(unsigned char col, unsigned char linha)
+//{
+//	HW_UPDATE_DATA(col,linha);
+//}
 
-unsigned char homeDataDisplay(unsigned char* appName,unsigned char* companyName,unsigned char* appVersion)
+void homeDataDisplay(unsigned char* appName,unsigned char* companyName,unsigned char* appVersion)
 {
 //    printf("%s\n",appName);
 //    printf("%s\n",companyName);
@@ -99,16 +99,16 @@ unsigned char homeDataDisplay(unsigned char* appName,unsigned char* companyName,
 
 }
 
-unsigned char mount_SD()
+void mount_SD()
 {
 	unsigned char* fs =  HW_EXT_MEMORY_MAIN();
 	HW_EXT_MEMORY_INIT(fs);
 }
 
-unsigned char check_SD_card()
-{
-//    HW_EXT_MEMORY_CHECK();
-}
+//void char check_SD_card()
+//{
+////    HW_EXT_MEMORY_CHECK();
+//}
 
 unsigned char* load_SD_card(unsigned char numTeste)
 {
@@ -123,7 +123,7 @@ unsigned char* load_SD_card(unsigned char numTeste)
 
 
 
-//     ptr_loadStringResult = HW_EXT_MEMORY_READ(ptr_loadName,count,ptr_loadStringResult);
+     ptr_loadStringResult = HW_EXT_MEMORY_READ(ptr_loadName,count,ptr_loadStringResult);
      //COMENTADO DEVIDO AO PROBLEMA DE MEMORIA
 //    FILE* ptr_file;
 //    ptr_file = fopen(ptr_loadName,"r");
@@ -152,12 +152,13 @@ unsigned char* load_SD_card(unsigned char numTeste)
     return ptr_loadStringResult;
 }
 
-unsigned char save_SD_card(unsigned char* dataToSave, unsigned char numTeste)
+void save_SD_card(unsigned char* dataToSave, unsigned char numTeste)
 {
+	numTeste++;
     unsigned char* ptr_saveName = getArqName(numTeste);
-    struct results* saveStruct = dataToSave;
+//    struct results* saveStruct = dataToSave;
     unsigned char sampleToSave = 0;
-//    HW_EXT_MEMORY_WRITE(dataToSave,ptr_saveName);
+    HW_EXT_MEMORY_WRITE(dataToSave,ptr_saveName);
     //COMENTADO DEVIDO AO PROBLEMA DE MEMORIA
 
 //    FILE* ptr_file;
@@ -184,21 +185,21 @@ unsigned char save_SD_card(unsigned char* dataToSave, unsigned char numTeste)
 
 }
 
-unsigned char startCOMM()
+void startCOMM()
 {
 //    printf("SET_HW_UART2()\n");
 	unsigned char* uartInstance = getUARTInstance();
 	SET_HW_UART(uartInstance);
 }
 
-unsigned char stopCOMM()
+void stopCOMM()
 {
 //    printf("RESET_HW_UART2()\n");
 	unsigned char* uartInstance = getUARTInstance();
 	RESET_HW_UART(uartInstance);
 }
 
-unsigned char transmissionCOMM()
+void transmissionCOMM()
 {
 	//	unsigned char numTeste = 1;
 	unsigned char numTeste = getResultTestNumber();
@@ -270,17 +271,12 @@ unsigned char transmissionCOMM()
 	TRANSMISSION_HW_UART(uartInstance,uartMsg);
 }
 
-unsigned char receiveCOMM()
+void receiveCOMM()
 {
 //    printf("RECEIVE_HW_UART2()\n");
 //    RECEIVE_HW_UART2();
 }
 
-unsigned char statusCOMM()
-{
-//        printf("STATUS_HW_UART2()\n");
-//    STATUS_HW_UART2();
-}
 
 
 

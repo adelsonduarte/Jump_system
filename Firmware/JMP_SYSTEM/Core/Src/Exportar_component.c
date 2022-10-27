@@ -61,7 +61,7 @@ unsigned char exportStateMachine(struct Menu* subMenu)
     unsigned char* ptr_alturaString;
     struct results* ptr_structExportResult;
     unsigned char dataVerify;
-    unsigned char cursorPosition[2] = {0,0};
+    //unsigned char cursorPosition[2] = {0,0};
     unsigned char displayUpdateStatus = IDDLE;
     while(key != MENU)
     {
@@ -76,52 +76,52 @@ unsigned char exportStateMachine(struct Menu* subMenu)
             	// e comparar para verificar se a comm já está ligada antes de liga-la novamente.
                 updateUserMsg(0,0,waitTransmissionMsg,&displayUpdateStatus);
                 subMenuExport->menuState = getNextSub(EXPORTAR_UNITARIO);
-                readyUserInterface(&displayUpdateStatus,cursorPosition);
+                readyUserInterface(&displayUpdateStatus);
             break;
 
             case EXPORTAR_UNITARIO:
                 updateUserMsg(0,USERMSG1,exportunitUserMsg,&displayUpdateStatus);
-                printDataDisplay(0,INSERTMSG,avancarUserMsg);
-				printDataDisplay(strlen(avancarUserMsg),INSERTMSG,menuUserMsg);
-				printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
+                HW_PRINT_DATA(0,INSERTMSG,avancarUserMsg);
+				HW_PRINT_DATA(stringLenght(avancarUserMsg),INSERTMSG,menuUserMsg);
+				HW_PRINT_DATA(0,OPTIONMSG,selecionarUserMsg);
 
                 key = getKeyPressed();
 
                 if(key == AVANCAR)
                 {
                 	resetKeyPressed();
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    readyUserInterface(&displayUpdateStatus);
                     subMenuExport->menuState = getNextSub(EXPORTAR_TODOS);
                 }
 
                 else if(key == CONFIRMAR)
                 {
                 	resetKeyPressed();
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
-                    subMenuExport->menuSelect = setSelectSub(&subMenuExport->menuState);
+                    readyUserInterface(&displayUpdateStatus);
+                    //subMenuExport->menuSelect = setSelectSub(&subMenuExport->menuState);
                     subMenuExport->menuState = getNextSub(NUM_TESTE_EXPORT);
                 }
                 break;
 
             case EXPORTAR_TODOS:
                 updateUserMsg(0,0,exportallUserMsg,&displayUpdateStatus);
-                printDataDisplay(0,INSERTMSG,avancarUserMsg);
-				printDataDisplay(strlen(avancarUserMsg),INSERTMSG,menuUserMsg);
-				printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
+                HW_PRINT_DATA(0,INSERTMSG,avancarUserMsg);
+				HW_PRINT_DATA(stringLenght(avancarUserMsg),INSERTMSG,menuUserMsg);
+				HW_PRINT_DATA(0,OPTIONMSG,selecionarUserMsg);
                 key = getKeyPressed();
 
                 if(key == AVANCAR)
                 {
                 	resetKeyPressed();
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    readyUserInterface(&displayUpdateStatus);
                     subMenuExport->menuState = getNextSub(EXPORTAR_UNITARIO);
                 }
 
                 else if(key == CONFIRMAR)
                 {
                 	resetKeyPressed();
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
-                    subMenuExport->menuSelect = setSelectSub(&subMenuExport->menuState);
+                    readyUserInterface(&displayUpdateStatus);
+                    //subMenuExport->menuSelect = setSelectSub(&subMenuExport->menuState);
                     subMenuExport->menuState = getNextSub(PROCESS_TODOS);
                 }
                 break;
@@ -130,13 +130,13 @@ unsigned char exportStateMachine(struct Menu* subMenu)
             case NUM_TESTE_EXPORT:
                 updateUserMsg(0,USERMSG1,consultTestUserMsg,&displayUpdateStatus);
                 ptr_exportTestString = getNumTestString();
-                printDataDisplay(0,USERMSG2,ptr_exportTestString);
-                updateDataDisplay(index,USERMSG2);
+                HW_PRINT_DATA(0,USERMSG2,ptr_exportTestString);
+                HW_UPDATE_DATA(index,USERMSG2);
 
-                printDataDisplay(0,INSERTMSG,avancarUserMsg);
-				printDataDisplay(strlen(avancarUserMsg),INSERTMSG,menuUserMsg);
-				printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
-				printDataDisplay(strlen(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
+                HW_PRINT_DATA(0,INSERTMSG,avancarUserMsg);
+				HW_PRINT_DATA(stringLenght(avancarUserMsg),INSERTMSG,menuUserMsg);
+				HW_PRINT_DATA(0,OPTIONMSG,selecionarUserMsg);
+				HW_PRINT_DATA(stringLenght(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
 				key = getKeyPressed();
 
                 if(key == INSERIR)
@@ -153,9 +153,9 @@ unsigned char exportStateMachine(struct Menu* subMenu)
                 else if(key == CONFIRMAR)
                 {
                 	resetKeyPressed();
-                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    readyUserInterface(&displayUpdateStatus);
                     subMenuExport->menuState = getNextSub(PROCESS_UNITARIO);
-                    subMenuExport->menuSelect = setSelectSub(&subMenuExport->menuState);
+                    //subMenuExport->menuSelect = setSelectSub(&subMenuExport->menuState);
                 }
 
                 break;
@@ -178,7 +178,7 @@ unsigned char exportStateMachine(struct Menu* subMenu)
                     updateUserMsg(0,0,exportedUserMsg,&displayUpdateStatus);
 
                     subMenuExport->menuState = getNextSub(IDDLE);
-  				  readyUserInterface(&displayUpdateStatus,cursorPosition);
+  				    readyUserInterface(&displayUpdateStatus);
                     key = MENU;
                     break;
         }

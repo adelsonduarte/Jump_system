@@ -20,7 +20,7 @@ unsigned char* appVersionMsg = "Versao 0.1 2.1";
 //
 
 //SUBMENU INICIAR
-unsigned char* startUserMsg = "INICIAR TESTE"; //13
+unsigned char* startUserMsg  = "INICIAR TESTE"; //13
 unsigned char* noTransmissionMsg = "TRANSMISSAO OFF"; //15
 unsigned char* yesTransmissionMsg = "TRANSMISSAO ON"; //14
 unsigned char* waitTransmissionMsg = "PAREANDO"; //8

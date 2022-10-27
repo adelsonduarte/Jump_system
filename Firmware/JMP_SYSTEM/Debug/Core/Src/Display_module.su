@@ -2,4 +2,3 @@
 ../Core/Src/Display_module.c:21:15:readyUserInterface	16	static
 ../Core/Src/Display_module.c:29:15:statusUserInterface	16	static
 ../Core/Src/Display_module.c:34:15:cursorChangeInterface	24	static
-../Core/Src/Display_module.c:43:15:resetCursorInterface	16	static

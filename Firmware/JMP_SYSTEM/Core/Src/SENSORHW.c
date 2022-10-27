@@ -17,10 +17,31 @@ struct results{
     struct samples Measurement[MEASUREMENT_SIZE];
 };
 
+struct dataInsert{
+    unsigned char userTest;
+    unsigned long int userTime;
+    unsigned char userMass;
+    unsigned char userOverMass;
+    unsigned char userConsultTest;
+    unsigned int userAlturaMin;
+    unsigned int userAlturaMax;
+    unsigned char userNumSaltos;
+    unsigned long int  userIntervalSaltos;
+    unsigned char userCMJ;
+    unsigned char userAlturaDJ;
+    unsigned char userNumSeries;
+    unsigned long int userIntervalSeries;
+    unsigned char userCommConfig;
+    unsigned char userSelectTapete;
+    unsigned char userSelectSensorChannel;
+};
+
 static struct results measuredData;
 
 unsigned char readingSensor()
 {
+	struct dataInsert* configStruct = getUserConfigStruct();
+
 	unsigned char userState = REPOUSO;
 	unsigned char sensorFlag;
 	unsigned int referenceTime,currentTime,totalTime,spentTimeVoo,spentTimeSolo = 0;
@@ -35,12 +56,12 @@ unsigned char readingSensor()
 
 
 	unsigned char indexTest = getResultTestNumber();
-	unsigned long int userTime = getUserTime();
-	unsigned long int userIntervalSeries = getUserIntervalSeries();
-	unsigned char userNumSeries = getUserNumSeries();
-	unsigned char userTapete = getUserSelectTapete();
-	unsigned long int userIntervalSaltos = getUserIntervalSaltos();
-	unsigned char userNumSaltos = getUserNumSaltos();
+//	unsigned long int userTime = getUserTime();
+//	unsigned long int userIntervalSeries = getUserIntervalSeries();
+//	unsigned char userNumSeries = getUserNumSeries();
+//	unsigned char userTapete = getUserSelectTapete();
+//	unsigned long int userIntervalSaltos = getUserIntervalSaltos();
+//	unsigned char userNumSaltos = getUserNumSaltos();
 	unsigned int timeMin = getTimeAltMin();
 	unsigned int timeMax = getTimeAltMax();
 	/*The definition below are used just for debugging proposes
@@ -57,9 +78,9 @@ unsigned char readingSensor()
 	//
 	key = getKeyPressed();
 
-//	while(key != PARAR && totalTime != userTime && numSaltos != userNumSaltos) //WHILE COMPLETO
-//	while(key != PARAR && numSaltos != userNumSaltos) //USADO PARA DEBUGGER DESCONSIDERANDO O TIMEOUT
-	while(key != PARAR && numSeries != userNumSeries) //USADO PARA DEBUGGER DESCONSIDERANDO O TIMEOUT e NUM SALTOS
+//	while(key != PARAR && totalTime != configStruct->userTime && numSaltos != configStruct->userNumSaltos) //WHILE COMPLETO
+//	while(key != PARAR && numSaltos != configStruct->userNumSaltos) //USADO PARA DEBUGGER DESCONSIDERANDO O TIMEOUT
+	while(key != PARAR && numSeries != configStruct->userNumSeries) //USADO PARA DEBUGGER DESCONSIDERANDO O TIMEOUT e NUM SALTOS
 
 	{
 		totalTime = getTimer3Variable();
@@ -68,12 +89,12 @@ unsigned char readingSensor()
 		{
 			case REPOUSO:
 				sensorFlag = getTimer2Variable();
-				if(sensorFlag == 0 && userTapete == FALSE) //INICIO FORA DO TAPETE
+				if(sensorFlag == 0 && configStruct->userSelectTapete == FALSE) //INICIO FORA DO TAPETE
 				{
 					userState = CONTATO;
 					referenceTime = getTimer3Variable();
 				}
-				else if(sensorFlag == 0 && userTapete == TRUE) // INICIO DENTRO DO TAPETE
+				else if(sensorFlag == 0 && configStruct->userSelectTapete == TRUE) // INICIO DENTRO DO TAPETE
 				{
 					userState = CONTATO;
 					referenceTime = 0;
@@ -117,7 +138,7 @@ unsigned char readingSensor()
 						referenceTime = currentTime;
 						//leitura invalida
 					}
-					else if((spentTimeVoo+spentTimeSolo)>userIntervalSaltos)
+					else if((spentTimeVoo+spentTimeSolo)>configStruct->userIntervalSaltos)
 					{
 						/*leitura invalida --- confirmar com alex. Aqui estou consi
 						 * derando que o tempo do ciclo (voo+contato) é um salto
@@ -137,7 +158,7 @@ unsigned char readingSensor()
 						referenceTime = currentTime;
 						numSaltos++;
 						samples++;
-						if(numSaltos == userNumSaltos)
+						if(numSaltos == configStruct->userNumSaltos)
 						{
 							numSeries++;
 							userState = INTERVALO;
@@ -155,7 +176,7 @@ unsigned char readingSensor()
 			case INTERVALO:
 				currentTime = getTimer3Variable();
 				intervalSeries = currentTime - referenceTime;
-				if(intervalSeries == userIntervalSeries)
+				if(intervalSeries == configStruct->userIntervalSeries)
 				{
 					HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, SET);
 					userState = CONTATO;
@@ -166,14 +187,14 @@ unsigned char readingSensor()
 		}
 	}
 
-	if(totalTime == userTime)
+	if(totalTime == configStruct->userTime)
 	{
 		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 		measuredData.timeout = TRUE;
 		return TIMEOUT;
 	}
 
-	else if(numSaltos == userNumSaltos)
+	else if(numSaltos == configStruct->userNumSaltos)
 	{
 		measuredData.timeout = FALSE;
 		measuredData.resultTestAcquiredSamples = samples;
