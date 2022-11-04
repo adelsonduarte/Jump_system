@@ -1,0 +1,13 @@
+../Core/Src/IO_interface.c:46:6:startTM2	8	static
+../Core/Src/IO_interface.c:51:6:stopTM2	8	static
+../Core/Src/IO_interface.c:56:6:startTM3	8	static
+../Core/Src/IO_interface.c:62:6:stopTM3	8	static
+../Core/Src/IO_interface.c:83:6:eraseDataDisplay	8	static
+../Core/Src/IO_interface.c:93:6:homeDataDisplay	24	static
+../Core/Src/IO_interface.c:102:6:mount_SD	16	static
+../Core/Src/IO_interface.c:113:16:load_SD_card	32	static
+../Core/Src/IO_interface.c:155:6:save_SD_card	24	static
+../Core/Src/IO_interface.c:188:6:startCOMM	16	static
+../Core/Src/IO_interface.c:195:6:stopCOMM	16	static
+../Core/Src/IO_interface.c:202:6:transmissionCOMM	96	static
+../Core/Src/IO_interface.c:274:6:receiveCOMM	4	static
