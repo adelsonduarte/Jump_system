@@ -1,3 +1,0 @@
-../Core/Src/SENSORHW.c:41:15:readingSensor	112	static
-../Core/Src/SENSORHW.c:227:6:calcAltura	4	static
-../Core/Src/SENSORHW.c:232:6:calcPotencia	4	static
