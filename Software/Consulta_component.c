@@ -99,9 +99,14 @@ unsigned char consultStateMachine(struct Menu* subMenu)
             case RESULT_TESTE:
                 selectedUserTest = stringToInt(ptr_consultTestString);
                 ptr_structConsultResult = load_data(selectedUserTest);
+<<<<<<< HEAD
 //                ptr_structConsultResult = getUserResultData(selectedUserTest);
 
                 if(testSamples<(ptr_structConsultResult->resultTestAcquiredSamples)) //BUSCAR INFOMAÇÃO DE NUMSAMPLE
+=======
+
+                if(testSamples<(ptr_structConsultResult->resultTestAcquiredSamples))
+>>>>>>> 86ffc1670df986741b7c1944748c75133f6cec1f
                 {
                     updateUserMsg(0,0,"Amostra",&displayUpdateStatus);
                     readyUserInterface(&displayUpdateStatus,cursorPosition);

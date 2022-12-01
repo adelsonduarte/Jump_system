@@ -1,6 +1,11 @@
 #ifndef DisplayMessage_H_INCLUDED
 #define DisplayMessage_H_INCLUDED
 
+#define USERMSG1  0
+#define USERMSG2  1
+#define INSERTMSG 2
+#define OPTIONMSG 3
+
 //MENSAGEM DE BOAS VINDAS
 extern unsigned char* appNameMsg;
 extern unsigned char* companyNameMsg;
@@ -19,10 +24,14 @@ extern unsigned char* overmassUserMsg;
 
 extern unsigned char* startreadUserMsg;
 extern unsigned char* stopreadUserMsg;
+extern unsigned char* medindoUserMsg;
 
 
 extern unsigned char* resultsUserMsg;
-//VERIFICAR COMO COLOCAR OS PARAMETROS LIDOS
+extern unsigned char* amostraUserMsg;
+extern unsigned char* tempoVooUserMsg;
+extern unsigned char* tempoSoloUserMsg;
+extern unsigned char* potenciaUserMsg;
 extern unsigned char* saveUserMsg;
 extern unsigned char* savedUserMsg;
 extern unsigned char* cancelUserMsg;
@@ -68,6 +77,14 @@ extern unsigned char* erasingUserMsg;
 extern unsigned char* erasedUserMsg;
 
 extern unsigned char* testMsg;
+
+extern unsigned char* avancarUserMsg;
+extern unsigned char* inserirUserMsg;
+extern unsigned char* menuUserMsg;
+extern unsigned char* selecionarUserMsg;
+extern unsigned char* pararUserMsg;
+extern unsigned char* pularUserMsg;
+
 
 
 

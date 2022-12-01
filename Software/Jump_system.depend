@@ -179,7 +179,11 @@
 	"Data.h"
 	"Display_module.h"
 
+<<<<<<< HEAD
 1662401382 h:\o meu disco\cefise - biotecnologia\jump_system\software\main.h
+=======
+1662745421 h:\o meu disco\cefise - biotecnologia\jump_system\software\main.h
+>>>>>>> 86ffc1670df986741b7c1944748c75133f6cec1f
 
 1662144311 h:\o meu disco\cefise - biotecnologia\jump_system\software\exportar_component.h
 
@@ -198,7 +202,11 @@
 
 1662409290 h:\o meu disco\cefise - biotecnologia\jump_system\software\configuracao_component.h
 
+<<<<<<< HEAD
 1662567866 source:h:\o meu disco\cefise - biotecnologia\jump_system\software\consulta_component.c
+=======
+1662987974 source:h:\o meu disco\cefise - biotecnologia\jump_system\software\consulta_component.c
+>>>>>>> 86ffc1670df986741b7c1944748c75133f6cec1f
 	<stdio.h>
 	<stdlib.h>
 	"main.h"
@@ -273,7 +281,11 @@
 	"Data.h"
 	"IO_interface.h"
 
+<<<<<<< HEAD
 1662577049 source:h:\o meu disco\cefise - biotecnologia\jump_system\software\io_interface.c
+=======
+1662990750 source:h:\o meu disco\cefise - biotecnologia\jump_system\software\io_interface.c
+>>>>>>> 86ffc1670df986741b7c1944748c75133f6cec1f
 	"stdio.h"
 	"stdlib.h"
 	"LCDHW.h"
@@ -305,7 +317,11 @@
 	"Data.h"
 	"Display_module.h"
 
+<<<<<<< HEAD
 1662401394 g:\meu drive\cefise - biotecnologia\jump_system\software\main.h
+=======
+1662745443 g:\meu drive\cefise - biotecnologia\jump_system\software\main.h
+>>>>>>> 86ffc1670df986741b7c1944748c75133f6cec1f
 
 1662144318 g:\meu drive\cefise - biotecnologia\jump_system\software\exportar_component.h
 
@@ -353,7 +369,11 @@
 	"Data.h"
 	"DataProcessing.h"
 
+<<<<<<< HEAD
 1662651521 source:g:\meu drive\cefise - biotecnologia\jump_system\software\io_interface.c
+=======
+1662750442 source:g:\meu drive\cefise - biotecnologia\jump_system\software\io_interface.c
+>>>>>>> 86ffc1670df986741b7c1944748c75133f6cec1f
 	"stdio.h"
 	"stdlib.h"
 	"LCDHW.h"
@@ -438,14 +458,22 @@
 	<string.h>
 	<stdint-gcc.h>
 
+<<<<<<< HEAD
 1662578129 source:g:\meu drive\cefise - biotecnologia\jump_system\software\dataprocessing.c
+=======
+1662665880 source:g:\meu drive\cefise - biotecnologia\jump_system\software\dataprocessing.c
+>>>>>>> 86ffc1670df986741b7c1944748c75133f6cec1f
 	"main.h"
 	"time.h"
 	"Display_module.h"
 	"Data.h"
 	"C:\MinGW\include\stdlib.h"
 
+<<<<<<< HEAD
 1662578121 source:h:\o meu disco\cefise - biotecnologia\jump_system\software\dataprocessing.c
+=======
+1662983207 source:h:\o meu disco\cefise - biotecnologia\jump_system\software\dataprocessing.c
+>>>>>>> 86ffc1670df986741b7c1944748c75133f6cec1f
 	"main.h"
 	"time.h"
 	"Display_module.h"
@@ -458,26 +486,46 @@
 
 1662487346 h:\o meu disco\cefise - biotecnologia\jump_system\software\dataprocessing.h
 
+<<<<<<< HEAD
 1662578401 h:\o meu disco\cefise - biotecnologia\jump_system\software\sd_module.h
 
 1662578521 source:h:\o meu disco\cefise - biotecnologia\jump_system\software\sd_module.c
 	<String.h>
+=======
+1662990783 h:\o meu disco\cefise - biotecnologia\jump_system\software\sd_module.h
+
+1662990191 source:h:\o meu disco\cefise - biotecnologia\jump_system\software\sd_module.c
+	<String.h>
+	"stdio.h"
+>>>>>>> 86ffc1670df986741b7c1944748c75133f6cec1f
 	"SD_module.h"
 	"Data.h"
 	"main.h"
 	"C:\MinGW\include\stdlib.h"
 
+<<<<<<< HEAD
 1662470983 source:h:\o meu disco\cefise - biotecnologia\jump_system\software\data.c
+=======
+1662985815 source:h:\o meu disco\cefise - biotecnologia\jump_system\software\data.c
+>>>>>>> 86ffc1670df986741b7c1944748c75133f6cec1f
 	<stdio.h>
 	<stdlib.h>
 	"Data.h"
 	"main.h"
 	"time.h"
 
+<<<<<<< HEAD
 1662578414 g:\meu drive\cefise - biotecnologia\jump_system\software\sd_module.h
 
 1662578533 source:g:\meu drive\cefise - biotecnologia\jump_system\software\sd_module.c
 	<String.h>
+=======
+1662751562 g:\meu drive\cefise - biotecnologia\jump_system\software\sd_module.h
+
+1662750505 source:g:\meu drive\cefise - biotecnologia\jump_system\software\sd_module.c
+	<String.h>
+	"stdio.h"
+>>>>>>> 86ffc1670df986741b7c1944748c75133f6cec1f
 	"SD_module.h"
 	"Data.h"
 	"main.h"
@@ -488,10 +536,17 @@
 
 1662407586 h:\o meu disco\cefise - biotecnologia\jump_system\software\lcdhw.h
 
+<<<<<<< HEAD
 1662568196 source:h:\o meu disco\cefise - biotecnologia\jump_system\software\sdmemoryhw.c
 	"SDMEMORYHW.h"
 
 1662486055 h:\o meu disco\cefise - biotecnologia\jump_system\software\sdmemoryhw.h
+=======
+1662989477 source:h:\o meu disco\cefise - biotecnologia\jump_system\software\sdmemoryhw.c
+	"SDMEMORYHW.h"
+
+1662989068 h:\o meu disco\cefise - biotecnologia\jump_system\software\sdmemoryhw.h
+>>>>>>> 86ffc1670df986741b7c1944748c75133f6cec1f
 
 1662406925 source:h:\o meu disco\cefise - biotecnologia\jump_system\software\sensorhw.c
 
@@ -502,7 +557,11 @@
 
 1662467580 h:\o meu disco\cefise - biotecnologia\jump_system\software\timerhw.h
 
+<<<<<<< HEAD
 1662568257 h:\o meu disco\cefise - biotecnologia\jump_system\software\io_interface.h
+=======
+1662981895 h:\o meu disco\cefise - biotecnologia\jump_system\software\io_interface.h
+>>>>>>> 86ffc1670df986741b7c1944748c75133f6cec1f
 
 1662409265 h:\o meu disco\cefise - biotecnologia\jump_system\software\apagar_component.h
 

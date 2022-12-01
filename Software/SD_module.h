@@ -12,7 +12,13 @@ unsigned char* savedDataToString(struct results* dataToSave, unsigned char sampl
 unsigned char* load_data(unsigned char numTest);
 unsigned char* savedHeaderToString(struct results* dataToSave);
 unsigned char* getArqName(unsigned char numTeste);
+<<<<<<< HEAD
 unsigned char* getArquivoMsg();
+=======
+unsigned char lineCounter(unsigned char numTeste);
+unsigned char* loadDataArrayToStruct(unsigned char* load);
+
+>>>>>>> 86ffc1670df986741b7c1944748c75133f6cec1f
 
 
 

@@ -151,12 +151,15 @@ unsigned char* getEraseTestString()
     return eraseTestString;
 }
 
+<<<<<<< HEAD
 unsigned char* getStringHeaderToSave() //fiz aqui pra ficar mais simples
 {
         static unsigned char saveHeaderString[50];
         return saveHeaderString;
 }
 
+=======
+>>>>>>> 86ffc1670df986741b7c1944748c75133f6cec1f
 unsigned char* getStringToSave() //fiz aqui pra ficar mais simples
 {
         static unsigned char saveResultString[50];

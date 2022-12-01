@@ -20,7 +20,11 @@ unsigned char homeDataDisplay(unsigned char* appName,unsigned char* companyName,
 
 //MEMORIA EXTERNA
 unsigned char check_SD_card();
+<<<<<<< HEAD
 unsigned char load_SD_card(unsigned char numTeste);
+=======
+unsigned char* load_SD_card(unsigned char numTeste);
+>>>>>>> 86ffc1670df986741b7c1944748c75133f6cec1f
 unsigned char save_SD_card(unsigned char* dataToSave, unsigned char numTeste);
 
 

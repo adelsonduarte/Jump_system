@@ -3,31 +3,44 @@
 #include "main.h"
 #include "INICIAR_Component.h"
 #include "SubMenu.h"
+#include "time.h"
 #include "Display_module.h"
 #include "DisplayMessages.h"
+#include "SD_module.h"
+#include "Data.h"
 #include "IO_interface.h"
+#include "SENSORHW.h"
 
 //Teste results
-struct results{
-    unsigned char sample;
-    unsigned long int ulReadingTime;
+
+struct samples{
+    unsigned char sampleNum;
     unsigned int uiVooTime;
-    unsigned char ucAltDistance;
+    unsigned int uiSoloTime;
 };
+struct results{
+    unsigned char resultTestNum;
+    unsigned char resultTestAcquiredSamples;
+    unsigned char thereAreData;
+    unsigned char timeout;
+    struct samples sampleMeasurement[MEASUREMENT_SIZE];
+};
+
 //
 struct dataInsert{
-    unsigned char userTime;
+    unsigned char userTest;
+    unsigned long int userTime;
     unsigned char userMass;
     unsigned char userOverMass;
     unsigned char userConsultTest;
-    unsigned char userAlturaMin;
-    unsigned char userAlturaMax;
+    unsigned int userAlturaMin;
+    unsigned int userAlturaMax;
     unsigned char userNumSaltos;
-    unsigned char userIntervalSaltos;
+    unsigned long int userIntervalSaltos;
     unsigned char userCMJ;
     unsigned char userAlturaDJ;
     unsigned char userNumSeries;
-    unsigned char userIntervalSeries;
+    unsigned long int userIntervalSeries;
     unsigned char userCommConfig;
     unsigned char userSelectTapete;
     unsigned char userSelectSensorChannel;
@@ -45,274 +58,374 @@ struct Menu{
 unsigned char initStateMachine(struct Menu* subMenu)
 {
     struct Menu* subMenuIniciar = subMenu;
-    unsigned char key = IDDLE;
+    struct dataInsert* ptr_userConfiguration = getUserConfigStruct();
+    unsigned char key = 0;
+    short insertColumn = 7;
+
+    struct tm myTime;
+    struct tm* userTimeStruct = &myTime;
+    unsigned char userTimeString[9];
+    unsigned char procTimeString[9];
+    unsigned char* ptr_massString;
+    unsigned char* ptr_overMassString;
+    struct results* ptr_result;
+    unsigned char* ptr_sampleString;
+    unsigned int* ptr_vooTimeString;
+    unsigned int* ptr_alturaString;
+    unsigned int* ptr_potString;
+
+
     unsigned char displayUpdateStatus = IDDLE;
-    unsigned char cursorPosition[1] = {0,0};
-    unsigned char arrayTime[8] = {0,0,":",0,0,":",0,0};
+    unsigned char cursorPosition[2] = {0,0};
+
     //Teste results
-    struct results result ={0,0,0,0};
-    unsigned char i = 0;
-    unsigned char idx=0;
-    static unsigned char arraySample[9];
-    static unsigned long int arrayReadingTime[9];
-    static unsigned int arrayVooTime[9];
-    static unsigned char arrayAltDistance[9];
+//    unsigned char* ptr_Sample;
+//    unsigned char* ptr_ulReadingTime;
+//    unsigned char* ptr_uiVooTime;
+//    unsigned char* ptr_ucAltDistance;
+//    struct results result[TEST_SIZE]; //verificar se vou usar o endere�o de data.c assim como fiz com a estrutura de configuracao
+
+    unsigned char indexTest;
+    unsigned char readingStatus = IDDLE;
+    unsigned char selectedUserTest = 0;
+    unsigned char testSamples = 0;
+
     //
+
+
+
+    unsigned char startTapete,readingState;
+
+
     while(key != MENU)
     {
-    	HAL_Delay(100);
         switch(subMenuIniciar->menuState)
         {
             case IDDLE:
                 subMenuIniciar->menuState = getNextSub(COMM_OFF);
+                //RESET
             break;
+
             case COMM_OFF:
-            	key = getKeyPressed();
-            	updateUserMsg(3,2,noTransmissionMsg,&displayUpdateStatus);
+                updateUserMsg(0,USERMSG1,noTransmissionMsg,&displayUpdateStatus);
+                printDataDisplay(0,INSERTMSG,avancarUserMsg);
+                printDataDisplay(strlen(avancarUserMsg),INSERTMSG,menuUserMsg);
+                printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
+                key = getKeyPressed();
                 if(key == AVANCAR)
                 {
-                	IOStatus(&displayUpdateStatus,&cursorPosition);
-//                	if(key == IDDLE) HAL_GPIO_TogglePin(GPIOC, LED_Pin);
+                	resetKeyPressed();
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
                     subMenuIniciar->menuState = getNextSub(COMM_ON);
                 }
                 else if(key == CONFIRMAR)
                 {
-                    //funcao para desabilitar comunicacao
-                	IOStatus(&displayUpdateStatus,&cursorPosition);
-                    subMenuIniciar->menuInsert.userCommConfig = COMM_OFF;
-                    setInsertSub(&subMenuIniciar->menuInsert);
+                	resetKeyPressed();
+                    stopCOMM();
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    ptr_userConfiguration->userCommConfig = COMM_OFF;
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
                     subMenuIniciar->menuState = getNextSub(TEMPO_READ);
                 }
             break;
 
             case COMM_ON:
-            	key = getKeyPressed();
-				updateUserMsg(3,2,yesTransmissionMsg,&displayUpdateStatus);
+				updateUserMsg(0,0,yesTransmissionMsg,&displayUpdateStatus);
+				printDataDisplay(0,INSERTMSG,avancarUserMsg);
+				printDataDisplay(strlen(avancarUserMsg),INSERTMSG,menuUserMsg);
+				printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
+				key = getKeyPressed();
                 if(key == AVANCAR)
 				{
-                	IOStatus(&displayUpdateStatus,&cursorPosition);
+                	resetKeyPressed();
+                	readyUserInterface(&displayUpdateStatus,cursorPosition);
 					subMenuIniciar->menuState = getNextSub(COMM_OFF);
 				}
                 else if(key == CONFIRMAR)
                 {
-                	IOStatus(&displayUpdateStatus,&cursorPosition);
-                    //funcao para habilitar comunicacao
-                	updateUserMsg(3,2,waitTransmissionMsg,&displayUpdateStatus);
-                    subMenuIniciar->menuInsert.userCommConfig = COMM_ON;
-                    setInsertSub(&subMenuIniciar->menuInsert);
+                	resetKeyPressed();
+                	readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    startCOMM();
+                	updateUserMsg(0,0,waitTransmissionMsg,&displayUpdateStatus);
+                	readyUserInterface(&displayUpdateStatus,cursorPosition);
+                     ptr_userConfiguration->userCommConfig = COMM_ON;
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
                     subMenuIniciar->menuState = getNextSub(TEMPO_READ);
                 }
                 break;
 
             case TEMPO_READ:
-            	key = getKeyPressed();
-//            	if(key == INSERIR) HAL_GPIO_TogglePin(GPIOC, LED_Pin);
-				updateUserMsg(0,1,timeUserMsg,&displayUpdateStatus);
-				insertUserInterface(cursorPosition[0],2, &arrayTime[cursorPosition[0]]);
+                updateUserMsg(0,USERMSG1,timeUserMsg,&displayUpdateStatus);
+
+                userTimeStruct = getTimeStruct();
+                strftime(userTimeString, sizeof(userTimeString), "%H:%M:%S", userTimeStruct);
+                printDataDisplay(0,USERMSG2,userTimeString);
+                updateDataDisplay(insertColumn,USERMSG2);
+
+                printDataDisplay(0,INSERTMSG,avancarUserMsg);
+                printDataDisplay(strlen(avancarUserMsg),INSERTMSG,menuUserMsg);
+                printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
+                printDataDisplay(strlen(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
+                key = getKeyPressed();
+
                 if(key == INSERIR)
                 {
-                	IOStatus(&displayUpdateStatus,&cursorPosition);
-//                    subMenuIniciar->menuInsert.userTime++;
-                	arrayTime[cursorPosition[0]]++;
+                	resetKeyPressed();
+                    setUserTime(&insertColumn);
                     subMenuIniciar->menuState = getNextSub(TEMPO_READ);
+                }
+                else if (key == AVANCAR)
+                {
+                	resetKeyPressed();
+                    indexColumn(&insertColumn,7);
                 }
                 else if(key == CONFIRMAR)
                 {
-                	IOStatus(&displayUpdateStatus,&cursorPosition);
-                    setInsertSub(&subMenuIniciar->menuInsert);
-                    //Configurar TIMER
+                	resetKeyPressed();
+                	insertColumn = 4; //colocar um define talvez -> definicao de caracteres no display massa e overmass
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+					ptr_userConfiguration->userTime = milisecondsTime(userTimeStruct);
                     subMenuIniciar->menuState = getNextSub(MASSA_READ);
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
                 }
-                else if(key == AVANCAR)
-				{
-					IOStatus(&displayUpdateStatus,&cursorPosition);
-					cursorPosition[0] = cursorChangeInterface(cursorPosition[0],0);
-					subMenuIniciar->menuState = getNextSub(TEMPO_READ);
-					subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
-				}
                 break;
 
             case MASSA_READ:
-            	key = getKeyPressed();
-				updateUserMsg(3,2,massUserMsg,&displayUpdateStatus);
+                 updateUserMsg(0,USERMSG1,massUserMsg,&displayUpdateStatus);
+                 ptr_massString = getMassString();
+                 printDataDisplay(0,USERMSG2,ptr_massString);
+                 updateDataDisplay(insertColumn,1);
+                 printDataDisplay(0,INSERTMSG,avancarUserMsg);
+				 printDataDisplay(strlen(avancarUserMsg),INSERTMSG,menuUserMsg);
+				 printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
+				printDataDisplay(strlen(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
+                key = getKeyPressed();
                 if(key == INSERIR)
                 {
-                	IOStatus(&displayUpdateStatus,&cursorPosition);
-                    subMenuIniciar->menuInsert.userMass++;
+                	resetKeyPressed();
+                    setUserMass(&insertColumn); //criar variavel adicional para separar insertcolumn
                     subMenuIniciar->menuState = getNextSub(MASSA_READ);
+                }
+                else if(key == AVANCAR)
+                {
+                	resetKeyPressed();
+                    indexMass(&insertColumn);
                 }
                 else if(key == CONFIRMAR)
                 {
-                	IOStatus(&displayUpdateStatus,&cursorPosition);
-                    setInsertSub(&subMenuIniciar->menuInsert);
+                	resetKeyPressed();
+                	insertColumn = 4;
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    ptr_userConfiguration->userMass= stringToInt(ptr_massString);
                     subMenuIniciar->menuState = getNextSub(SOBREC_READ);
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
                 }
                 break;
 
             case SOBREC_READ:
-            	key = getKeyPressed();
-				updateUserMsg(3,2,overmassUserMsg,&displayUpdateStatus);
+                updateUserMsg(0,USERMSG1,overmassUserMsg,&displayUpdateStatus);
+                ptr_overMassString = getOverMassString();
+                printDataDisplay(0,USERMSG2,ptr_overMassString);
+                updateDataDisplay(insertColumn,1);
+
+                printDataDisplay(0,INSERTMSG,avancarUserMsg);
+				 printDataDisplay(strlen(avancarUserMsg),INSERTMSG,menuUserMsg);
+				 printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
+				printDataDisplay(strlen(selecionarUserMsg),OPTIONMSG,inserirUserMsg);
+
+                key = getKeyPressed();
+
                 if(key == INSERIR)
                 {
-                	IOStatus(&displayUpdateStatus,&cursorPosition);
-                    subMenuIniciar->menuInsert.userOverMass++;
+                	resetKeyPressed();
+                    setUserOverMass(&insertColumn);
                     subMenuIniciar->menuState = getNextSub(SOBREC_READ);
+                }
+                else if(key == AVANCAR)
+                {
+                	resetKeyPressed();
+                    indexMass(&insertColumn);
                 }
                 else if(key == CONFIRMAR)
                 {
-                	IOStatus(&displayUpdateStatus,&cursorPosition);
-                    setInsertSub(&subMenuIniciar->menuInsert);
+                	resetKeyPressed();
+                	insertColumn = 7; //definicao de caracteres para TIME
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    ptr_userConfiguration->userOverMass= stringToInt(ptr_overMassString);
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
                     subMenuIniciar->menuState = getNextSub(START);
                 }
                 break;
 
             case START:
-            	key = getKeyPressed();
-				updateUserMsg(3,2,startreadUserMsg,&displayUpdateStatus);
+                setInsertData(ptr_userConfiguration);
+                updateUserMsg(0,USERMSG1,startreadUserMsg,&displayUpdateStatus);
+                printDataDisplay(0,USERMSG2,userTimeString);
+                printDataDisplay(0,INSERTMSG,menuUserMsg);
+				printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
+
+
+                key = getKeyPressed();
+
                 if(key == CONFIRMAR)
                 {
-                	IOStatus(&displayUpdateStatus,&cursorPosition);
-                    //INICIA LEITURA (LIGA ENCODER, PONTE, O QUE FOR
+                	resetKeyPressed();
+                    indexTest = getResultTestNumber();
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
                     subMenuIniciar->menuState = getNextSub(READING);
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
                 }
             break;
 
             case READING:
-            	key = getKeyPressed();
-            	//APRESENTAR OS DADOS LIDOS AQUI
-                 //DISPLAY
-            	updateUserMsg(3,2,testMsg,&displayUpdateStatus);
-                if(key == PARAR)
-                {
-                	IOStatus(&displayUpdateStatus,&cursorPosition);
-                	subMenuIniciar->menuState = getNextSub(STOP);
-                }
+            	 updateUserMsg(0,USERMSG1,medindoUserMsg,&displayUpdateStatus);
+            	 resetTimer3Variable();
+				 printDataDisplay(0,OPTIONMSG,pararUserMsg);
+            	 startTM2();
+				 startTM3();
+				 readingStatus = readingSensor();
+				 key = getKeyPressed();
 
-                //Teste results
-                else if(key==AMOSTRA)
-                {
-                    result.sample++;
-                    result.ucAltDistance+=5;
-                    result.uiVooTime +=10;
-                    result.ulReadingTime += 100;
-                    arraySample[idx] = result.sample;
-                    arrayAltDistance[idx] = result.ucAltDistance;
-                    arrayVooTime[idx] = result.uiVooTime;
-                    arrayReadingTime[idx] = result.ulReadingTime;
-                    idx++;
-                }
-                //
+				 if(key == PARAR || readingStatus != IDDLE)
+				 {
+					 resetKeyPressed();
+					 readyUserInterface(&displayUpdateStatus,cursorPosition);
+					 subMenuIniciar->menuState = getNextSub(STOP);
+				 }
             break;
 
             case STOP:
             	key = getKeyPressed();
-				updateUserMsg(3,2,stopreadUserMsg,&displayUpdateStatus);
+                updateUserMsg(0,0,stopreadUserMsg,&displayUpdateStatus);
+				printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
+
                 if(key == CONFIRMAR)
                 {
-                	IOStatus(&displayUpdateStatus,&cursorPosition);
-                    //PARA LEITURA, DESLIGA TIMER, ENCODER, O QUE FOR
+                	resetKeyPressed();
+                    stopTM2();
+                    stopTM3();
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    setResultTestNumber();
+                    transmissionCOMM();
                     subMenuIniciar->menuState = getNextSub(DISP_RESULTS);
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
+
                 }
                 break;
 
             case DISP_RESULTS:
-            	key = getKeyPressed();
-				updateUserMsg(3,2,resultsUserMsg,&displayUpdateStatus);
+                updateUserMsg(0,0,resultsUserMsg,&displayUpdateStatus);
+                printDataDisplay(0,INSERTMSG,selecionarUserMsg);
+				printDataDisplay(0,OPTIONMSG,pularUserMsg);
+                key = getKeyPressed();
 
                 if(key == PARAR)
                 {
-                	IOStatus(&displayUpdateStatus,&cursorPosition);
+                	resetKeyPressed();
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
                     subMenuIniciar->menuState = getNextSub(SAVE_DATA);
                 }
                 else if(key == CONFIRMAR)
                 {
-                	IOStatus(&displayUpdateStatus,&cursorPosition);
+                	resetKeyPressed();
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
                     subMenuIniciar->menuState = getNextSub(RESULTS);
                 }
             break;
 
             case RESULTS:
-				updateUserMsg(3,2,testMsg,&displayUpdateStatus);
-                //Teste results
-                if(i<idx)
-                {
-                  printf("RESULTADO %d\n",arraySample[i]);
-                printf("Altura = %d\n",arrayAltDistance[i]);
-                printf("Tempo de voo = %d\n",arrayVooTime[i]);
-                printf("Tempo de leitura = %d\n",arrayReadingTime[i]);
-                }
-                //
-
-                subMenuIniciar->menuDisplay = getDisplaySub(&subMenuIniciar->menuDisplay);
-            	key = getKeyPressed();
-                if(key == AVANCAR)
-                {
-                	IOStatus(&displayUpdateStatus,&cursorPosition);
-                    //Teste results
-                    i++;
-                    if(i==idx)
-                    {
-                        i=0;
-                    }
-                    //
-                    subMenuIniciar->menuState = getNextSub(RESULTS);
-                }
-                else if(key == PARAR)
+            	selectedUserTest = getResultTestNumber();
+            	ptr_result = getUserResultData(selectedUserTest);
+				if(testSamples<(ptr_result->resultTestAcquiredSamples))
 				{
-                	IOStatus(&displayUpdateStatus,&cursorPosition);
-					subMenuIniciar->menuState = getNextSub(SAVE_DATA);
+					updateUserMsg(0,USERMSG1,amostraUserMsg,&displayUpdateStatus);
+					ptr_sampleString = param_1_toString(&ptr_result->sampleMeasurement[testSamples].sampleNum);
+					printDataDisplay(strlen(amostraUserMsg),USERMSG1 , ptr_sampleString);
+
+					printDataDisplay(0,USERMSG2,tempoVooUserMsg);
+					ptr_vooTimeString = param_2_toString(&ptr_result->sampleMeasurement[testSamples].uiVooTime);
+					printDataDisplay(strlen(tempoVooUserMsg),USERMSG2 ,ptr_vooTimeString);
+
+
+					printDataDisplay(0,INSERTMSG,tempoSoloUserMsg);
+					ptr_alturaString = param_2_toString(&ptr_result->sampleMeasurement[testSamples].uiSoloTime);
+					printDataDisplay(strlen(tempoSoloUserMsg),INSERTMSG , ptr_alturaString);
+
+//                  ptr_potString; = param_3_toString(&ptr_structExportResult->Measurement[testSamples].uiSoloTime);
+//					printDataDisplay(0, INSERTMSG, ptr_potString);
+
 				}
+				else  printDataDisplay((16-strlen("VAZIO"))/2,INSERTMSG,"VAZIO");
+
+				key = getKeyPressed();
+
+				if(key == AVANCAR)
+				{
+					resetKeyPressed();
+					readyUserInterface(&displayUpdateStatus,cursorPosition);
+					testSamples++;
+					if(testSamples == ptr_result->resultTestAcquiredSamples) testSamples = 0;
+					subMenuIniciar->menuState = getNextSub(RESULTS);
+				}
+
+                if(key == PARAR)
+                {
+                	resetKeyPressed();
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    subMenuIniciar->menuState = getNextSub(SAVE_DATA);
+                }
+
             break;
 
             case SAVE_DATA:
-            	key = getKeyPressed();
-				updateUserMsg(3,2,saveUserMsg,&displayUpdateStatus);
+                updateUserMsg(0,0,saveUserMsg,&displayUpdateStatus);
+                printDataDisplay(0,INSERTMSG,avancarUserMsg);
+                printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
+                key = getKeyPressed();
+
                 if(key == AVANCAR)
                 {
-                	IOStatus(&displayUpdateStatus,&cursorPosition);
+                	resetKeyPressed();
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
                     subMenuIniciar->menuState = getNextSub(CANCEL_SAVE);
                 }
                 else if(key == CONFIRMAR)
                 {
-                	IOStatus(&displayUpdateStatus,&cursorPosition);
+                	resetKeyPressed();
+//                    save_data(indexTest);
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    updateUserMsg(0,0,savedUserMsg,&displayUpdateStatus);
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
-                    updateUserMsg(3,2,savedUserMsg,&displayUpdateStatus);
                     subMenuIniciar->menuState = getNextSub(COMM_OFF);
-                    key = MENU; // ta errado mas coloquei aqui pra teste
+                    testSamples = 0;
+  				  readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    key = MENU;
                 }
             break;
 
             case CANCEL_SAVE:
-            	key = getKeyPressed();
-				updateUserMsg(3,2,cancelUserMsg,&displayUpdateStatus);
+                updateUserMsg(0,0,cancelUserMsg,&displayUpdateStatus);
+                printDataDisplay(0,INSERTMSG,avancarUserMsg);
+				printDataDisplay(0,OPTIONMSG,selecionarUserMsg);
+                key = getKeyPressed();
+
                 if(key == AVANCAR)
                 {
-                	IOStatus(&displayUpdateStatus,&cursorPosition);
+                	resetKeyPressed();
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
                     subMenuIniciar->menuState = getNextSub(SAVE_DATA);
                 }
                 else if(key == CONFIRMAR)
                 {
-                	IOStatus(&displayUpdateStatus,&cursorPosition);
+                	resetKeyPressed();
                     subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
-                    updateUserMsg(3,2,canceledUserMsg,&displayUpdateStatus);
-                    ////Teste results
-                    result.sample=0;
-                    result.ucAltDistance=0;
-                    result.uiVooTime =0;
-                    result.ulReadingTime = 0;
-                    idx = 0;
-                    i=0;
+                    testSamples = 0;
+                    indexTest++;
                     //
                     subMenuIniciar->menuState = getNextSub(COMM_OFF);
-                    key = MENU; // ta errado mas coloquei aqui pra teste
+                    readyUserInterface(&displayUpdateStatus,cursorPosition);
+                    key = MENU;
                 }
             break;
         }

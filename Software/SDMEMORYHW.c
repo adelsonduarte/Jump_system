@@ -11,6 +11,7 @@ unsigned char HW_EXT_MEMORY_CHECK()
     //    return freeSpace;
 }
 
+<<<<<<< HEAD
 unsigned char HW_EXT_MEMORY_READ()
 {
 //    static char buffer[100];
@@ -23,6 +24,25 @@ unsigned char HW_EXT_MEMORY_READ()
 //    }
 //    f_close(&fil);
 //    return *buffer;
+=======
+unsigned char HW_EXT_MEMORY_READ(unsigned char* loadName,unsigned char numSamples, unsigned char* loadPointer)
+{
+//     unsigned char line = numSamples;
+//     unsigned char column = 0;
+//    unsigned char (*loadDataHW)[MAX_LINES][MAX_LEN] = loadPointer;
+//    f_open(&fil, loadName, FA_READ);
+//   Reads line by line until the end
+//    for(line=0;line<numSamples;line++)
+//    {
+//        for(column=0;column<4;column++)
+//        {
+//            fscanf(&fil,"%d",&loadDataHW[line][column]);
+//            if(feof(&fil)) break;
+//        }
+//    }
+//    f_close(&fil);
+//    return loadDataHW;
+>>>>>>> 86ffc1670df986741b7c1944748c75133f6cec1f
 }
 
 unsigned char HW_EXT_MEMORY_WRITE(unsigned char* saveString, unsigned char idx)

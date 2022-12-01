@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 Teste 1, Amostras = 3
 Amostra 1,Tempo de leitura = 100,Tempo de voo = 10, Altura = 5
 Amostra 2,Tempo de leitura = 100,Tempo de voo = 10, Altura = 5
 Amostra 3,Tempo de leitura = 100,Tempo de voo = 10, Altura = 5
+=======
+1     100     10     5
+2     100     10     5
+>>>>>>> 86ffc1670df986741b7c1944748c75133f6cec1f

@@ -10,6 +10,8 @@ struct samples{
     unsigned int uiVooTime;
     unsigned char ucAltDistance;
 };
+<<<<<<< HEAD
+=======
 
 struct results{
     unsigned char resultTestNum;
@@ -63,7 +65,64 @@ static unsigned char numTestArray[] = {0,0,1};
 static unsigned char selectEraseArray[] = {0};
 
 static unsigned char numberTest = 0;
+>>>>>>> 86ffc1670df986741b7c1944748c75133f6cec1f
 
+struct results{
+    unsigned char resultTestNum;
+    unsigned char resultTestAcquiredSamples;
+    unsigned char thereAreData;
+    struct samples Measurement[MEASUREMENT_SIZE];
+};
+
+<<<<<<< HEAD
+struct dataInsert{
+    unsigned char userTest;
+    unsigned long int userTime;
+    unsigned char userMass;
+    unsigned char userOverMass;
+    unsigned char userConsultTest;
+    unsigned char userAlturaMin;
+    unsigned char userAlturaMax;
+    unsigned char userNumSaltos;
+    unsigned char userIntervalSaltos;
+    unsigned char userCMJ;
+    unsigned char userAlturaDJ;
+    unsigned char userNumSeries;
+    unsigned char userIntervalSeries;
+    unsigned char userCommConfig;
+    unsigned char userSelectTapete;
+    unsigned char userSelectSensorChannel;
+};
+struct Menu{
+        unsigned char menuNext;
+        unsigned char menuSelect;
+        unsigned char menuDisplay;
+        unsigned char menuState;
+        struct dataInsert menuInsert;
+    };
+
+static struct dataInsert myData;
+static struct results myResults[TEST_SIZE];
+static struct tm myTime;
+struct tm* insertTime = &myTime;
+
+static unsigned char massArray[] = {0,0,0,0};
+static unsigned char overMassArray[] = {0,0,0,0};
+static unsigned char altMinArray[] = {0,0,0};
+static unsigned char altMaxArray[] = {0,0,0};
+static unsigned char numSaltosArray[] = {0,0,0};
+static unsigned char intervalSaltosArray[] = {0,0,0};
+static unsigned char altDJArray[] = {0,0};
+static unsigned char JumpTypeArray[] = {0};
+static unsigned char numSeriesArray[] = {0,0,0};
+static unsigned char intervalSeriesArray[] = {0,0,0};
+static unsigned char numTestArray[] = {0,0,1};
+static unsigned char selectEraseArray[] = {0};
+
+static unsigned char numberTest = 0;
+
+=======
+>>>>>>> 86ffc1670df986741b7c1944748c75133f6cec1f
 unsigned long int getUserTest()
 {
    return myData.userTest;
