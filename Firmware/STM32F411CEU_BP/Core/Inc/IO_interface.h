@@ -1,6 +1,7 @@
 #ifndef IO_INTERFACE_H_INCLUDED
 #define IO_INTERFACE_H_INCLUDED
 
+struct dataInsert;
 struct results;
 struct samples;
 union vooTime;
@@ -17,13 +18,9 @@ void stopTM2(void);
 void rstHardware(void);
 
 //DISPLAY
-//void printDataDisplay(unsigned char col, unsigned char linha,unsigned char* userData);
 void eraseDataDisplay();
-//void updateDataDisplay(unsigned char col, unsigned char linha);
 void homeDataDisplay(unsigned char* appName,unsigned char* companyName,unsigned char* appVersion);
-//void insertDataDisplay(unsigned char col, unsigned char linha,unsigned char* userData);
 //MEMORIA EXTERNA
-//unsigned char check_SD_card();
 unsigned char* load_SD_card(unsigned char numTeste);
 void save_SD_card(unsigned char* dataToSave, unsigned char numTeste);
 //COMUNICAÇÃO
@@ -32,5 +29,8 @@ void stopCOMM();
 void transmissionCOMM();
 void receiveCOMM();
 void statusCOMM();
+unsigned int wflashConfigData(struct dataInsert* dataToFlash);
+void rflashConfigData(void);
+
 
 #endif // IO_INTERFACE_H_INCLUDED

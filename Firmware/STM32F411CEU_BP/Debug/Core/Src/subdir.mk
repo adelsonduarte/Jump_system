@@ -13,6 +13,7 @@ C_SRCS += \
 ../Core/Src/DisplayMessages.c \
 ../Core/Src/Display_module.c \
 ../Core/Src/Exportar_component.c \
+../Core/Src/FLASH_SECTOR_F4.c \
 ../Core/Src/HIL_INTERFACE.c \
 ../Core/Src/INICIAR_Component.c \
 ../Core/Src/IO_interface.c \
@@ -44,6 +45,7 @@ OBJS += \
 ./Core/Src/DisplayMessages.o \
 ./Core/Src/Display_module.o \
 ./Core/Src/Exportar_component.o \
+./Core/Src/FLASH_SECTOR_F4.o \
 ./Core/Src/HIL_INTERFACE.o \
 ./Core/Src/INICIAR_Component.o \
 ./Core/Src/IO_interface.o \
@@ -75,6 +77,7 @@ C_DEPS += \
 ./Core/Src/DisplayMessages.d \
 ./Core/Src/Display_module.d \
 ./Core/Src/Exportar_component.d \
+./Core/Src/FLASH_SECTOR_F4.d \
 ./Core/Src/HIL_INTERFACE.d \
 ./Core/Src/INICIAR_Component.d \
 ./Core/Src/IO_interface.d \
@@ -105,7 +108,7 @@ Core/Src/%.o Core/Src/%.su: ../Core/Src/%.c Core/Src/subdir.mk
 clean: clean-Core-2f-Src
 
 clean-Core-2f-Src:
-	-$(RM) ./Core/Src/Apagar_component.d ./Core/Src/Apagar_component.o ./Core/Src/Apagar_component.su ./Core/Src/Configuracao_component.d ./Core/Src/Configuracao_component.o ./Core/Src/Configuracao_component.su ./Core/Src/Consulta_component.d ./Core/Src/Consulta_component.o ./Core/Src/Consulta_component.su ./Core/Src/Data.d ./Core/Src/Data.o ./Core/Src/Data.su ./Core/Src/DataProcessing.d ./Core/Src/DataProcessing.o ./Core/Src/DataProcessing.su ./Core/Src/DisplayMessages.d ./Core/Src/DisplayMessages.o ./Core/Src/DisplayMessages.su ./Core/Src/Display_module.d ./Core/Src/Display_module.o ./Core/Src/Display_module.su ./Core/Src/Exportar_component.d ./Core/Src/Exportar_component.o ./Core/Src/Exportar_component.su ./Core/Src/HIL_INTERFACE.d ./Core/Src/HIL_INTERFACE.o ./Core/Src/HIL_INTERFACE.su ./Core/Src/INICIAR_Component.d ./Core/Src/INICIAR_Component.o ./Core/Src/INICIAR_Component.su ./Core/Src/IO_interface.d ./Core/Src/IO_interface.o ./Core/Src/IO_interface.su ./Core/Src/LCDHW.d ./Core/Src/LCDHW.o ./Core/Src/LCDHW.su ./Core/Src/LiquidCrystal.d ./Core/Src/LiquidCrystal.o ./Core/Src/LiquidCrystal.su ./Core/Src/SDMEMORYHW.d ./Core/Src/SDMEMORYHW.o ./Core/Src/SDMEMORYHW.su ./Core/Src/SD_module.d ./Core/Src/SD_module.o ./Core/Src/SD_module.su ./Core/Src/SENSORHW.d ./Core/Src/SENSORHW.o ./Core/Src/SENSORHW.su ./Core/Src/SubMenu.d ./Core/Src/SubMenu.o ./Core/Src/SubMenu.su ./Core/Src/TimerHW.d ./Core/Src/TimerHW.o ./Core/Src/TimerHW.su ./Core/Src/UARTHW.d ./Core/Src/UARTHW.o ./Core/Src/UARTHW.su ./Core/Src/comunicacao.d ./Core/Src/comunicacao.o ./Core/Src/comunicacao.su ./Core/Src/fatfs_sd.d ./Core/Src/fatfs_sd.o ./Core/Src/fatfs_sd.su ./Core/Src/flash_v1.0.d ./Core/Src/flash_v1.0.o ./Core/Src/flash_v1.0.su ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/menu_module.d ./Core/Src/menu_module.o ./Core/Src/menu_module.su ./Core/Src/stm32f4xx_hal_msp.d ./Core/Src/stm32f4xx_hal_msp.o ./Core/Src/stm32f4xx_hal_msp.su ./Core/Src/stm32f4xx_it.d ./Core/Src/stm32f4xx_it.o ./Core/Src/stm32f4xx_it.su ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32f4xx.d ./Core/Src/system_stm32f4xx.o ./Core/Src/system_stm32f4xx.su
+	-$(RM) ./Core/Src/Apagar_component.d ./Core/Src/Apagar_component.o ./Core/Src/Apagar_component.su ./Core/Src/Configuracao_component.d ./Core/Src/Configuracao_component.o ./Core/Src/Configuracao_component.su ./Core/Src/Consulta_component.d ./Core/Src/Consulta_component.o ./Core/Src/Consulta_component.su ./Core/Src/Data.d ./Core/Src/Data.o ./Core/Src/Data.su ./Core/Src/DataProcessing.d ./Core/Src/DataProcessing.o ./Core/Src/DataProcessing.su ./Core/Src/DisplayMessages.d ./Core/Src/DisplayMessages.o ./Core/Src/DisplayMessages.su ./Core/Src/Display_module.d ./Core/Src/Display_module.o ./Core/Src/Display_module.su ./Core/Src/Exportar_component.d ./Core/Src/Exportar_component.o ./Core/Src/Exportar_component.su ./Core/Src/FLASH_SECTOR_F4.d ./Core/Src/FLASH_SECTOR_F4.o ./Core/Src/FLASH_SECTOR_F4.su ./Core/Src/HIL_INTERFACE.d ./Core/Src/HIL_INTERFACE.o ./Core/Src/HIL_INTERFACE.su ./Core/Src/INICIAR_Component.d ./Core/Src/INICIAR_Component.o ./Core/Src/INICIAR_Component.su ./Core/Src/IO_interface.d ./Core/Src/IO_interface.o ./Core/Src/IO_interface.su ./Core/Src/LCDHW.d ./Core/Src/LCDHW.o ./Core/Src/LCDHW.su ./Core/Src/LiquidCrystal.d ./Core/Src/LiquidCrystal.o ./Core/Src/LiquidCrystal.su ./Core/Src/SDMEMORYHW.d ./Core/Src/SDMEMORYHW.o ./Core/Src/SDMEMORYHW.su ./Core/Src/SD_module.d ./Core/Src/SD_module.o ./Core/Src/SD_module.su ./Core/Src/SENSORHW.d ./Core/Src/SENSORHW.o ./Core/Src/SENSORHW.su ./Core/Src/SubMenu.d ./Core/Src/SubMenu.o ./Core/Src/SubMenu.su ./Core/Src/TimerHW.d ./Core/Src/TimerHW.o ./Core/Src/TimerHW.su ./Core/Src/UARTHW.d ./Core/Src/UARTHW.o ./Core/Src/UARTHW.su ./Core/Src/comunicacao.d ./Core/Src/comunicacao.o ./Core/Src/comunicacao.su ./Core/Src/fatfs_sd.d ./Core/Src/fatfs_sd.o ./Core/Src/fatfs_sd.su ./Core/Src/flash_v1.0.d ./Core/Src/flash_v1.0.o ./Core/Src/flash_v1.0.su ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/menu_module.d ./Core/Src/menu_module.o ./Core/Src/menu_module.su ./Core/Src/stm32f4xx_hal_msp.d ./Core/Src/stm32f4xx_hal_msp.o ./Core/Src/stm32f4xx_hal_msp.su ./Core/Src/stm32f4xx_it.d ./Core/Src/stm32f4xx_it.o ./Core/Src/stm32f4xx_it.su ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32f4xx.d ./Core/Src/system_stm32f4xx.o ./Core/Src/system_stm32f4xx.su
 
 .PHONY: clean-Core-2f-Src
 

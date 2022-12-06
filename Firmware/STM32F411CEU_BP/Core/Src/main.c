@@ -269,8 +269,6 @@ int main(void)
   }
 #endif
 
-//	startTM3();// teste1
-//  HW_EXT_MEMORY_WRITE("adelson","teste.txt");
   HAL_Delay(100);
 #if _APPLICATION
   while (1)
@@ -281,7 +279,6 @@ int main(void)
 	  			  menuTesteMain.menuState = getNextMain(IDDLE);
 	  			  if(key == AVANCAR)
 	  			  {
-//	  				  stopTM3();// teste1
 	  				  resetKeyPressed();
 	  				  readyUserInterface(&displayUpdateStatus);
 	  				  menuTesteMain.menuState = getNextMain(START_TEST);
@@ -300,7 +297,6 @@ int main(void)
 	  			  }
 	  			  else if(key == CONFIRMAR)
 	  			  {
-//	  				  HW_EXT_MEMORY_WRITE("adelson","teste.txt"); // teste1
 	  				  resetKeyPressed();
 	  				  readyUserInterface(&displayUpdateStatus);
 	  				  menuTesteMain.menuSelect = menuTesteMain.menuState;

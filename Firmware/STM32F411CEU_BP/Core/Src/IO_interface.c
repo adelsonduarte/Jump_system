@@ -10,6 +10,10 @@
 #include "UARTHW.h"
 //TESTE
 #include "main.h"
+#include "stdint.h"
+#include "FLASH_SECTOR_F4.h"
+
+#define FLASH_ADDRESS 0x08060000
 
 //
 
@@ -45,11 +49,26 @@ union alturaSalto
 };
 union alturaSalto alturaSaltoUnion = {.all=0};
 
-//struct samples{
-//    unsigned char sampleNum;
-//    unsigned int uiVooTime;
-//    unsigned int uiSoloTime;
-//};
+
+struct dataInsert{
+    unsigned char userTest;
+    unsigned long int userTime;
+    unsigned char userMass;
+    unsigned char userOverMass;
+    unsigned char userConsultTest;
+    unsigned int userAlturaMin;
+    unsigned int userAlturaMax;
+    unsigned char userNumSaltos;
+    unsigned long int  userIntervalSaltos;
+    unsigned char userCMJ;
+    unsigned char userAlturaDJ;
+    unsigned char userNumSeries;
+    unsigned long int userIntervalSeries;
+    unsigned char userCommConfig;
+    unsigned char userSelectTapete;
+    unsigned char userSelectSensorChannel;
+};
+
 struct samples{
     unsigned char sampleNum;
     unsigned int uiVooTime;
@@ -282,6 +301,54 @@ void receiveCOMM()
 //    RECEIVE_HW_UART2();
 }
 
+unsigned int wflashConfigData(struct dataInsert* data)
+{
+	uint32_t flash[16];
+	flash[0] = data->userTime;
+	flash[1] = data->userTest;
+	flash[2] = data->userMass;
+	flash[3] = data->userOverMass;
+	flash[4] = data->userConsultTest;
+	flash[5] = data->userAlturaMin;
+	flash[6] = data->userAlturaMax;
+	flash[7] = data->userNumSaltos;
+	flash[8] = data->userIntervalSaltos;
+	flash[9] = data->userCMJ;
+	flash[10] = data->userAlturaDJ;
+	flash[11] = data->userNumSeries;
+	flash[12] = data->userIntervalSeries;
+	flash[13] = data->userCommConfig;
+	flash[14] = data->userSelectTapete;
+	flash[15] = data->userSelectSensorChannel;
 
+
+
+//	Flash_Write_Data(FLASH_ADDRESS, (uint32_t *)flash, 16);
+	Flash_Write_Data(FLASH_ADDRESS, flash, 16);
+	return 1;
+}
+
+void rflashConfigData(void)
+{
+    struct dataInsert* dataFlashConfig = getUserConfigStruct();
+	uint32_t flashData[30];
+	Flash_Read_Data(FLASH_ADDRESS, flashData, 16);
+	dataFlashConfig->userTime = flashData[0];
+	dataFlashConfig->userTest = flashData[1];
+	dataFlashConfig->userMass = flashData[2];
+	dataFlashConfig->userOverMass = flashData[3];
+	dataFlashConfig->userConsultTest = flashData[4];
+	dataFlashConfig->userAlturaMin = flashData[5];
+	dataFlashConfig->userAlturaMax = flashData[6];
+	dataFlashConfig->userNumSaltos = flashData[7];
+	dataFlashConfig->userIntervalSaltos = flashData[8];
+	dataFlashConfig->userCMJ = flashData[9];
+	dataFlashConfig->userAlturaDJ = flashData[10];
+	dataFlashConfig->userNumSeries = flashData[11];
+	dataFlashConfig->userIntervalSeries = flashData[12];
+	dataFlashConfig->userCommConfig = flashData[13];
+	dataFlashConfig->userSelectTapete = flashData[14];
+	dataFlashConfig->userSelectSensorChannel = flashData[15];
+}
 
 

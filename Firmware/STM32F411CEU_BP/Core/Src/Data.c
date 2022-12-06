@@ -30,7 +30,7 @@ struct dataInsert{
     unsigned int userAlturaMin;
     unsigned int userAlturaMax;
     unsigned char userNumSaltos;
-    unsigned long int  userIntervalSaltos;
+    unsigned long int userIntervalSaltos;
     unsigned char userCMJ;
     unsigned char userAlturaDJ;
     unsigned char userNumSeries;
@@ -52,22 +52,22 @@ static struct results myResults[TEST_SIZE];
 static struct tm myTime;
 struct tm* insertTime = &myTime;
 static struct tm intervalSaltosTime;
-struct tm* intervalTime = &intervalSaltosTime;
+struct tm* intervalSaltos = &intervalSaltosTime;
 
 static struct tm intervalSeriesTime;
 struct tm* intervalSeries = &intervalSeriesTime;
 
 static unsigned char massArray[] = {0,0,0,0,0};
 static unsigned char overMassArray[] = {0,0,0,0,0};
-static unsigned char altMinArray[] = {1,3,0}; //cm
-static unsigned char altMaxArray[] = {7,5,0}; //cm
+static unsigned char altMinArray[] = {0,0,0}; //cm
+static unsigned char altMaxArray[] = {0,0,0}; //cm
 static unsigned char numSaltosArray[] = {0,0,0};
 
 static unsigned char altDJArray[] = {0,0};
 static unsigned char JumpTypeArray[] = {0};
 static unsigned char numSeriesArray[] = {0,0,0};
 //static unsigned char intervalSeriesArray[] = {0,0,0};
-static unsigned char numTestArray[] = {0,0,1};
+static unsigned char numTestArray[] = {0,0,0};
 static unsigned char selectEraseArray[] = {0};
 
 
@@ -75,7 +75,7 @@ static unsigned char numberTest = 0;
 
 unsigned char setNumSeriesTest() //Funcao somenet para teste
 {
-	return myData.userNumSeries = 2;
+	return myData.userNumSeries;
 }
 
 unsigned long int getUserTime()
@@ -158,9 +158,9 @@ unsigned char* getTimeStruct()
     return insertTime;
 }
 
-unsigned char* getIntervalTimeStruct()
+unsigned char* getIntervalSaltosTimeStruct()
 {
-    return intervalTime;
+    return intervalSaltos;
 }
 
 unsigned char* getintervalSeriesTimeStruct()

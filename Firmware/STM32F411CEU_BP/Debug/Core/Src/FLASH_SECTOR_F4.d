@@ -1,6 +1,5 @@
-Core/Src/IO_interface.o: ../Core/Src/IO_interface.c ../Core/Inc/LCDHW.h \
- ../Core/Inc/SDMEMORYHW.h ../Core/Inc/TimerHW.h ../Core/Inc/UARTHW.h \
- ../Core/Inc/IO_interface.h ../Core/Inc/main.h \
+Core/Src/FLASH_SECTOR_F4.o: ../Core/Src/FLASH_SECTOR_F4.c \
+ ../Core/Inc/FLASH_SECTOR_F4.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -29,14 +28,8 @@ Core/Src/IO_interface.o: ../Core/Src/IO_interface.c ../Core/Inc/LCDHW.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- ../Core/Inc/FLASH_SECTOR_F4.h
-../Core/Inc/LCDHW.h:
-../Core/Inc/SDMEMORYHW.h:
-../Core/Inc/TimerHW.h:
-../Core/Inc/UARTHW.h:
-../Core/Inc/IO_interface.h:
-../Core/Inc/main.h:
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
+../Core/Inc/FLASH_SECTOR_F4.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h:
@@ -66,4 +59,3 @@ Core/Src/IO_interface.o: ../Core/Src/IO_interface.c ../Core/Inc/LCDHW.h \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
-../Core/Inc/FLASH_SECTOR_F4.h:

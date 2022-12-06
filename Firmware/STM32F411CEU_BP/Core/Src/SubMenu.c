@@ -76,11 +76,6 @@ unsigned char setStateSub(unsigned char *currentState)
 }
 
 
-unsigned char* getDataSubMenuTest()
-{
-
-}
-
 
 
 

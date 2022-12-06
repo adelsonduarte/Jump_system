@@ -87,6 +87,7 @@ void FLASH_escreve_32bits(uint32_t endereco, uint32_t *dado){
 	HAL_FLASH_OB_Unlock();
 
 	if( HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD,(uint64_t)endereco, *dado) != HAL_OK){
+
 		// rotina caso ocorra erro no processo de apagar
 	}
 

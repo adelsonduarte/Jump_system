@@ -6,6 +6,7 @@
 "./Core/Src/DisplayMessages.o"
 "./Core/Src/Display_module.o"
 "./Core/Src/Exportar_component.o"
+"./Core/Src/FLASH_SECTOR_F4.o"
 "./Core/Src/HIL_INTERFACE.o"
 "./Core/Src/INICIAR_Component.o"
 "./Core/Src/IO_interface.o"

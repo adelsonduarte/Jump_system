@@ -15,7 +15,7 @@
 ../Core/Src/Data.c:146:15:getUserSelectSensorChannel	4	static
 ../Core/Src/Data.c:151:15:getUserSelectTapete	4	static
 ../Core/Src/Data.c:156:16:getTimeStruct	4	static
-../Core/Src/Data.c:161:16:getIntervalTimeStruct	4	static
+../Core/Src/Data.c:161:16:getIntervalSaltosTimeStruct	4	static
 ../Core/Src/Data.c:166:16:getintervalSeriesTimeStruct	4	static
 ../Core/Src/Data.c:171:16:getMassArray	4	static
 ../Core/Src/Data.c:176:16:getOverMassArray	4	static

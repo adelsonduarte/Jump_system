@@ -4,4 +4,3 @@
 ../Core/Src/SubMenu.c:62:15:getDisplaySub	24	static
 ../Core/Src/SubMenu.c:67:15:getStateSub	16	static
 ../Core/Src/SubMenu.c:72:15:setStateSub	24	static
-../Core/Src/SubMenu.c:79:16:getDataSubMenuTest	4	static

@@ -82,6 +82,7 @@ unsigned char readingSensor()
 	unsigned char* ptr_sensorFlag;
 	unsigned char count = 0;
 	unsigned char userSelectTapete = FALSE;
+	unsigned int transitionStateTime = 0;
 
 
 	unsigned char key = 0;
@@ -100,41 +101,41 @@ unsigned char readingSensor()
 	ptr_measurementVooTime = getTimeVoo();
 	ptr_totalTime = getTimer3Variable();
 	unsigned char indexTest = getResultTestNumber();
-//	unsigned long int userTime = getUserTime();
-//	unsigned long int userIntervalSeries = getUserIntervalSeries();
-//	unsigned char userNumSeries = getUserNumSeries();
-//	unsigned char userTapete = getUserSelectTapete();
-//	unsigned long int userIntervalSaltos = getUserIntervalSaltos();
-//	unsigned char userNumSaltos = getUserNumSaltos();
-//	unsigned int timeMin = getTimeAltMin();
-//	unsigned int timeMax = getTimeAltMax();
+	unsigned long int userTime = getUserTime();
+	unsigned long int userIntervalSeries = getUserIntervalSeries();
+	unsigned char userNumSeries = getUserNumSeries();
+	unsigned char userTapete = getUserSelectTapete();
+	unsigned long int userIntervalSaltos = getUserIntervalSaltos();
+	unsigned char userNumSaltos = getUserNumSaltos();
+	unsigned int timeMin = getTimeAltMin();
+	unsigned int timeMax = getTimeAltMax();
 
 
 
 	/*The definition below are used just for debugging proposes
 	 *
 	 */
-	unsigned long int userIntervalSeries = 2000;
-	unsigned char userNumSeries = 1;
-//	unsigned char userTapete = TRUE;
-	unsigned long int userIntervalSaltos = 10000;
-	unsigned char userNumSaltos = 2;
-	unsigned int timeMin = 500;
-	unsigned int timeMax = 5000;
-	unsigned int massaCorp = 10; //10kg
-	configStruct->userIntervalSeries = userIntervalSeries;
-	configStruct->userNumSeries = userNumSeries;
-	configStruct->userNumSaltos = userNumSaltos;
-	configStruct->userIntervalSaltos = userIntervalSaltos;
-	configStruct->userMass = massaCorp;
+//	unsigned long int userIntervalSeries = 2000;
+//	unsigned char userNumSeries = 1;
+////	unsigned char userTapete = TRUE;
+//	unsigned long int userIntervalSaltos = 10000;
+//	unsigned char userNumSaltos = 2;
+//	unsigned int timeMin = 50;
+//	unsigned int timeMax = 5000;
+//	unsigned int massaCorp = 10; //10kg
+//	configStruct->userIntervalSeries = userIntervalSeries;
+//	configStruct->userNumSeries = userNumSeries;
+//	configStruct->userNumSaltos = userNumSaltos;
+//	configStruct->userIntervalSaltos = userIntervalSaltos;
+//	configStruct->userMass = massaCorp;
 
 
 	//
 	key = getKeyPressed();
 
 //	while(key != PARAR && totalTime != configStruct->userTime && numSaltos != configStruct->userNumSaltos) //WHILE COMPLETO
-//	while(key != PARAR && numSaltos != configStruct->userNumSaltos) //USADO PARA DEBUGGER DESCONSIDERANDO O TIMEOUT
-	while(key != PARAR && numSeries != configStruct->userNumSeries) //USADO PARA DEBUGGER DESCONSIDERANDO O TIMEOUT e NUM SALTOS
+//	while(key != PARAR && numSeries != configStruct->userNumSeries && *ptr_totalTime != configStruct->userTime)
+	while(key != PARAR && numSeries != configStruct->userNumSeries)
 	{
 		key = getKeyPressed();
 		switch(userState)
@@ -143,19 +144,20 @@ unsigned char readingSensor()
 				if(*ptr_sensorFlag == 0 && configStruct->userSelectTapete == FALSE) //INICIO FORA DO TAPETE
 				{
 					userState = CONTATO;
+					transitionStateTime = *ptr_totalTime;
 				}
 				else if(*ptr_sensorFlag == 0 && configStruct->userSelectTapete == TRUE) // INICIO DENTRO DO TAPETE
 				{
 					userState = CONTATO;
+					transitionStateTime=0;
 				}
 			break;
 
 			case CONTATO:
-				//PAREI AQUI
 				if(*ptr_sensorFlag == 1)
 				{
 					userState = VOO;
-					resetSamplesCount();
+					transitionStateTime = *ptr_totalTime;
 				}
 				else
 				{
@@ -163,9 +165,7 @@ unsigned char readingSensor()
 					while(*ptr_samples < SAMPLES)
 					{
 						totalTimeArray[*ptr_samples] = *ptr_totalTime;
-						contatoTime[*ptr_samples] = *ptr_totalTime;
-
-//						vooTime[*ptr_samples] = 0;
+						contatoTime[*ptr_samples] = *ptr_totalTime - transitionStateTime;
 					}
 
 					if(*ptr_samples == SAMPLES)
@@ -185,6 +185,7 @@ unsigned char readingSensor()
 					{
 						numSaltos++;
 						count++;
+						transitionStateTime = *ptr_totalTime;
 						if(numSaltos == configStruct->userNumSaltos)
 						{
 							numSeries++;
@@ -201,9 +202,8 @@ unsigned char readingSensor()
 					resetSamplesCount();
 					while(*ptr_samples < SAMPLES)
 					{
-//						contatoTime[*ptr_samples] = 0;
 						totalTimeArray[*ptr_samples] = *ptr_totalTime;
-						vooTime[*ptr_samples] = *ptr_totalTime;
+						vooTime[*ptr_samples] = *ptr_totalTime - transitionStateTime;
 					}
 					if(*ptr_samples == SAMPLES)
 					{
@@ -211,23 +211,19 @@ unsigned char readingSensor()
 
 						if(vooTimeLocal[count]>timeMin && vooTimeLocal[count]<timeMax)
 						{
-							alturaSaltoLocal[count] = calcAltura(vooTimeLocal[count]);
-							potenciaSaltoLocal[count] = calcPotencia(alturaSaltoLocal[count],configStruct->userMass);
 							readStatus = OK;
 						}
 						else readStatus = ERROSALTO;
-						resetSamplesCount();
 					}
 				}
 			break;
 
 			case INTERVALO:
-				intervalSeries = getTimeInterval();
+				intervalSeries = *ptr_totalTime - transitionStateTime;
 				if(intervalSeries == configStruct->userIntervalSeries)
 				{
 					userState = CONTATO;
 					numSaltos = 0;
-					resetTimeInterval();
 				}
 				else userState = INTERVALO;
 				break;
@@ -237,6 +233,8 @@ unsigned char readingSensor()
 	measuredData.resultTestAcquiredSamples = count;
 	for(unsigned i=0;i<count;i++)
 	{
+		alturaSaltoLocal[i] = calcAltura(vooTimeLocal[i]);
+		potenciaSaltoLocal[i] = calcPotencia(alturaSaltoLocal[i],configStruct->userMass);
 		measuredData.Measurement[i].sampleNum = i+1;
 		measuredData.Measurement[i].alturaSalto = alturaSaltoLocal[i];
 		measuredData.Measurement[i].potenciaSalto = potenciaSaltoLocal[i];
@@ -284,7 +282,6 @@ unsigned int calcAltura(float vooTimeLocal)
 
 float calcPotencia(unsigned int alturaSalto,unsigned int massaCorpo)
 {
-	//PAREI AQUI
 	float aux1,aux2,potSalto;
 	float const constant1 = 60.7;
 	float const constant2 = 45.3;

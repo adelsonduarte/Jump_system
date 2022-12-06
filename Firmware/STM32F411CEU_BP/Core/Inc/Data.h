@@ -11,13 +11,15 @@ unsigned char* getTimeStruct();
 unsigned char* getAltMinArray();
 unsigned char* getAltMaxArray();
 unsigned char* getNumSaltosArray();
-unsigned char* getIntervalSaltosArray();
 unsigned char* getTypeJumpArray();
 unsigned char* getAltDJArray();
 unsigned char* getNumSeriesArray();
-unsigned char* getIntervalSeriesArray();
+//unsigned char* getIntervalSeriesArray();
+//unsigned char* getIntervalSaltosArray();
 unsigned char* getNumTestArray();
 unsigned int* getUserResultData(unsigned char);
+//unsigned char* getintervalSeriesTim();
+unsigned char* getIntervalSaltosTimeStruct();
 unsigned char* getintervalSeriesTimeStruct();
 
 unsigned long int getUserTest();

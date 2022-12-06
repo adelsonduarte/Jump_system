@@ -84,8 +84,8 @@ unsigned char HW_EXT_MEMORY_WRITE(unsigned char* saveString, unsigned char* name
 				   saveStruct->Measurement[sampleToSave].potenciaSalto,
 				   saveStruct->Measurement[sampleToSave].uiVooTime,
 				   saveStruct->Measurement[sampleToSave].uiSoloTime);
-			result = f_puts("\n", &fil);
 			HAL_Delay(100);
+			result = f_puts("\n", &fil);
 		}
 	}
 	result = f_close(&fil);

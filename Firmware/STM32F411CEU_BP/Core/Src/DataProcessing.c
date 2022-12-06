@@ -1,7 +1,7 @@
 #include "main.h"
 #include "time.h"
 #include "Display_module.h"
-//#include "DataProcessing.h"
+#include "DataProcessing.h"
 #include "Data.h"
 #include "stdlib.h"
 
@@ -17,6 +17,8 @@ static unsigned char numSeriesString[10];
 static unsigned char interSeriesString[10];
 static unsigned char numTestString[10];
 static unsigned char eraseTestString[10];
+
+#define G_CONSTANT 981; // cm/s^2
 
 unsigned char indexTime(unsigned char* index)
 {
@@ -56,19 +58,19 @@ unsigned long milisecondsTime(unsigned char* ptr_inputTime)
 unsigned long stringToLong(unsigned char* string)
 {
     char *ptr;
-    unsigned long int intTime = strtol(string,&ptr,10); //REFAZER
+    unsigned long int intTime = strtol(string,&ptr,10);
     //fazer a convers�o de hhmmss para ms
     return intTime;
 }
 
-unsigned int stringToInt(unsigned char* string) //REFAZER
+unsigned int stringToInt(unsigned char* string)
 {
     char *ptr;
     unsigned int x = strtol(string,&ptr,10);
     return x;
 }
 
-unsigned char stringToFloat(unsigned char* string) //REFAZER
+unsigned char stringToFloat(unsigned char* string)
 {
     float x = strtof(string,NULL);
     return x;
@@ -104,14 +106,14 @@ unsigned char indexChange(short* index, unsigned char size)
 unsigned char* getAltMinString()
 {
     unsigned char* altMinArray = getAltMinArray();
-    sprintf(altMinString,"%d%d%d",altMinArray[0],altMinArray[1],altMinArray[2]);
+    sprintf(altMinString,"%d%d%d cm",altMinArray[0],altMinArray[1],altMinArray[2]);
     return altMinString;
 }
 
 unsigned char* getAltMaxString()
 {
     unsigned char* altMaxArray = getAltMaxArray();
-    sprintf(altMaxString,"%d%d%d",altMaxArray[0],altMaxArray[1],altMaxArray[2]);
+    sprintf(altMaxString,"%d%d%d cm",altMaxArray[0],altMaxArray[1],altMaxArray[2]);
     return altMaxString;
 }
 
@@ -132,7 +134,7 @@ unsigned char* getTypeJumpString()
 unsigned char* getAltDJString()
 {
     unsigned char* altDJArray = getAltDJArray();
-    sprintf(altDJString,"%d%d%",altDJArray[0],altDJArray[1]);
+    sprintf(altDJString,"%d%d% cm",altDJArray[0],altDJArray[1]);
     return altDJString;
 }
 
@@ -153,7 +155,7 @@ unsigned char* getIntervalSeriesString()
 unsigned char* getMassString()
 {
     unsigned char* massArray = getMassArray();
-    sprintf(massString,"%d%d%d.%d",massArray[0],massArray[1],massArray[2],massArray[4]);
+    sprintf(massString,"%d%d%d.%d kg",massArray[0],massArray[1],massArray[2],massArray[4]);
     //massArray[3] ficou representando o "." no display
     return massString;
 }
@@ -161,7 +163,7 @@ unsigned char* getMassString()
 unsigned char* getOverMassString()
 {
     unsigned char* overMassArray = getOverMassArray();
-    sprintf(overMassString,"%d%d%d.%d",overMassArray[0],overMassArray[1],overMassArray[2],overMassArray[4]);
+    sprintf(overMassString,"%d%d%d.%d kg",overMassArray[0],overMassArray[1],overMassArray[2],overMassArray[4]);
     return overMassString;
 }
 
@@ -294,10 +296,10 @@ unsigned char setUserNumTest(unsigned char* idx)
     if(numTestArray[index]>9) numTestArray[index]= 0;
 }
 
-unsigned char* setIntervalSaltosTime(unsigned char* configInputTimer)
+void setUserIntervalSaltosTime(unsigned char* configInputTimer)
 {
 	unsigned char index = *configInputTimer + 3;
-	struct tm* insertTime = getIntervalTimeStruct();
+	struct tm* insertTime = getIntervalSaltosTimeStruct();
 
 	switch(index)
 	{
@@ -325,7 +327,38 @@ unsigned char* setIntervalSaltosTime(unsigned char* configInputTimer)
 
 }
 
-unsigned char* setUserTime(unsigned char* inputUserTimer)
+void setUserIntervalSeriesTime(unsigned char* configInputTimer)
+{
+	unsigned char index = *configInputTimer + 3;
+	struct tm* insertTime = getintervalSeriesTimeStruct();
+
+	switch(index)
+	{
+		case DEZENA_M:
+			insertTime->tm_min = insertTime->tm_min+10;
+			if(insertTime->tm_min>60) insertTime->tm_min = 0;
+		break;
+
+		case UNIDADE_M:
+			insertTime->tm_min = insertTime->tm_min+1;
+			if(insertTime->tm_min>60) insertTime->tm_min = 0;
+		break;
+
+		case DEZENA_S:
+			insertTime->tm_sec =insertTime->tm_sec+10 ;
+			if(insertTime->tm_sec>60) insertTime->tm_sec = 0;
+
+		break;
+
+		case UNIDADE_S:
+			insertTime->tm_sec =insertTime->tm_sec+1 ;
+			if(insertTime->tm_sec>60) insertTime->tm_sec = 0;
+		break;
+	}
+
+}
+
+void setUserTime(unsigned char* inputUserTimer)
 {
     unsigned char index = *inputUserTimer;
     struct tm* insertTime = getTimeStruct();
@@ -373,11 +406,11 @@ unsigned char* setUserTime(unsigned char* inputUserTimer)
 
 unsigned int alturaToTempo(unsigned int altura)
 {
-	unsigned int tempo = 0;
-	unsigned int nominator = 8 * altura;
-	unsigned int  g = 981; // cm/s^2
-	float relation =  nominator/g;
-	tempo = sqrt(relation);
-	tempo = tempo*1000;
+	float aux1 = 0;
+	int tempo = 0;
+	float nominator = 8 * altura;
+	float relation =  nominator/G_CONSTANT;
+	aux1 = sqrt(relation);
+	tempo = aux1*1000;
 	return tempo;
 }

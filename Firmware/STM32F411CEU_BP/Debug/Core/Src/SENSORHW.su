@@ -1,5 +1,5 @@
 ../Core/Src/SENSORHW.c:55:15:getUserState	4	static
 ../Core/Src/SENSORHW.c:60:15:setUserState	16	static
-../Core/Src/SENSORHW.c:66:15:readingSensor	552	static
-../Core/Src/SENSORHW.c:281:14:calcAltura	32	static
-../Core/Src/SENSORHW.c:297:7:calcPotencia	40	static
+../Core/Src/SENSORHW.c:66:15:readingSensor	536	static
+../Core/Src/SENSORHW.c:267:14:calcAltura	32	static
+../Core/Src/SENSORHW.c:283:7:calcPotencia	40	static

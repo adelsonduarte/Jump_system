@@ -67,7 +67,7 @@ struct Menu{
 unsigned char initStateMachine(struct Menu* subMenu)
 {
     struct Menu* subMenuIniciar = subMenu;
-    struct dataInsert* ptr_userConfiguration = getUserConfigStruct();
+    struct dataInsert* ptr_userConfiguration;
     struct results* ptr_result;
     struct tm myTime;
 	struct tm* userTimeStruct = &myTime;
@@ -88,14 +88,6 @@ unsigned char initStateMachine(struct Menu* subMenu)
 
 
     unsigned char displayUpdateStatus = IDDLE;
-    //unsigned char cursorPosition[2] = {0,0};
-
-    //Teste results
-//    unsigned char* ptr_Sample;
-//    unsigned char* ptr_ulReadingTime;
-//    unsigned char* ptr_uiVooTime;
-//    unsigned char* ptr_ucAltDistance;
-//    struct results result[TEST_SIZE]; //verificar se vou usar o endere�o de data.c assim como fiz com a estrutura de configuracao
 
     unsigned char indexTest;
     unsigned char readingStatus = IDDLE;
@@ -103,8 +95,8 @@ unsigned char initStateMachine(struct Menu* subMenu)
     unsigned char testSamples = 0;
 
     //
-
-
+//    rflashConfigData();
+    ptr_userConfiguration = getUserConfigStruct();
 
     unsigned char startTapete,readingState;
 
@@ -136,7 +128,6 @@ unsigned char initStateMachine(struct Menu* subMenu)
                     stopCOMM();
                     readyUserInterface(&displayUpdateStatus);
                     ptr_userConfiguration->userCommConfig = COMM_OFF;
-                    //subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
                     subMenuIniciar->menuState = getNextSub(TEMPO_READ);
                 }
             break;
@@ -161,7 +152,6 @@ unsigned char initStateMachine(struct Menu* subMenu)
                 	updateUserMsg(0,0,waitTransmissionMsg,&displayUpdateStatus);
                     readyUserInterface(&displayUpdateStatus);
                      ptr_userConfiguration->userCommConfig = COMM_ON;
-                    //subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
                     subMenuIniciar->menuState = getNextSub(TEMPO_READ);
                 }
                 break;
@@ -198,7 +188,6 @@ unsigned char initStateMachine(struct Menu* subMenu)
                     readyUserInterface(&displayUpdateStatus);
 					ptr_userConfiguration->userTime = milisecondsTime(userTimeStruct);
                     subMenuIniciar->menuState = getNextSub(MASSA_READ);
-                    //subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
                 }
                 break;
 
@@ -230,7 +219,6 @@ unsigned char initStateMachine(struct Menu* subMenu)
                     readyUserInterface(&displayUpdateStatus);
                     ptr_userConfiguration->userMass= stringToInt(ptr_massString);
                     subMenuIniciar->menuState = getNextSub(SOBREC_READ);
-                    //subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
                 }
                 break;
 
@@ -264,7 +252,6 @@ unsigned char initStateMachine(struct Menu* subMenu)
                 	insertColumn = 7; //definicao de caracteres para TIME
                     readyUserInterface(&displayUpdateStatus);
                     ptr_userConfiguration->userOverMass= stringToInt(ptr_overMassString);
-                    //subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
                     subMenuIniciar->menuState = getNextSub(START);
                 }
                 break;
@@ -285,7 +272,6 @@ unsigned char initStateMachine(struct Menu* subMenu)
                     indexTest = getResultTestNumber();
                     readyUserInterface(&displayUpdateStatus);
                     subMenuIniciar->menuState = getNextSub(READING);
-                    //subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
                 }
             break;
 
@@ -293,10 +279,8 @@ unsigned char initStateMachine(struct Menu* subMenu)
             	 updateUserMsg(0,USERMSG1,medindoUserMsg,&displayUpdateStatus);
             	 resetTimer3Variable();
 				 HW_PRINT_DATA(0,OPTIONMSG,pararUserMsg);
-//				 HW_EXT_MEMORY_WRITE("adelson","READING_ANTES.txt");
             	 startTM2();
 				 startTM3();
-//             	 HW_EXT_MEMORY_WRITE("adelson","READING_DEPOIS.txt"); //nao escreveu tambem
 				 readingStatus = readingSensor();
 				 key = getKeyPressed();
 				 if(key == PARAR || readingStatus != IDDLE)
@@ -318,13 +302,10 @@ unsigned char initStateMachine(struct Menu* subMenu)
                 	resetKeyPressed();
                     stopTM2();
                     stopTM3();
-//                    HW_EXT_MEMORY_WRITE("adelson","STOP_DEPOIS.txt"); //dando erro apos desligar timer parei aqui
                     readyUserInterface(&displayUpdateStatus);
                     setResultTestNumber();
 //                    transmissionCOMM();
                     subMenuIniciar->menuState = getNextSub(DISP_RESULTS);
-                    //subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
-
                 }
                 break;
 
@@ -344,7 +325,6 @@ unsigned char initStateMachine(struct Menu* subMenu)
                 {
                 	resetKeyPressed();
                     readyUserInterface(&displayUpdateStatus);
-                    //subMenuIniciar->menuSelect = setSelectSub(&subMenuIniciar->menuState);
                     subMenuIniciar->menuState = getNextSub(RESULTS);
                 }
             break;
@@ -378,7 +358,11 @@ unsigned char initStateMachine(struct Menu* subMenu)
 //					HW_PRINT_DATA(strlen(potenciaUserMsg)+strlen(ptr_potString)+strlen(tempoSoloUserMsg)+1,INSERTMSG , ptr_soloTimeString);
 
 				}
-				else  HW_PRINT_DATA((16-strlen("VAZIO"))/2,INSERTMSG,"VAZIO");
+				else
+				{
+					HW_PRINT_DATA(0, USERMSG1, "NAO HA DADOS");
+					HW_PRINT_DATA(0, OPTIONMSG, pularUserMsg);
+				}
 
 				key = getKeyPressed();
 
