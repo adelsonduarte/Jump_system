@@ -60,8 +60,10 @@
 
 /* Private variables ---------------------------------------------------------*/
 SPI_HandleTypeDef hspi1;
+
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
+
 UART_HandleTypeDef huart2;
 DMA_HandleTypeDef hdma_usart2_rx;
 
@@ -73,11 +75,8 @@ volatile char rxMSG[2];
 volatile char uartFlagRx = FALSE;
 volatile unsigned char samples = 0;
 volatile unsigned char sensorState;
-volatile unsigned int timer3Data = 0;
-volatile unsigned int timer3Count = 0;
-volatile unsigned int timeVooCount = 0;
-volatile unsigned int timeSoloCount = 0;
-volatile unsigned int timeInterval = 0;
+volatile uint32_t timer3Data = 0;
+volatile uint32_t timer3Count = 0;
 volatile unsigned int totalTimeArray[SAMPLES];
 volatile unsigned int timeVoo[SAMPLES];
 volatile unsigned int timeSolo[SAMPLES];
@@ -99,14 +98,14 @@ static void MX_SPI1_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-unsigned int getTimeInterval()
-{
-	return timeInterval;
-}
-void resetTimeInterval()
-{
-	timeInterval = 0;
-}
+//unsigned int getTimeInterval()
+//{
+//	return timeInterval;
+//}
+//void resetTimeInterval()
+//{
+//	timeInterval = 0;
+//}
 unsigned int* getTotalTime()
 {
 	return &totalTimeArray;
@@ -189,7 +188,7 @@ unsigned char* getSensorFlag()
 	return &sensorFlag;
 }
 
-unsigned int* getTimer3Variable()
+uint32_t* getTimer3Variable()
 {
 	return &timer3Data;
 }
@@ -262,14 +261,23 @@ int main(void)
   }
 #endif
 #if _HWVALIDATION
+  startTM3();
   for(;;)
   {
-	  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-	  HAL_Delay(1000);
+//	  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+//	  HAL_Delay(1000);
   }
 #endif
 
-  HAL_Delay(100);
+#if _MEASUREVALIDATION
+  while(1)
+  {
+	  readyUserInterface(&displayUpdateStatus);
+	  updateUserMsg(0,USERMSG1,"SENSING MEAS.",&displayUpdateStatus);
+	  measureValidation();
+  }
+#endif
+
 #if _APPLICATION
   while (1)
   {
@@ -277,7 +285,7 @@ int main(void)
 	  	  {
 	  		  case IDDLE:
 	  			  menuTesteMain.menuState = getNextMain(IDDLE);
-	  			  if(key == AVANCAR)
+	  			  if(key == DOWN)
 	  			  {
 	  				  resetKeyPressed();
 	  				  readyUserInterface(&displayUpdateStatus);
@@ -289,7 +297,13 @@ int main(void)
 	  			  updateUserMsg(0,USERMSG1,startUserMsg,&displayUpdateStatus);
 	  			  HW_PRINT_DATA(0,INSERTMSG,avancarUserMsg);
 	  			  HW_PRINT_DATA(0,OPTIONMSG,selecionarUserMsg);
-	  			  if(key == AVANCAR)
+//	  			  if(key == AVANCAR)
+//	  			  {
+//	  				  resetKeyPressed();
+//	  				  readyUserInterface(&displayUpdateStatus);
+//	  				  menuTesteMain.menuState = getNextMain(CONSULT_DATA);
+//	  			  }
+	  			  if(key == DOWN)
 	  			  {
 	  				  resetKeyPressed();
 	  				  readyUserInterface(&displayUpdateStatus);
@@ -314,7 +328,13 @@ int main(void)
 	  			  if(key == AVANCAR)
 	  			  {
 	  				  resetKeyPressed();
-	  				                      readyUserInterface(&displayUpdateStatus);
+					  readyUserInterface(&displayUpdateStatus);
+	  				  menuTesteMain.menuState = getNextMain(START_TEST);
+	  			  }
+	  			  else if(key == DOWN)
+	  			  {
+	  				  resetKeyPressed();
+					  readyUserInterface(&displayUpdateStatus);
 	  				  menuTesteMain.menuState = getNextMain(CONFIG_SENSOR);
 	  			  }
 
@@ -337,8 +357,14 @@ int main(void)
 	  			  {
 	  				  resetKeyPressed();
 	  				  readyUserInterface(&displayUpdateStatus);
-	  				  menuTesteMain.menuState = getNextMain(EXPORT_DATA);
+	  				  menuTesteMain.menuState = getNextMain(CONSULT_DATA);
 	  			  }
+	  			  else if(key == DOWN)
+				  {
+					  resetKeyPressed();
+					  readyUserInterface(&displayUpdateStatus);
+					  menuTesteMain.menuState = getNextMain(EXPORT_DATA);
+				  }
 	  			  else if(key == CONFIRMAR)
 	  			  {
 	  				  resetKeyPressed();
@@ -358,8 +384,14 @@ int main(void)
 	  			  {
 	  				  resetKeyPressed();
 	  				  readyUserInterface(&displayUpdateStatus);
-	  				  menuTesteMain.menuState = getNextMain(ERASE_DATA);
+	  				  menuTesteMain.menuState = getNextMain(CONFIG_SENSOR);
 	  			  }
+	  			  else if(key == DOWN)
+				  {
+					  resetKeyPressed();
+					  readyUserInterface(&displayUpdateStatus);
+					  menuTesteMain.menuState = getNextMain(ERASE_DATA);
+				  }
 	  			  else if(key == CONFIRMAR)
 	  			  {
 	  				  resetKeyPressed();
@@ -380,8 +412,14 @@ int main(void)
 	  			  {
 	  				  resetKeyPressed();
 	  				  readyUserInterface(&displayUpdateStatus);
-	  				  menuTesteMain.menuState = getNextMain(START_TEST);
+	  				  menuTesteMain.menuState = getNextMain(EXPORT_DATA);
 	  			  }
+	  			  if(key == DOWN)
+				  {
+					  resetKeyPressed();
+					  readyUserInterface(&displayUpdateStatus);
+					  menuTesteMain.menuState = getNextMain(START_TEST);
+				  }
 
 	  			  else if(key == CONFIRMAR)
 	  			  {
@@ -554,9 +592,9 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 1 */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 100-1;
+  htim3.Init.Prescaler = 10-1;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 1000-1;
+  htim3.Init.Period = 100-1;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
@@ -669,6 +707,20 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(SPI1_CS_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pins : BT_DOWN_Pin BT_AVANCA_Pin BT_SELECT_Pin BT_STOP_Pin
+                           BT_INSERT_Pin */
+  GPIO_InitStruct.Pin = BT_DOWN_Pin|BT_AVANCA_Pin|BT_SELECT_Pin|BT_STOP_Pin
+                          |BT_INSERT_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : BT_LEFT_Pin BT__RIGHT_Pin BT_MENU_Pin */
+  GPIO_InitStruct.Pin = BT_LEFT_Pin|BT__RIGHT_Pin|BT_MENU_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
   /*Configure GPIO pins : LCD_D7_Pin LCD_D6_Pin LCD_D5_Pin LCD_D4_Pin
                            LCD_RS_Pin */
   GPIO_InitStruct.Pin = LCD_D7_Pin|LCD_D6_Pin|LCD_D5_Pin|LCD_D4_Pin
@@ -687,19 +739,16 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : BT_MENU_Pin */
-  GPIO_InitStruct.Pin = BT_MENU_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(BT_MENU_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : BT_AVANCA_Pin BT_SELECT_Pin BT_STOP_Pin BT_INSERT_Pin */
-  GPIO_InitStruct.Pin = BT_AVANCA_Pin|BT_SELECT_Pin|BT_STOP_Pin|BT_INSERT_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
   /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI2_IRQn);
+
   HAL_NVIC_SetPriority(EXTI4_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI4_IRQn);
 
@@ -711,25 +760,15 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 {
-	if(htim == &htim3) //VERIFICAR O CLOCK PARA CALCULAR O NOVO TIMER
+	if(htim == &htim3) //10us
 	{
-		timer3Count+=1;  //1ms
-		if(timer3Count == 10)
-		{
-			timer3Data += timer3Count;
-			timer3Count = 0;
-			samples++;
-		}
-//
-//		else if(sensorState == INTERVALO)
+//		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+		timer3Count=10;  //1ms
+//		if(timer3Count == 10)
 //		{
-//			if(timer3Count == 10)
-//			{
-//				timeInterval +=10;
-//				timer3Count = 0;
-//			}
-//		}
-
+		timer3Data += timer3Count; //10ms
+//			timer3Count = 0;
+//			samples++;
 	}
 
 }
@@ -752,16 +791,13 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 	{
 		if(htim->Channel == 2)
 		{
-			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, SET);
 			sensorFlag = 1;
 		}
 		else if(htim->Channel == 1)
 		{
-			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, RESET);
 			sensorFlag = 0;
 		}
 	}
-
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
@@ -771,6 +807,19 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		case BT_AVANCA_Pin:
 			key = AVANCAR;
 		break;
+
+		case BT_DOWN_Pin:
+		key = DOWN;
+		break;
+
+		case BT_LEFT_Pin:
+		key = LEFT;
+		break;
+
+		case BT__RIGHT_Pin:
+		key = RIGHT;
+		break;
+
 		case BT_INSERT_Pin:
 			key = INSERIR;
 		break;

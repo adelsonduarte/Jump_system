@@ -78,7 +78,7 @@ unsigned char HW_EXT_MEMORY_WRITE(unsigned char* saveString, unsigned char* name
 		for(sampleToSave = 0;sampleToSave<saveStruct->resultTestAcquiredSamples;sampleToSave++)
 		{
 //			result = f_printf(&fil,"%d",10);
-			f_printf(&fil,"%d \t %d \t %d \t %d \t %d",
+			f_printf(&fil,"%d \t\t %d \t\t %d \t\t %d \t\t %d",
 				   saveStruct->Measurement[sampleToSave].sampleNum,
 				   saveStruct->Measurement[sampleToSave].alturaSalto,
 				   saveStruct->Measurement[sampleToSave].potenciaSalto,

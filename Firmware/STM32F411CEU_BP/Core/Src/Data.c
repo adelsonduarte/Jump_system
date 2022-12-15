@@ -61,11 +61,11 @@ static unsigned char massArray[] = {0,0,0,0,0};
 static unsigned char overMassArray[] = {0,0,0,0,0};
 static unsigned char altMinArray[] = {0,0,0}; //cm
 static unsigned char altMaxArray[] = {0,0,0}; //cm
-static unsigned char numSaltosArray[] = {0,0,0};
+static unsigned char numSaltosArray[] = {0,0,1};
 
 static unsigned char altDJArray[] = {0,0};
 static unsigned char JumpTypeArray[] = {0};
-static unsigned char numSeriesArray[] = {0,0,0};
+static unsigned char numSeriesArray[] = {0,0,1};
 //static unsigned char intervalSeriesArray[] = {0,0,0};
 static unsigned char numTestArray[] = {0,0,0};
 static unsigned char selectEraseArray[] = {0};

@@ -64,8 +64,8 @@ all: main-build
 main-build: STM32F411CEU_BP.elf secondary-outputs
 
 # Tool invocations
-STM32F411CEU_BP.elf STM32F411CEU_BP.map: $(OBJS) $(USER_OBJS) G:\Meu\ Drive\CEFISE\ -\ Biotecnologia\Jump_system\Firmware\STM32F411CEU_BP\STM32F411CEU_BP\STM32F411CEUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "STM32F411CEU_BP.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"G:\Meu Drive\CEFISE - Biotecnologia\Jump_system\Firmware\STM32F411CEU_BP\STM32F411CEU_BP\STM32F411CEUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32F411CEU_BP.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+STM32F411CEU_BP.elf STM32F411CEU_BP.map: $(OBJS) $(USER_OBJS) G:\Meu\ Drive\CEFISE\ -\ Biotecnologia\Jump_system\Firmware\STM32F411CEU_BP\STM32F411CEUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "STM32F411CEU_BP.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"G:\Meu Drive\CEFISE - Biotecnologia\Jump_system\Firmware\STM32F411CEU_BP\STM32F411CEUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32F411CEU_BP.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

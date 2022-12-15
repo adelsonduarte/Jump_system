@@ -1,9 +1,19 @@
 #include "main.h"
 #include "IO_interface.h"
+#include "stdint.h"
+#include "DisplayMessages.h"
+#include "HIL_INTERFACE.h"
+#include "SDMEMORYHW.h"
+#include "fatfs.h"
+#include "fatfs_sd.h"
+
 #if _VI
 #define EXIT 'E'
 #define SOLICITA '1'
 #define PARA '2'
+
+volatile uint16_t vooTime;
+volatile uint16_t contatoTime;
 
 static unsigned char userState = REPOUSO;
 
@@ -77,6 +87,7 @@ void processApplication() //parei aqui
 	unsigned char userSelectTapete = FALSE;
 	unsigned char uartMsg[40];
 	unsigned char TRANSMISSION = FALSE;
+	unsigned int* ptr_totalTime;
 
 	float aux1;
 	unsigned int aux2 = 981>>3;
@@ -99,160 +110,292 @@ void processApplication() //parei aqui
 
 	ptr_samples = getSamplesCount();
 	ptr_sensorFlag = getSensorFlag();
-	ptr_measurementTotalTime = getTotalTime();
+	ptr_totalTime = getTimer3Variable();
 	ptr_measurementContatoTime = getTimeSolo();
 	ptr_measurementVooTime = getTimeVoo();
+	unsigned int transitionStateTime = 0;
 
     while(TRANSMISSION == FALSE) //AQUI
     {
-        switch(userState)
-        {
-            case REPOUSO:
-//                sensorFlag = getTimer2Variable();
-                if(*ptr_sensorFlag == 0 && userSelectTapete == FALSE) //INICIO FORA DO TAPETE
-                {
-					count = 0;
-                    userState = CONTATO;
-                }
-                else
+    	switch(userState)
+		{
+			case REPOUSO:
+				if(*ptr_sensorFlag == 0 && userSelectTapete == FALSE) //INICIO FORA DO TAPETE
 				{
-					if(*ptr_samples == SAMPLES)
+					userState = CONTATO;
+					transitionStateTime = *ptr_totalTime;
+				}
+				else
+				{
+					while(*ptr_samples < SAMPLES)
 					{
-						for(unsigned char i=0;i<SAMPLES;i++)
+						totalTimeArray[*ptr_samples] = *ptr_totalTime;
+						contatoTime[*ptr_samples] = 0;
+						vooTime[*ptr_samples] = 0;
+						if(*ptr_samples == SAMPLES)
 						{
-							totalTimeArray[i] = ptr_measurementTotalTime[i];
-							contatoTime[i] = ptr_measurementContatoTime[i];
-							vooTime[i] = ptr_measurementVooTime[i];
-						}
-
-						for(unsigned char i=0;i<SAMPLES;i++)
-						{
-							totalTimeUnion.all = totalTimeArray[i];
-							for(unsigned j=2;j>0;j--)
+							resetSamplesCount();
+							for(unsigned i=0;i<SAMPLES;i++)
 							{
-								uartMsg[count] = totalTimeUnion.pt[j-1];
-								count++;
+								totalTimeUnion.all = totalTimeArray[i];
+								for(unsigned j=2;j>0;j--)
+								{
+									uartMsg[count] = totalTimeUnion.pt[j-1];
+									count++;
+								}
+								alturaSaltoUnion.all = vooTime[i];
+								for(unsigned j=2;j>0;j--)
+								{
+									uartMsg[count] = alturaSaltoUnion.pt[j-1];
+									count++;
+								}
 							}
-
-							alturaSaltoUnion.all = vooTime[i];
-							for(unsigned j=2;j>0;j--)
-							{
-								uartMsg[count] = alturaSaltoUnion.pt[j-1];
-								count++;
-							}
+							TRANSMISSION_HW_UART(uartInstance,uartMsg);
+							TRANSMISSION = TRUE;
+							resetSamplesCount();
+							count=0;
 						}
-						TRANSMISSION_HW_UART(uartInstance,uartMsg);
-						HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, SET);
-						TRANSMISSION = TRUE;
-						resetSamplesCount();
 					}
-					else if(*ptr_samples> SAMPLES) resetSamplesCount();
-                	userState = REPOUSO;
+				}
+			break;
+
+			case CONTATO:
+				if(*ptr_sensorFlag == 1)
+				{
+					userState = VOO;
+					transitionStateTime = *ptr_totalTime;
+				}
+				else
+				{
+					while(*ptr_samples < SAMPLES)
+					{
+						totalTimeArray[*ptr_samples] = *ptr_totalTime;
+						contatoTime[*ptr_samples] = *ptr_totalTime - transitionStateTime;
+						vooTime[*ptr_samples] = 0;
+						if(*ptr_samples == SAMPLES)
+						{
+							resetSamplesCount();
+							for(unsigned i=0;i<SAMPLES;i++)
+							{
+								totalTimeUnion.all = totalTimeArray[i];
+								for(unsigned j=2;j>0;j--)
+								{
+									uartMsg[count] = totalTimeUnion.pt[j-1];
+									count++;
+								}
+								alturaSaltoUnion.all = vooTime[i];
+								for(unsigned j=2;j>0;j--)
+								{
+									uartMsg[count] = alturaSaltoUnion.pt[j-1];
+									count++;
+								}
+							}
+							TRANSMISSION_HW_UART(uartInstance,uartMsg);
+							TRANSMISSION = TRUE;
+							resetSamplesCount();
+							count=0;
+						}
+					}
 				}
 
-            break;
+			break;
 
-            case CONTATO:
-//                sensorFlag = getTimer2Variable();
-                if(*ptr_sensorFlag == 1)
-                {
-                    userState = VOO;
-                    count = 0;
-                }
-                else
-                {
-					if(*ptr_samples == SAMPLES)
-					{
-						for(unsigned char i=0;i<SAMPLES;i++)
-						{
-							totalTimeArray[i] = ptr_measurementTotalTime[i];
-							contatoTime[i] = ptr_measurementContatoTime[i];
-							vooTime[i] = ptr_measurementVooTime[i];
-						}
+			case VOO:
+				if(*ptr_sensorFlag  == 0)
+				{
 
-						for(unsigned char i=0;i<SAMPLES;i++)
-						{
-							totalTimeUnion.all = totalTimeArray[i];
-							for(unsigned j=2;j>0;j--)
-							{
-								uartMsg[count] = totalTimeUnion.pt[j-1];
-								count++;
-							}
-
-							alturaSaltoUnion.all = vooTime[i];
-							for(unsigned j=2;j>0;j--)
-							{
-								uartMsg[count] = alturaSaltoUnion.pt[j-1];
-								count++;
-							}
-						}
-						TRANSMISSION_HW_UART(uartInstance,uartMsg);
-						HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-						TRANSMISSION = TRUE;
-						resetSamplesCount();
-					}
 					userState = CONTATO;
-                }
-
-            break;
-
-            case VOO:
-                if(*ptr_sensorFlag == 0)
-                {
-                    userState = CONTATO;
-                    count = 0;
-                }
-                else
-                {
-					if(*ptr_samples == SAMPLES)
+					transitionStateTime = *ptr_totalTime;
+				}
+				else
+				{
+					while(*ptr_samples < SAMPLES)
 					{
-						/*
-						 * Tempo total dessa rotina = 3,8ms
-						 */
-						for(unsigned char i=0;i<SAMPLES;i++)
+						totalTimeArray[*ptr_samples] = *ptr_totalTime;
+						contatoTime[*ptr_samples] = 0;
+						vooTime[*ptr_samples] = *ptr_totalTime - transitionStateTime;
+						if(*ptr_samples == SAMPLES)
 						{
-							totalTimeArray[i] = ptr_measurementTotalTime[i];
-							contatoTime[i] = ptr_measurementContatoTime[i];
-							vooTime[i] = ptr_measurementVooTime[i];
-						}
-						/*
-						 * Altura do Salto em Centímetros = ((Tempo Voo^2) *  (981/8))
-						 */
-						HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, RESET);
-						for(unsigned char i=0;i<SAMPLES;i++)
-						{
-							aux1 = vooTime[i]*vooTime[i];
-							aux1 = aux1/1000000;
-							alturaSalto[i] = aux1*aux2;
-						}
-						HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, SET);
-
-
-						for(unsigned char i=0;i<SAMPLES;i++)
-						{
-							totalTimeUnion.all = totalTimeArray[i];
-							for(unsigned j=2;j>0;j--)
+							resetSamplesCount();
+							for(unsigned i=0;i<SAMPLES;i++)
 							{
-								uartMsg[count] = totalTimeUnion.pt[j-1];
-								count++;
+								totalTimeUnion.all = totalTimeArray[i];
+								for(unsigned j=2;j>0;j--)
+								{
+									uartMsg[count] = totalTimeUnion.pt[j-1];
+									count++;
+								}
+								alturaSaltoUnion.all = vooTime[i];
+								for(unsigned j=2;j>0;j--)
+								{
+									uartMsg[count] = alturaSaltoUnion.pt[j-1];
+									count++;
+								}
 							}
-
-							alturaSaltoUnion.all = alturaSalto[i];
-							for(unsigned j=2;j>0;j--)
-							{
-								uartMsg[count] = alturaSaltoUnion.pt[j-1];
-								count++;
-							}
+							TRANSMISSION_HW_UART(uartInstance,uartMsg);
+							TRANSMISSION = TRUE;
+							count=0;
 						}
-						TRANSMISSION_HW_UART(uartInstance,uartMsg);
-						HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-						TRANSMISSION = TRUE;
-						resetSamplesCount();
 					}
-                }
-            break;
-        }
+				}
+			break;
+		}
     }
+}
+#endif
+
+#if _MEASUREVALIDATION
+
+#define AMOSTRAS 102
+uint16_t contatoTimeSamples[AMOSTRAS] = {0,0,0,0,0};
+
+uint16_t vooTimeSamples[AMOSTRAS] = {0,0,0,0,0};
+
+void measureValidation(void)
+{
+	unsigned char key = 0;
+	unsigned char logicZeroFile[30];
+	unsigned char logicOneFile[30];
+	unsigned char idx = 0;
+	uint32_t accum1 = 0;
+	uint32_t accum2 = 0;
+	float TvooAVG,TcontatoAVG;
+	while(1)
+	{
+		do
+		{
+//			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, SET);
+			key = (unsigned char)getKeyPressed();
+		}
+		while(key != CONFIRMAR);
+		validation();
+		stopTM2();
+		stopTM3();
+		resetKeyPressed();
+		idx++;
+//		sprintf(logicZeroFile,"Tcontato_meas_%d.txt",idx);
+//		sprintf(logicOneFile,"Tvoo_meas_%d.txt",idx);
+//		SAVE_ARRAY(contatoTimeString, logicZeroFile);
+//		SAVE_ARRAY(vooTimeString, logicOneFile);
+//		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, RESET);
+	}
+
+}
+void validation(void)
+{
+	uint32_t* ptr_totalTime;
+	unsigned char* ptr_samples;
+	unsigned char userState = REPOUSO;
+
+	unsigned char key = 0;
+	unsigned char* ptr_sensorFlag;
+	uint32_t contatoTime,vooTime;
+	ptr_totalTime = (uint16_t*)getTimer3Variable();
+	ptr_sensorFlag = (unsigned char*)getSensorFlag();
+	ptr_samples = (unsigned char*)getSamplesCount();
+	uint32_t transitionStateTime=0;
+	unsigned char transitionString[50];
+	unsigned char contatoTimeString[30];
+	unsigned char vooTimeString[30];
+	uint16_t contato = 0;
+	unsigned char voo = 0;
+	startTM2();
+	startTM3();
+
+	while(key!=PARAR)
+	{
+//		key = (unsigned char)getKeyPressed();
+//		if(contato == AMOSTRAS && voo == AMOSTRAS) key = PARAR;
+		switch(userState)
+		{
+			case REPOUSO:
+				if(*ptr_sensorFlag == 0) //INICIO FORA DO TAPETE
+				{
+					userState = CONTATO;
+					transitionStateTime = *ptr_totalTime;
+//					sprintf((char*)transitionString,"Trepouso = %d",(char*)transitionStateTime);
+//					HW_PRINT_DATA(0,USERMSG2,transitionString);
+				}
+				else userState = REPOUSO;
+			break;
+
+			case CONTATO:
+				if(*ptr_sensorFlag == 1)
+				{
+					userState = VOO;
+					contatoTime = *ptr_totalTime - transitionStateTime;
+//					contatoTimeSamples[contato] = contatoTime;
+//					contato++;
+//					transitionStateTime = *ptr_totalTime;
+//					HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, SET);
+					transitionStateTime = *ptr_totalTime;
+				}
+				else
+				{
+					userState = CONTATO;
+				}
+
+			break;
+
+			case VOO:
+				if(*ptr_sensorFlag  == 0)
+				{
+					userState = CONTATO;
+					vooTime = *ptr_totalTime - transitionStateTime;
+//					vooTimeSamples[voo] = vooTime;
+//					voo++;
+//					transitionStateTime = *ptr_totalTime;
+//					HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, RESET);
+					sprintf((char*)vooTimeString,"Tvoo = %d",(char*)vooTime);
+					HW_PRINT_DATA(0,INSERTMSG,vooTimeString);
+					sprintf((char*)contatoTimeString,"Tcontato = %d",(char*)contatoTime);
+					HW_PRINT_DATA(0,USERMSG2,contatoTimeString);
+					transitionStateTime = *ptr_totalTime;
+				}
+				else
+				{
+					userState = VOO;
+				}
+			break;
+		}
+	}
+	contato = 0;
+	voo = 0;
+}
+unsigned char SAVE_ARRAY(uint16_t* saveString, unsigned char* nameString)
+{
+	uint16_t sampleToSave = 0;
+	unsigned char idx = 1;
+	FRESULT result;
+	FIL fil;
+	FATFS fs;
+	result = f_mount(&fs," ", 0);
+    HAL_Delay(500);
+    result = f_open(&fil, nameString, FA_OPEN_ALWAYS | FA_WRITE | FA_READ);
+//    f_lseek(&fil, teste.fsize);
+	if (&fil == NULL)
+	{
+
+//		printf( "error ao abrir\n");
+	}
+	else{
+		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+//		printf( "abriu save_SD_card\n");
+		f_puts("Amostra \tTempo(us)\n", &fil);
+		HAL_Delay(10);
+		for(sampleToSave = 0;sampleToSave<AMOSTRAS;sampleToSave++)
+		{
+//			result = f_printf(&fil,"%d",10);
+			f_printf(&fil,"%d \t\t %d",idx,saveString[sampleToSave]);
+			idx++;
+//			HAL_Delay(10);
+			result = f_puts("\n", &fil);
+		}
+	}
+    idx = 0;
+	result = f_close(&fil);
+    return 1;
+
 }
 #endif
 

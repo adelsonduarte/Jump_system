@@ -118,7 +118,7 @@ unsigned char* loadDataArrayToStruct(unsigned char* data)
 
 unsigned char* getArqName(unsigned char numTeste)
 {
-    static unsigned char arqName[15]; //VERIFICAR SE VOU FAZER UM GET NISSO
+    static unsigned char arqName[15];
     sprintf(arqName,"Teste%d.txt",numTeste);
     return arqName;
 }

@@ -2,12 +2,8 @@
 #include "SENSORHW.h"
 #include "Data.h"
 #include "stdlib.h"
+#include "DisplayMessages.h"
 
-//struct samples{
-//    unsigned char sampleNum;
-//    unsigned int uiVooTime;
-//    unsigned int uiSoloTime;
-//};
 #if _APPLICATION
 #define ERROSALTO 1
 #define OK 0
@@ -101,12 +97,8 @@ unsigned char readingSensor()
 	ptr_measurementVooTime = getTimeVoo();
 	ptr_totalTime = getTimer3Variable();
 	unsigned char indexTest = getResultTestNumber();
-	unsigned long int userTime = getUserTime();
-	unsigned long int userIntervalSeries = getUserIntervalSeries();
 	unsigned char userNumSeries = getUserNumSeries();
 	unsigned char userTapete = getUserSelectTapete();
-	unsigned long int userIntervalSaltos = getUserIntervalSaltos();
-	unsigned char userNumSaltos = getUserNumSaltos();
 	unsigned int timeMin = getTimeAltMin();
 	unsigned int timeMax = getTimeAltMax();
 
@@ -190,9 +182,18 @@ unsigned char readingSensor()
 						{
 							numSeries++;
 							if(numSeries ==  configStruct->userNumSeries) userState = REPOUSO;
-							else userState = INTERVALO;
+							else
+							{
+								HW_PRINT_DATA(0, USERMSG2, "FIM DE SERIE");
+								userState = INTERVALO;
+							}
 						}
-						else userState = CONTATO;
+						else
+						{
+							userState = INTERVALO_SALTOS;
+							HW_PRINT_DATA(0, USERMSG2, "INTERVALO");
+						}
+
 					}
 					else userState = CONTATO;
 				}
@@ -223,9 +224,22 @@ unsigned char readingSensor()
 				if(intervalSeries == configStruct->userIntervalSeries)
 				{
 					userState = CONTATO;
+					HW_PRINT_DATA(0, USERMSG2, "          ");
+					HW_PRINT_DATA(0, USERMSG2, "NOVA SERIE");
 					numSaltos = 0;
 				}
 				else userState = INTERVALO;
+				break;
+
+			case INTERVALO_SALTOS:
+				intervalSaltos = *ptr_totalTime - transitionStateTime;
+				if(intervalSaltos == configStruct->userIntervalSaltos)
+				{
+					userState = CONTATO;
+					HW_PRINT_DATA(0, USERMSG2, "          ");
+					HW_PRINT_DATA(0, USERMSG2, "HABILITADO");
+				}
+				else userState = INTERVALO_SALTOS;
 				break;
 		}
 	}

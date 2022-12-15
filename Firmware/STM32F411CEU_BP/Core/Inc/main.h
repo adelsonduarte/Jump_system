@@ -39,7 +39,126 @@ extern "C" {
 #define _VI	0
 #define _HWVALIDATION	0
 #define SAMPLES 10
-#define _APPLICATION 1
+#define _APPLICATION 0
+#define _MEASUREVALIDATION 1
+
+/*
+ * Defines da solução
+ */
+
+#define TRUE            1
+#define FALSE           0
+
+#define FORA 	'0'
+#define DENTRO 	'1'
+#define REPOUSO '2'
+#define CONTATO '3'
+#define VOO     '4'
+#define TIMEOUT	'5'
+#define MAX_SERIE '6'
+#define INTERVALO '7'
+
+#define SUBMENU_SIZE    15
+#define MAINMENU_SIZE   4
+#define HOME            1
+
+//MENU MACHINE STATE
+#define IDDLE           0
+#define START_TEST      1
+#define CONSULT_DATA    2
+#define CONFIG_SENSOR   3
+#define EXPORT_DATA     4
+#define ERASE_DATA      5
+#define TESTE           6
+
+
+//INICIAR MACHINE STATE
+#define COMM_OFF        1
+#define COMM_ON         2
+#define TEMPO_READ      3
+#define MASSA_READ      4
+#define SOBREC_READ     5
+#define START           6
+#define READING         7
+#define STOP            8
+#define DISP_RESULTS    9
+#define RESULTS         10
+#define SAVE_DATA       11
+#define CANCEL_SAVE     12
+
+//CONSULTA MACHINE STATE
+#define CONSULTA_TESTE  1
+#define RESULT_TESTE    2
+#define EXPORTAR        3
+
+//CONFIGURACAO MACHINE STATE
+#define CONFIG_SENSOR_1     1
+#define CONFIG_SENSOR_2     2
+#define SENSOR_ALTMIN       3
+#define SENSOR_ALTMAX       4
+#define SENSOR_SALTOS       5
+#define SENSOR_INT_SALTOS   6
+#define SENSOR_JMP_SELECT   7
+#define SENSOR_ALTDJ        8
+#define SENSOR_SERIES       9
+#define SENSOR_INT_SERIES   10
+#define TAPETE_ON           11
+#define TAPETE_OFF          12
+#define SAVE_CONFIGS        13
+
+//EXPORTACAO MACHINE STATE
+#define VERIFICA_COMM         1
+#define EXPORTAR_UNITARIO     2
+#define NUM_TESTE_EXPORT      3
+#define PROCESS_UNITARIO      4
+#define EXPORTAR_TODOS        5
+#define PROCESS_TODOS         6
+
+//APAGA DADOS MACHINE STATE
+#define VERFICA_APAGAR      1
+#define CONFIRMA_APAGAR     2
+#define CONFIRMA            5
+#define RET_MENU            2
+
+//COMANDOS USU�?RIO
+#define AVANCAR     'A'
+#define CONFIRMAR   'C'
+#define PARAR       'P'
+#define MENU        'M'
+#define INSERIR     'I'
+#define AMOSTRA     ';'
+
+
+//QUANTIDADE DE TESTES
+#define TEST_SIZE   5
+#define MEASUREMENT_SIZE   5
+
+//READ FILE MATRIX
+#define MAX_LINES 10
+#define MAX_LEN 100
+
+/* USER CODE END Includes */
+
+/* Exported types ------------------------------------------------------------*/
+/* USER CODE BEGIN ET */
+
+/* USER CODE END ET */
+
+/* Exported constants --------------------------------------------------------*/
+/* USER CODE BEGIN EC */
+
+/* USER CODE END EC */
+
+/* Exported macro ------------------------------------------------------------*/
+/* USER CODE BEGIN EM */
+
+/*Defines para validação
+ *
+ */
+#define _VI	0
+#define _HWVALIDATION	1
+#define SAMPLES 10
+#define _APPLICATION 0
 
 /*
  * Defines da solução
@@ -834,6 +953,481 @@ extern "C" {
 #define MENU        'M'
 #define INSERIR     'I'
 #define AMOSTRA     ';'
+
+
+//QUANTIDADE DE TESTES
+#define TEST_SIZE   5
+#define MEASUREMENT_SIZE   5
+
+//READ FILE MATRIX
+#define MAX_LINES 10
+#define MAX_LEN 100
+
+/* USER CODE END Includes */
+
+/* Exported types ------------------------------------------------------------*/
+/* USER CODE BEGIN ET */
+
+/* USER CODE END ET */
+
+/* Exported constants --------------------------------------------------------*/
+/* USER CODE BEGIN EC */
+
+/* USER CODE END EC */
+
+/* Exported macro ------------------------------------------------------------*/
+/* USER CODE BEGIN EM */
+
+/*Defines para validação
+ *
+ */
+#define _VI	0
+#define _HWVALIDATION	0
+#define SAMPLES 10
+#define _APPLICATION 1
+
+/*
+ * Defines da solução
+ */
+
+#define TRUE            1
+#define FALSE           0
+
+#define FORA 	'0'
+#define DENTRO 	'1'
+#define REPOUSO '2'
+#define CONTATO '3'
+#define VOO     '4'
+#define TIMEOUT	'5'
+#define MAX_SERIE '6'
+#define INTERVALO '7'
+
+#define SUBMENU_SIZE    15
+#define MAINMENU_SIZE   4
+#define HOME            1
+
+//MENU MACHINE STATE
+#define IDDLE           0
+#define START_TEST      1
+#define CONSULT_DATA    2
+#define CONFIG_SENSOR   3
+#define EXPORT_DATA     4
+#define ERASE_DATA      5
+#define TESTE           6
+
+
+//INICIAR MACHINE STATE
+#define COMM_OFF        1
+#define COMM_ON         2
+#define TEMPO_READ      3
+#define MASSA_READ      4
+#define SOBREC_READ     5
+#define START           6
+#define READING         7
+#define STOP            8
+#define DISP_RESULTS    9
+#define RESULTS         10
+#define SAVE_DATA       11
+#define CANCEL_SAVE     12
+
+//CONSULTA MACHINE STATE
+#define CONSULTA_TESTE  1
+#define RESULT_TESTE    2
+#define EXPORTAR        3
+
+//CONFIGURACAO MACHINE STATE
+#define CONFIG_SENSOR_1     1
+#define CONFIG_SENSOR_2     2
+#define SENSOR_ALTMIN       3
+#define SENSOR_ALTMAX       4
+#define SENSOR_SALTOS       5
+#define SENSOR_INT_SALTOS   6
+#define SENSOR_JMP_SELECT   7
+#define SENSOR_ALTDJ        8
+#define SENSOR_SERIES       9
+#define SENSOR_INT_SERIES   10
+#define TAPETE_ON           11
+#define TAPETE_OFF          12
+#define SAVE_CONFIGS        13
+
+//EXPORTACAO MACHINE STATE
+#define VERIFICA_COMM         1
+#define EXPORTAR_UNITARIO     2
+#define NUM_TESTE_EXPORT      3
+#define PROCESS_UNITARIO      4
+#define EXPORTAR_TODOS        5
+#define PROCESS_TODOS         6
+
+//APAGA DADOS MACHINE STATE
+#define VERFICA_APAGAR      1
+#define CONFIRMA_APAGAR     2
+#define CONFIRMA            5
+#define RET_MENU            2
+
+//COMANDOS USU�?RIO
+#define AVANCAR     'A'
+#define CONFIRMAR   'C'
+#define PARAR       'P'
+#define MENU        'M'
+#define INSERIR     'I'
+#define AMOSTRA     ';'
+
+
+//QUANTIDADE DE TESTES
+#define TEST_SIZE   5
+#define MEASUREMENT_SIZE   5
+
+//READ FILE MATRIX
+#define MAX_LINES 10
+#define MAX_LEN 100
+
+/* USER CODE END Includes */
+
+/* Exported types ------------------------------------------------------------*/
+/* USER CODE BEGIN ET */
+
+/* USER CODE END ET */
+
+/* Exported constants --------------------------------------------------------*/
+/* USER CODE BEGIN EC */
+
+/* USER CODE END EC */
+
+/* Exported macro ------------------------------------------------------------*/
+/* USER CODE BEGIN EM */
+
+/*Defines para validação
+ *
+ */
+#define _VI	0
+#define _HWVALIDATION	0
+#define SAMPLES 10
+#define _APPLICATION 1
+
+/*
+ * Defines da solução
+ */
+
+#define TRUE            1
+#define FALSE           0
+
+#define FORA 	'0'
+#define DENTRO 	'1'
+#define REPOUSO '2'
+#define CONTATO '3'
+#define VOO     '4'
+#define TIMEOUT	'5'
+#define MAX_SERIE '6'
+#define INTERVALO '7'
+
+#define SUBMENU_SIZE    15
+#define MAINMENU_SIZE   4
+#define HOME            1
+
+//MENU MACHINE STATE
+#define IDDLE           0
+#define START_TEST      1
+#define CONSULT_DATA    2
+#define CONFIG_SENSOR   3
+#define EXPORT_DATA     4
+#define ERASE_DATA      5
+#define TESTE           6
+
+
+//INICIAR MACHINE STATE
+#define COMM_OFF        1
+#define COMM_ON         2
+#define TEMPO_READ      3
+#define MASSA_READ      4
+#define SOBREC_READ     5
+#define START           6
+#define READING         7
+#define STOP            8
+#define DISP_RESULTS    9
+#define RESULTS         10
+#define SAVE_DATA       11
+#define CANCEL_SAVE     12
+
+//CONSULTA MACHINE STATE
+#define CONSULTA_TESTE  1
+#define RESULT_TESTE    2
+#define EXPORTAR        3
+
+//CONFIGURACAO MACHINE STATE
+#define CONFIG_SENSOR_1     1
+#define CONFIG_SENSOR_2     2
+#define SENSOR_ALTMIN       3
+#define SENSOR_ALTMAX       4
+#define SENSOR_SALTOS       5
+#define SENSOR_INT_SALTOS   6
+#define SENSOR_JMP_SELECT   7
+#define SENSOR_ALTDJ        8
+#define SENSOR_SERIES       9
+#define SENSOR_INT_SERIES   10
+#define TAPETE_ON           11
+#define TAPETE_OFF          12
+#define SAVE_CONFIGS        13
+
+//EXPORTACAO MACHINE STATE
+#define VERIFICA_COMM         1
+#define EXPORTAR_UNITARIO     2
+#define NUM_TESTE_EXPORT      3
+#define PROCESS_UNITARIO      4
+#define EXPORTAR_TODOS        5
+#define PROCESS_TODOS         6
+
+//APAGA DADOS MACHINE STATE
+#define VERFICA_APAGAR      1
+#define CONFIRMA_APAGAR     2
+#define CONFIRMA            5
+#define RET_MENU            2
+
+//COMANDOS USU�?RIO
+#define AVANCAR     'A'
+#define CONFIRMAR   'C'
+#define PARAR       'P'
+#define MENU        'M'
+#define INSERIR     'I'
+#define AMOSTRA     ';'
+
+
+//QUANTIDADE DE TESTES
+#define TEST_SIZE   5
+#define MEASUREMENT_SIZE   5
+
+//READ FILE MATRIX
+#define MAX_LINES 10
+#define MAX_LEN 100
+
+/* USER CODE END Includes */
+
+/* Exported types ------------------------------------------------------------*/
+/* USER CODE BEGIN ET */
+
+/* USER CODE END ET */
+
+/* Exported constants --------------------------------------------------------*/
+/* USER CODE BEGIN EC */
+
+/* USER CODE END EC */
+
+/* Exported macro ------------------------------------------------------------*/
+/* USER CODE BEGIN EM */
+
+/*Defines para validação
+ *
+ */
+#define _VI	0
+#define _HWVALIDATION	0
+#define SAMPLES 10
+#define _APPLICATION 0
+
+/*
+ * Defines da solução
+ */
+
+#define TRUE            1
+#define FALSE           0
+
+#define FORA 	'0'
+#define DENTRO 	'1'
+#define REPOUSO '2'
+#define CONTATO '3'
+#define VOO     '4'
+#define TIMEOUT	'5'
+#define MAX_SERIE '6'
+#define INTERVALO '7'
+
+#define SUBMENU_SIZE    15
+#define MAINMENU_SIZE   4
+#define HOME            1
+
+//MENU MACHINE STATE
+#define IDDLE           0
+#define START_TEST      1
+#define CONSULT_DATA    2
+#define CONFIG_SENSOR   3
+#define EXPORT_DATA     4
+#define ERASE_DATA      5
+#define TESTE           6
+
+
+//INICIAR MACHINE STATE
+#define COMM_OFF        1
+#define COMM_ON         2
+#define TEMPO_READ      3
+#define MASSA_READ      4
+#define SOBREC_READ     5
+#define START           6
+#define READING         7
+#define STOP            8
+#define DISP_RESULTS    9
+#define RESULTS         10
+#define SAVE_DATA       11
+#define CANCEL_SAVE     12
+
+//CONSULTA MACHINE STATE
+#define CONSULTA_TESTE  1
+#define RESULT_TESTE    2
+#define EXPORTAR        3
+
+//CONFIGURACAO MACHINE STATE
+#define CONFIG_SENSOR_1     1
+#define CONFIG_SENSOR_2     2
+#define SENSOR_ALTMIN       3
+#define SENSOR_ALTMAX       4
+#define SENSOR_SALTOS       5
+#define SENSOR_INT_SALTOS   6
+#define SENSOR_JMP_SELECT   7
+#define SENSOR_ALTDJ        8
+#define SENSOR_SERIES       9
+#define SENSOR_INT_SERIES   10
+#define TAPETE_ON           11
+#define TAPETE_OFF          12
+#define SAVE_CONFIGS        13
+
+//EXPORTACAO MACHINE STATE
+#define VERIFICA_COMM         1
+#define EXPORTAR_UNITARIO     2
+#define NUM_TESTE_EXPORT      3
+#define PROCESS_UNITARIO      4
+#define EXPORTAR_TODOS        5
+#define PROCESS_TODOS         6
+
+//APAGA DADOS MACHINE STATE
+#define VERFICA_APAGAR      1
+#define CONFIRMA_APAGAR     2
+#define CONFIRMA            5
+#define RET_MENU            2
+
+//COMANDOS USU�?RIO
+#define AVANCAR     'A'
+#define CONFIRMAR   'C'
+#define PARAR       'P'
+#define MENU        'M'
+#define INSERIR     'I'
+#define AMOSTRA     ';'
+
+
+//QUANTIDADE DE TESTES
+#define TEST_SIZE   5
+#define MEASUREMENT_SIZE   5
+
+//READ FILE MATRIX
+#define MAX_LINES 10
+#define MAX_LEN 100
+
+/* USER CODE END Includes */
+
+/* Exported types ------------------------------------------------------------*/
+/* USER CODE BEGIN ET */
+
+/* USER CODE END ET */
+
+/* Exported constants --------------------------------------------------------*/
+/* USER CODE BEGIN EC */
+
+/* USER CODE END EC */
+
+/* Exported macro ------------------------------------------------------------*/
+/* USER CODE BEGIN EM */
+
+/*Defines para validação
+ *
+ */
+#define _VI	0
+#define _HWVALIDATION	0
+#define SAMPLES 10
+#define _APPLICATION 0
+
+/*
+ * Defines da solução
+ */
+
+#define TRUE            1
+#define FALSE           0
+
+#define FORA 	'0'
+#define DENTRO 	'1'
+#define REPOUSO '2'
+#define CONTATO '3'
+#define VOO     '4'
+#define TIMEOUT	'5'
+#define MAX_SERIE '6'
+#define INTERVALO '7'
+#define INTERVALO_SALTOS '8'
+
+#define SUBMENU_SIZE    15
+#define MAINMENU_SIZE   4
+#define HOME            1
+
+//MENU MACHINE STATE
+#define IDDLE           0
+#define START_TEST      1
+#define CONSULT_DATA    2
+#define CONFIG_SENSOR   3
+#define EXPORT_DATA     4
+#define ERASE_DATA      5
+#define TESTE           6
+
+
+//INICIAR MACHINE STATE
+#define COMM_OFF        1
+#define COMM_ON         2
+#define TEMPO_READ      3
+#define MASSA_READ      4
+#define SOBREC_READ     5
+#define START           6
+#define READING         7
+#define STOP            8
+#define DISP_RESULTS    9
+#define RESULTS         10
+#define SAVE_DATA       11
+#define CANCEL_SAVE     12
+
+//CONSULTA MACHINE STATE
+#define CONSULTA_TESTE  1
+#define RESULT_TESTE    2
+#define EXPORTAR        3
+
+//CONFIGURACAO MACHINE STATE
+#define CONFIG_SENSOR_1     1
+#define CONFIG_SENSOR_2     2
+#define SENSOR_ALTMIN       3
+#define SENSOR_ALTMAX       4
+#define SENSOR_SALTOS       5
+#define SENSOR_INT_SALTOS   6
+#define SENSOR_JMP_SELECT   7
+#define SENSOR_ALTDJ        8
+#define SENSOR_SERIES       9
+#define SENSOR_INT_SERIES   10
+#define TAPETE_ON           11
+#define TAPETE_OFF          12
+#define SAVE_CONFIGS        13
+
+//EXPORTACAO MACHINE STATE
+#define VERIFICA_COMM         1
+#define EXPORTAR_UNITARIO     2
+#define NUM_TESTE_EXPORT      3
+#define PROCESS_UNITARIO      4
+#define EXPORTAR_TODOS        5
+#define PROCESS_TODOS         6
+
+//APAGA DADOS MACHINE STATE
+#define VERFICA_APAGAR      1
+#define CONFIRMA_APAGAR     2
+#define CONFIRMA            5
+#define RET_MENU            2
+
+//COMANDOS USU�?RIO
+#define AVANCAR     'A'
+#define CONFIRMAR   'C'
+#define PARAR       'P'
+#define MENU        'M'
+#define INSERIR     'I'
+#define DOWN     	'B'
+#define LEFT     	'D'
+#define RIGHT		'E'
 
 
 //QUANTIDADE DE TESTES
@@ -949,6 +1543,15 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define SPI1_CS_Pin GPIO_PIN_4
 #define SPI1_CS_GPIO_Port GPIOA
+#define BT_DOWN_Pin GPIO_PIN_0
+#define BT_DOWN_GPIO_Port GPIOB
+#define BT_DOWN_EXTI_IRQn EXTI0_IRQn
+#define BT_LEFT_Pin GPIO_PIN_1
+#define BT_LEFT_GPIO_Port GPIOB
+#define BT_LEFT_EXTI_IRQn EXTI1_IRQn
+#define BT__RIGHT_Pin GPIO_PIN_2
+#define BT__RIGHT_GPIO_Port GPIOB
+#define BT__RIGHT_EXTI_IRQn EXTI2_IRQn
 #define LCD_D7_Pin GPIO_PIN_12
 #define LCD_D7_GPIO_Port GPIOB
 #define LCD_D6_Pin GPIO_PIN_13

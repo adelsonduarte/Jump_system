@@ -9,8 +9,8 @@ union soloTime;
 union totalTime;
 union alturaSalto;
 //TIMERS
-void startTM1(void);
-void stopTM1(void);
+void startTM3(void);
+void stopTM3(void);
 void startTM2(void);
 void stopTM2(void);
 

@@ -20,7 +20,7 @@ unsigned char HW_UPDATE_DATA(unsigned char position, unsigned char linha)
 {
 	setCursor(&lcdDisplay, position, linha); /***/
 	cursor(&lcdDisplay);
-	HAL_Delay(175);
+	HAL_Delay(180);
 	noCursor(&lcdDisplay);
 }
 

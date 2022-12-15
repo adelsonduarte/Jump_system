@@ -400,8 +400,6 @@ unsigned char initStateMachine(struct Menu* subMenu)
                 {
                 	resetKeyPressed();
                 	save_SD_card(ptr_result,indexTest);
-//                    save_data(indexTest);
-//                	HW_EXT_MEMORY_WRITE("adelson","SAVE_DATA.txt");
                     readyUserInterface(&displayUpdateStatus);
                     updateUserMsg(0,0,savedUserMsg,&displayUpdateStatus);
                     subMenuIniciar->menuState = getNextSub(COMM_OFF);
