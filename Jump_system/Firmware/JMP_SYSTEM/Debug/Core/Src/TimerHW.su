@@ -1,0 +1,4 @@
+../Core/Src/TimerHW.c:8:15:SET_HW_TIMER2	16	static
+../Core/Src/TimerHW.c:18:15:RESET_HW_TIMER2	16	static
+../Core/Src/TimerHW.c:28:15:SET_HW_TIMER3	16	static
+../Core/Src/TimerHW.c:37:15:RESET_HW_TIMER3	16	static

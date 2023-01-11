@@ -1,0 +1,9 @@
+../Core/Src/comunicacao.c:5:15:get_header_start	16	static
+../Core/Src/comunicacao.c:8:15:get_source_address	16	static
+../Core/Src/comunicacao.c:12:15:get_destination_address	16	static
+../Core/Src/comunicacao.c:16:15:get_function	16	static
+../Core/Src/comunicacao.c:20:15:get_payload_size	16	static
+../Core/Src/comunicacao.c:24:6:get_payload	16	static
+../Core/Src/comunicacao.c:27:15:get_checksum	16	static
+../Core/Src/comunicacao.c:31:15:get_header_end	16	static
+../Core/Src/comunicacao.c:36:6:transmit_data	48	dynamic
