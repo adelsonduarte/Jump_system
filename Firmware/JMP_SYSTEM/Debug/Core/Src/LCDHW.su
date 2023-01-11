@@ -1,4 +1,0 @@
-../Core/Src/LCDHW.c:7:15:HW_PRINT_DATA	16	static
-../Core/Src/LCDHW.c:14:15:HW_ERASE_DATA	8	static
-../Core/Src/LCDHW.c:19:15:HW_UPDATE_DATA	16	static
-../Core/Src/LCDHW.c:27:15:HW_HOME_DISP	24	static
