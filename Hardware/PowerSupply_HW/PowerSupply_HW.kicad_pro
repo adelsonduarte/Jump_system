@@ -121,7 +121,8 @@
       "track_widths": [
         0.0,
         0.7,
-        1.0
+        1.0,
+        2.0
       ],
       "via_dimensions": [
         {
@@ -348,7 +349,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "JMP_SYSTEM.kicad_pro",
+    "filename": "PowerSupply_HW.kicad_pro",
     "version": 1
   },
   "net_settings": {
@@ -427,20 +428,8 @@
   },
   "sheets": [
     [
-      "e63e39d7-6ac0-4ffd-8aa3-1841a4541b55",
+      "84d5b92f-4da5-4f34-952f-c9c13223e319",
       ""
-    ],
-    [
-      "e3f9034f-60dc-4b3d-a42f-e1142422b9f9",
-      "BLUEPILL_STM32"
-    ],
-    [
-      "ee87b791-7bf6-4294-bf5f-21508e7078b8",
-      "User _IO"
-    ],
-    [
-      "5b060b70-955c-45b6-8b83-be2320706ce6",
-      "PowerManagaement"
     ]
   ],
   "text_variables": {}

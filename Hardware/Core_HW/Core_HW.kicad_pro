@@ -33,9 +33,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 3.5,
-          "height": 7.0,
-          "width": 7.0
+          "drill": 0.762,
+          "height": 1.524,
+          "width": 1.524
         },
         "silk_line_width": 0.15,
         "silk_text_italic": false,
@@ -121,7 +121,8 @@
       "track_widths": [
         0.0,
         0.7,
-        1.0
+        1.0,
+        1.5
       ],
       "via_dimensions": [
         {
@@ -348,7 +349,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "JMP_SYSTEM.kicad_pro",
+    "filename": "Core_HW.kicad_pro",
     "version": 1
   },
   "net_settings": {
@@ -427,20 +428,8 @@
   },
   "sheets": [
     [
-      "e63e39d7-6ac0-4ffd-8aa3-1841a4541b55",
+      "6025fa6f-9ead-4adf-bc03-f014bed72b02",
       ""
-    ],
-    [
-      "e3f9034f-60dc-4b3d-a42f-e1142422b9f9",
-      "BLUEPILL_STM32"
-    ],
-    [
-      "ee87b791-7bf6-4294-bf5f-21508e7078b8",
-      "User _IO"
-    ],
-    [
-      "5b060b70-955c-45b6-8b83-be2320706ce6",
-      "PowerManagaement"
     ]
   ],
   "text_variables": {}

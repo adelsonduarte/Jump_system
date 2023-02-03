@@ -2440,6 +2440,9 @@
     (path "/e018d1fa-8b9d-4877-b748-6798f67f6d0f"
       (reference "#PWR0123") (unit 1) (value "GNDD") (footprint "")
     )
+    (path "/5b060b70-955c-45b6-8b83-be2320706ce6/838896d1-13f2-4acd-ab89-080b7295c7af"
+      (reference "#PWR0124") (unit 1) (value "GNDA") (footprint "")
+    )
     (path "/5b060b70-955c-45b6-8b83-be2320706ce6/37dadb33-b79c-42e4-a39e-27a50be439df"
       (reference "BT1") (unit 1) (value "4.2V") (footprint "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical")
     )
@@ -2477,7 +2480,7 @@
       (reference "C11") (unit 1) (value "1uF") (footprint "Capacitor_SMD:C_0805_2012Metric")
     )
     (path "/5b060b70-955c-45b6-8b83-be2320706ce6/abf35a24-81b9-4dbc-8de6-be83c0075afd"
-      (reference "C12") (unit 1) (value "1uF") (footprint "Capacitor_SMD:C_0805_2012Metric")
+      (reference "C12") (unit 1) (value "R0") (footprint "Capacitor_SMD:C_0805_2012Metric")
     )
     (path "/5b060b70-955c-45b6-8b83-be2320706ce6/8ff356a3-46a4-4b0c-b7ee-82971a39a63e"
       (reference "C13") (unit 1) (value "1uF") (footprint "Capacitor_SMD:C_0805_2012Metric")
@@ -2613,6 +2616,9 @@
     )
     (path "/5b060b70-955c-45b6-8b83-be2320706ce6/c8fa5923-a88b-4e35-90b4-bedac8fadac0"
       (reference "R22") (unit 1) (value "R em M") (footprint "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder")
+    )
+    (path "/5b060b70-955c-45b6-8b83-be2320706ce6/c86889d7-b6e9-4be5-ac6c-151ec30b39cc"
+      (reference "R23") (unit 1) (value "R0") (footprint "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder")
     )
     (path "/2fe2348d-2cab-4013-8137-e863f510ceca"
       (reference "SW1") (unit 1) (value "SENSOR") (footprint "Connector_Molex:Molex_KK-254_AE-6410-02A_1x02_P2.54mm_Vertical")
